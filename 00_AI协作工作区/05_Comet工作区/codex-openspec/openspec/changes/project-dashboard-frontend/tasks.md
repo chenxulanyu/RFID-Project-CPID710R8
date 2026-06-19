@@ -20,4 +20,4 @@
 
 - [x] 4.1 Implement desktop layout constraints so dashboard, table, and timeline remain readable.
 - [x] 4.2 Implement mobile portrait landscape guidance or equivalent landscape-first behavior.
-- [ ] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
+- [x] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
