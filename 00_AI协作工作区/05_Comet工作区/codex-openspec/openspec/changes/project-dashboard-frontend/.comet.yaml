@@ -1,5 +1,5 @@
 workflow: full
-phase: verify
+phase: archive
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -12,11 +12,11 @@ auto_transition: true
 base_ref: null
 design_doc: docs/superpowers/specs/2026-06-19-project-dashboard-frontend-design.md
 plan: docs/superpowers/plans/2026-06-19-project-dashboard-frontend.md
-verify_result: pending
+verify_result: pass
 verification_report: docs/superpowers/reports/2026-06-19-project-dashboard-frontend-verify.md
-branch_status: pending
+branch_status: handled
 created_at: 2026-06-19
-verified_at: null
+verified_at: 2026-06-19
 archived: false
 handoff_context: openspec/changes/project-dashboard-frontend/.comet/handoff/design-context.json
 handoff_hash: e49a236e1f9a2705aadb24f02408366ada4e1278133b1c0691619b7621796678
