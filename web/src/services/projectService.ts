@@ -1,6 +1,6 @@
 import type { ProjectProgressData, ProjectTask, ProjectTaskInput } from "../types/project";
 import { calculateCalendarDays, calculateCompletionRatio, getWarningState } from "../utils/progress";
-import { MockProjectRepository, type ProjectRepository } from "./projectRepository";
+import { DefaultProjectRepository, type ProjectRepository } from "./projectRepository";
 
 function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
   const plannedDurationDays = calculateCalendarDays(input.plannedStartDate, input.plannedEndDate);
@@ -40,7 +40,7 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
 
 export async function getProjectProgress(
   today = "2026-06-19",
-  repository: ProjectRepository = new MockProjectRepository(),
+  repository: ProjectRepository = new DefaultProjectRepository(),
 ): Promise<ProjectProgressData> {
   const [project, taskInputs] = await Promise.all([repository.getProject(), repository.listTaskInputs()]);
 

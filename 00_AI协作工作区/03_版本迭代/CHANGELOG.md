@@ -69,3 +69,14 @@
 - 后台页复用移动端横屏提示，并为表单、任务列表、按钮和消息区域增加换行、截断或滚动约束，降低文字和框体溢出风险。
 - 验证：`npm test` 通过，8 个测试文件、38 条测试用例通过。
 - 可交给 Claude Code 审查：是。
+
+## admin-progress-backend v1.1 - 2026-06-20
+
+- 处理 Claude Code `Claude审查-admin-progress-backend-v1.0.md` 的有条件通过意见。
+- 修复 `/admin` 路由归档任务时 `archivedAt` 固定为 `2026-06-19` 的问题；后台入口改为注入浏览器本地当前日期。
+- 新增回归测试：模拟 2026-06-20 从 `/admin` 归档任务时，`localStorage` 中对应任务的 `archivedAt` 必须写入 `2026-06-20`。
+- 采纳命名建议：将默认读取用 repository 从 `MockProjectRepository` 重命名为 `DefaultProjectRepository`，避免误导为纯测试替身。
+- 暂不处理非阻断 UX 建议：完成日期与手动进度同时填写的提示、异步保存 loading 状态，留待后续交互优化 change。
+- 验证：`npm test` 通过，8 个测试文件、39 条测试用例通过。
+- 验证：`npm run build` 通过。
+- 验证：`openspec validate admin-progress-backend --strict` 通过。

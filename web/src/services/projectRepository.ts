@@ -131,4 +131,4 @@ export class LocalProjectRepository implements ProjectRepository {
   }
 }
 
-export class MockProjectRepository extends LocalProjectRepository {}
+export class DefaultProjectRepository extends LocalProjectRepository {}
