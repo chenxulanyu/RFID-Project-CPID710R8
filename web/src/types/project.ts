@@ -20,6 +20,9 @@ export interface ProjectTaskInput {
   resourceOwner: string;
   responsiblePerson: string;
   remarks?: string;
+  manualCompletionRatio?: number;
+  isArchived?: boolean;
+  archivedAt?: string;
 }
 
 export interface ProjectTask extends ProjectTaskInput {

@@ -441,6 +441,169 @@ body {
   background: #6b7a90;
 }
 
+.primary-button,
+.ghost-button,
+.danger-button {
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  min-height: 36px;
+  padding: 8px 12px;
+}
+
+.primary-button {
+  background: #17202a;
+  border: 1px solid #17202a;
+  color: #ffffff;
+}
+
+.ghost-button {
+  background: #ffffff;
+  border: 1px solid #c9d3df;
+  color: #17202a;
+}
+
+.danger-button {
+  background: #fff1f0;
+  border: 1px solid #e0a39e;
+  color: #9f2d24;
+}
+
+.admin-layout {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+}
+
+.admin-panel {
+  background: #ffffff;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 16px;
+}
+
+.admin-section + .admin-section {
+  border-top: 1px solid #edf2f7;
+  margin-top: 18px;
+  padding-top: 18px;
+}
+
+.admin-section h2,
+.admin-panel h2 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+
+.admin-task-list {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 12px 0 0;
+  max-height: 540px;
+  overflow: auto;
+  padding: 0;
+}
+
+.admin-task-button {
+  background: #f7f9fc;
+  border: 1px solid #d8dee8;
+  border-radius: 6px;
+  color: #17202a;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.admin-task-button strong,
+.admin-task-button span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-task-button strong {
+  font-size: 13px;
+}
+
+.admin-task-button span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.admin-form-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-field {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.admin-field-wide {
+  grid-column: 1 / -1;
+}
+
+.admin-field span {
+  color: #526173;
+  font-size: 12px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.admin-field input,
+.admin-field textarea {
+  border: 1px solid #c9d3df;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: #17202a;
+  font: inherit;
+  min-width: 0;
+  padding: 9px 10px;
+  width: 100%;
+}
+
+.admin-field textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.admin-message {
+  border-radius: 6px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+  padding: 10px 12px;
+}
+
+.admin-message.error {
+  background: #fff1f0;
+  color: #9f2d24;
+}
+
+.admin-message.success {
+  background: #eaf7ef;
+  color: #246b3d;
+}
+
 @media (max-width: 1100px) {
   .metric-grid {
     grid-template-columns: repeat(3, minmax(120px, 1fr));
@@ -460,6 +623,14 @@ body {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -1,6 +1,6 @@
 import type { ProjectProgressData, ProjectTask, ProjectTaskInput } from "../types/project";
 import { calculateCalendarDays, calculateCompletionRatio, getWarningState } from "../utils/progress";
-import { MockProjectRepository, type ProjectRepository } from "./projectRepository";
+import { DefaultProjectRepository, type ProjectRepository } from "./projectRepository";
 
 function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
   const plannedDurationDays = calculateCalendarDays(input.plannedStartDate, input.plannedEndDate);
@@ -21,16 +21,18 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
       ? Math.max(calculateCalendarDays(input.plannedEndDate, today) - 1, 0)
       : undefined;
 
+  const automaticCompletionRatio = calculateCompletionRatio({
+    plannedDurationDays,
+    elapsedDays: numericElapsedDays,
+    isFinished,
+  });
+
   return {
     ...input,
     plannedDurationDays,
     actualDurationDays,
     elapsedDays,
-    completionRatio: calculateCompletionRatio({
-      plannedDurationDays,
-      elapsedDays: numericElapsedDays,
-      isFinished,
-    }),
+    completionRatio: isFinished ? 1 : input.manualCompletionRatio ?? automaticCompletionRatio,
     overdueDays,
     warningState,
   };
@@ -38,7 +40,7 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
 
 export async function getProjectProgress(
   today = "2026-06-19",
-  repository: ProjectRepository = new MockProjectRepository(),
+  repository: ProjectRepository = new DefaultProjectRepository(),
 ): Promise<ProjectProgressData> {
   const [project, taskInputs] = await Promise.all([repository.getProject(), repository.listTaskInputs()]);
 

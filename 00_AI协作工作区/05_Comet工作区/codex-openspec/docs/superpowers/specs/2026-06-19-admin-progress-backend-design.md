@@ -2,6 +2,8 @@
 comet_change: admin-progress-backend
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-19-admin-progress-backend
+status: final
 ---
 
 # Admin Progress Backend Technical Design

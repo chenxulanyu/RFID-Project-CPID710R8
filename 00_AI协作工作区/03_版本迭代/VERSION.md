@@ -15,3 +15,4 @@
 
 - `web-app-foundation`: `v1.1`
 - `project-dashboard-frontend`: `v1.2`
+- `admin-progress-backend`: `v1.1`
