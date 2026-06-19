@@ -21,16 +21,18 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
       ? Math.max(calculateCalendarDays(input.plannedEndDate, today) - 1, 0)
       : undefined;
 
+  const automaticCompletionRatio = calculateCompletionRatio({
+    plannedDurationDays,
+    elapsedDays: numericElapsedDays,
+    isFinished,
+  });
+
   return {
     ...input,
     plannedDurationDays,
     actualDurationDays,
     elapsedDays,
-    completionRatio: calculateCompletionRatio({
-      plannedDurationDays,
-      elapsedDays: numericElapsedDays,
-      isFinished,
-    }),
+    completionRatio: isFinished ? 1 : input.manualCompletionRatio ?? automaticCompletionRatio,
     overdueDays,
     warningState,
   };
