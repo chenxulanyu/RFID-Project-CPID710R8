@@ -50,6 +50,15 @@ describe("DashboardPage", () => {
     expect(within(timeline).getByText("当前日期")).toBeInTheDocument();
   });
 
+  it("positions the current date marker against the timeline track", async () => {
+    render(<DashboardPage today="2026-06-29" />);
+
+    const timeline = await screen.findByRole("region", { name: "计划时间轴" });
+    expect(within(timeline).getByText("当前日期")).toHaveStyle({
+      left: "calc(232px + 49.72677595628415%)",
+    });
+  });
+
   it("includes mobile landscape guidance", async () => {
     render(<DashboardPage today="2026-06-19" />);
 

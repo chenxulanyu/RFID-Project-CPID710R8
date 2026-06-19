@@ -20,7 +20,7 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
             <strong>当前日期：{model.today}</strong>
             <span>{model.timelineRange.endDate}</span>
           </div>
-          <div className="timeline-today" style={{ left: `calc(220px + ${model.timelineRange.todayPercent}%)` }}>
+          <div className="timeline-today" style={{ left: `calc(232px + ${model.timelineRange.todayPercent}%)` }}>
             当前日期
           </div>
           {model.tasks.map((task) => (
