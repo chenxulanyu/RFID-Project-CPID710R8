@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { Project, ProjectTaskInput } from "../types/project";
+import {
+  archiveProjectTask,
+  createProjectTask,
+  restoreProjectTask,
+  saveProjectMetadata,
+} from "./projectAdminService";
 import { LocalProjectRepository } from "./projectRepository";
 import { getProjectProgress } from "./projectService";
+import { ProjectValidationError } from "./projectValidation";
 
 const project: Project = {
   id: "cpid710r8",
@@ -74,5 +81,76 @@ describe("admin repository read integration", () => {
 
     expect(data.tasks[0].completionRatio).toBe(1);
     expect(data.tasks[0].elapsedDays).toBe("finished");
+  });
+});
+
+describe("admin write service", () => {
+  it("saves project metadata and returns it in public reads", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({ project, tasks: [] });
+
+    await saveProjectMetadata(repository, { ...project, name: "更新后的项目" });
+    const data = await getProjectProgress("2026-06-19", repository);
+
+    expect(data.project.name).toBe("更新后的项目");
+  });
+
+  it("creates a task and exposes it through public progress reads", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({ project, tasks: [] });
+
+    await createProjectTask(repository, task({ id: "new-task", taskName: "新增任务" }));
+    const data = await getProjectProgress("2026-06-19", repository);
+
+    expect(data.tasks.map((item) => item.id)).toEqual(["new-task"]);
+  });
+
+  it("archives and restores a task without physical deletion", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({
+      project,
+      tasks: [task({ id: "task-1", taskName: "可归档任务" })],
+    });
+
+    await archiveProjectTask(repository, "task-1", "2026-06-19");
+    expect((await getProjectProgress("2026-06-19", repository)).tasks).toHaveLength(0);
+    expect((await repository.listTaskInputs({ includeArchived: true }))[0].isArchived).toBe(true);
+
+    await restoreProjectTask(repository, "task-1");
+    expect((await getProjectProgress("2026-06-19", repository)).tasks.map((item) => item.id)).toEqual([
+      "task-1",
+    ]);
+  });
+
+  it("rejects invalid task dates with a validation error", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({ project, tasks: [] });
+
+    await expect(
+      createProjectTask(
+        repository,
+        task({
+          id: "bad-date",
+          taskName: "错误日期",
+          plannedStartDate: "2026-06-10",
+          plannedEndDate: "2026-06-01",
+        }),
+      ),
+    ).rejects.toBeInstanceOf(ProjectValidationError);
+  });
+
+  it("rejects duplicate task ids on create", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({
+      project,
+      tasks: [task({ id: "same", taskName: "原任务" })],
+    });
+
+    await expect(createProjectTask(repository, task({ id: "same", taskName: "重复任务" }))).rejects.toThrow(
+      "任务 ID 已存在",
+    );
+  });
+
+  it("rejects manual completion ratio outside 0 to 1", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({ project, tasks: [] });
+
+    await expect(
+      createProjectTask(repository, task({ id: "bad-ratio", taskName: "错误进度", manualCompletionRatio: 1.2 })),
+    ).rejects.toThrow("完成比例必须在 0 到 100% 之间");
   });
 });
