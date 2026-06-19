@@ -28,3 +28,34 @@
 - 验证：`npm test` 通过，4 个测试文件、11 条测试用例通过。
 - 验证：`npm run build` 通过。
 - 可再次交给 Claude Code 审查：是。
+
+## project-dashboard-frontend v1.0 - 2026-06-19
+
+- 新增 CPID710R8 项目总览仪表盘，包含项目周期、当前日期、关键 KPI、风险任务条、任务明细表和计划时间轴。
+- 新增 `dashboardStatus` 派生状态，兼容原有 `elapsedDays` 字段，并区分已完成、进行中、延迟启动和未开始任务。
+- 新增计划时间轴，以计划起止日期呈现任务跨度，并用状态/风险颜色表达完成、进行、延迟和未开始状态。
+- 新增移动端竖屏横屏提示；手机竖屏隐藏完整仪表盘，手机横屏保留完整仪表盘并让高密度表格、时间轴在自身容器内横向滚动。
+- 加强文字和框体溢出控制：KPI、风险条、状态标签、明细表和时间轴均使用稳定尺寸、截断或横向滚动，避免移动端文字与框体重叠。
+- 新增回归测试：仪表盘 KPI、风险任务、任务明细、计划时间轴、移动端横屏提示。
+- 验证：`npm test` 通过，6 个测试文件、17 条测试用例通过。
+- 验证：`npm run build` 通过。
+- 视觉验证：桌面 `1440x900`、手机横屏 `844x390`、手机竖屏 `390x844` 均无页面级横向溢出；手机竖屏仅显示横屏提示。
+- 可交给 Claude Code 审查：是。
+
+## project-dashboard-frontend v1.1 - 2026-06-19
+
+- 处理 Codex standard code review gate 反馈：3 条 Important 和 1 条 Minor 均采纳。
+- 修复 `dashboardStatus` 对旧 `elapsedDays` 数据的兼容：`finished` 保持已完成，数字型已耗时任务保持进行中。
+- 修复计划时间轴当前日期标记写死位置的问题，改为根据项目周期和当前日期派生 `todayPercent`。
+- 修复默认当前日期使用 UTC 口径的问题，改为基于浏览器本地日期字段生成 `YYYY-MM-DD`。
+- 新增项目数据加载失败提示，并在组件卸载或日期切换时避免过期异步更新。
+- 新增回归测试：旧 `elapsedDays` 状态兼容、时间轴当前日期位置、本地日期格式化、加载失败提示。
+- 处理 Codex 复审反馈：将时间轴当前日期标记定位修正为相对任务轨道起点，而非相对整体时间轴容器。
+
+## project-dashboard-frontend v1.2 - 2026-06-19
+
+- 处理 Claude Code `Claude审查-project-dashboard-frontend-v1.1.md` 的有条件通过意见。
+- 修复时间轴当前日期标记的 CSS 百分比基准：新增与任务行同网格的 `timeline-today-track`，使 marker 的 `left: <todayPercent>%` 相对任务轨道宽度定位。
+- 修复 `getDashboardStatus` 的防御性优先级：`actualEndDate` / `actualStartDate` 优先于 legacy `elapsedDays` fallback，避免不一致导入数据把已完成任务误判为进行中。
+- 增强当前日期 marker 可见性：增加白色边框，使其在深色任务条上保持清晰。
+- 新增回归测试：不一致任务数据下 actual dates 优先，以及当前日期 marker 必须定位在任务轨道容器内。

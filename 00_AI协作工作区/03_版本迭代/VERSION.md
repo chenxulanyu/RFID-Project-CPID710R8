@@ -14,3 +14,4 @@
 ## 业务功能版本
 
 - `web-app-foundation`: `v1.1`
+- `project-dashboard-frontend`: `v1.2`

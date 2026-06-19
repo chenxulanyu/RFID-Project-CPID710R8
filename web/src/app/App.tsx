@@ -1,5 +1,5 @@
 import { AdminPlaceholder } from "../features/project/AdminPlaceholder";
-import { FoundationPage } from "../features/project/FoundationPage";
+import { DashboardPage } from "../features/project/DashboardPage";
 
 function getPathname() {
   return window.location.pathname;
@@ -11,10 +11,10 @@ export function App() {
   return (
     <main className="app-shell">
       <nav className="top-nav" aria-label="主导航">
-        <a href="/">项目基础</a>
+        <a href="/">项目仪表盘</a>
         <a href="/admin">后台占位</a>
       </nav>
-      {pathname === "/admin" ? <AdminPlaceholder /> : <FoundationPage />}
+      {pathname === "/admin" ? <AdminPlaceholder /> : <DashboardPage />}
     </main>
   );
 }

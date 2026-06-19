@@ -6,7 +6,7 @@ base-ref: 1588b0728c331f05c398d188e2ebb71aa2ffc09e
 
 # Project Dashboard Frontend Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build the CPID710R8 project dashboard with top-level KPIs, risk task strip, task detail table, lightweight timeline, and mobile landscape guidance.
 
@@ -40,7 +40,7 @@ base-ref: 1588b0728c331f05c398d188e2ebb71aa2ffc09e
 - Create: `web/src/features/project/dashboardMetrics.test.ts`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/project-dashboard-frontend/tasks.md`
 
-- [ ] **Step 1: Write failing status and metrics tests**
+- [x] **Step 1: Write failing status and metrics tests**
 
 Create `web/src/features/project/dashboardMetrics.test.ts`:
 
@@ -122,7 +122,7 @@ describe("dashboardMetrics", () => {
 });
 ```
 
-- [ ] **Step 2: Run metric test to verify RED**
+- [x] **Step 2: Run metric test to verify RED**
 
 Run:
 
@@ -133,7 +133,7 @@ npm test -- src/features/project/dashboardMetrics.test.ts
 
 Expected: FAIL because `dashboardMetrics.ts` does not exist.
 
-- [ ] **Step 3: Implement dashboard metrics**
+- [x] **Step 3: Implement dashboard metrics**
 
 Create `web/src/features/project/dashboardMetrics.ts`:
 
@@ -274,7 +274,7 @@ export function buildDashboardModel({
 }
 ```
 
-- [ ] **Step 4: Run metric tests to verify GREEN**
+- [x] **Step 4: Run metric tests to verify GREEN**
 
 Run:
 
@@ -285,13 +285,13 @@ npm test -- src/features/project/dashboardMetrics.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 5: Check off OpenSpec task 1.1 and 1.3**
+- [x] **Step 5: Check off OpenSpec task 1.1 and 1.3**
 
 In `tasks.md`, change:
 
 ```md
-- [ ] 1.1 Implement derived dashboard metrics for task counts, overall progress, overdue tasks, and warning counts.
-- [ ] 1.3 Verify dashboard metrics match the underlying task data.
+- [x] 1.1 Implement derived dashboard metrics for task counts, overall progress, overdue tasks, and warning counts.
+- [x] 1.3 Verify dashboard metrics match the underlying task data.
 ```
 
 to:
@@ -301,7 +301,7 @@ to:
 - [x] 1.3 Verify dashboard metrics match the underlying task data.
 ```
 
-- [ ] **Step 6: Commit metrics**
+- [x] **Step 6: Commit metrics**
 
 Run:
 
@@ -321,7 +321,7 @@ git commit -m "feat: add project dashboard metrics"
 - Modify: `web/src/styles.css`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/project-dashboard-frontend/tasks.md`
 
-- [ ] **Step 1: Write failing dashboard render test**
+- [x] **Step 1: Write failing dashboard render test**
 
 Create `web/src/features/project/DashboardPage.test.tsx`:
 
@@ -342,7 +342,7 @@ describe("DashboardPage", () => {
 });
 ```
 
-- [ ] **Step 2: Run dashboard render test to verify RED**
+- [x] **Step 2: Run dashboard render test to verify RED**
 
 Run:
 
@@ -353,7 +353,7 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: FAIL because `DashboardPage.tsx` does not exist.
 
-- [ ] **Step 3: Implement summary dashboard components**
+- [x] **Step 3: Implement summary dashboard components**
 
 Create `web/src/features/project/ProjectSummaryDashboard.tsx`:
 
@@ -544,7 +544,7 @@ Append dashboard summary styles to `web/src/styles.css`:
 }
 ```
 
-- [ ] **Step 4: Run dashboard render test to verify GREEN**
+- [x] **Step 4: Run dashboard render test to verify GREEN**
 
 Run:
 
@@ -555,7 +555,7 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: PASS.
 
-- [ ] **Step 5: Update App smoke test expectation**
+- [x] **Step 5: Update App smoke test expectation**
 
 Modify `web/src/app/App.test.tsx` so the main route expects the dashboard nav/text:
 
@@ -573,12 +573,12 @@ npm test -- src/app/App.test.tsx
 
 Expected: PASS.
 
-- [ ] **Step 6: Check off OpenSpec task 1.2**
+- [x] **Step 6: Check off OpenSpec task 1.2**
 
 In `tasks.md`, change:
 
 ```md
-- [ ] 1.2 Build the project summary dashboard section with project period, duration, elapsed days, and progress indicators.
+- [x] 1.2 Build the project summary dashboard section with project period, duration, elapsed days, and progress indicators.
 ```
 
 to:
@@ -587,7 +587,7 @@ to:
 - [x] 1.2 Build the project summary dashboard section with project period, duration, elapsed days, and progress indicators.
 ```
 
-- [ ] **Step 7: Commit dashboard summary**
+- [x] **Step 7: Commit dashboard summary**
 
 Run:
 
@@ -608,7 +608,7 @@ git commit -m "feat: add project dashboard summary"
 - Modify: `web/src/styles.css`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/project-dashboard-frontend/tasks.md`
 
-- [ ] **Step 1: Extend failing test for risks and table**
+- [x] **Step 1: Extend failing test for risks and table**
 
 Append to `DashboardPage.test.tsx`:
 
@@ -624,7 +624,7 @@ it("renders risk tasks and task detail fields", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify RED**
+- [x] **Step 2: Run test to verify RED**
 
 Run:
 
@@ -635,7 +635,7 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: FAIL because risk/table components are not rendered.
 
-- [ ] **Step 3: Implement risk strip and table**
+- [x] **Step 3: Implement risk strip and table**
 
 Create `web/src/features/project/RiskTaskStrip.tsx`:
 
@@ -883,7 +883,7 @@ Append CSS:
 }
 ```
 
-- [ ] **Step 4: Run test to verify GREEN**
+- [x] **Step 4: Run test to verify GREEN**
 
 Run:
 
@@ -894,11 +894,11 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: PASS.
 
-- [ ] **Step 5: Check off OpenSpec tasks 2.1, 2.2, 2.3**
+- [x] **Step 5: Check off OpenSpec tasks 2.1, 2.2, 2.3**
 
 In `tasks.md`, check off task detail view tasks after the table renders.
 
-- [ ] **Step 6: Commit risk and table**
+- [x] **Step 6: Commit risk and table**
 
 Run:
 
@@ -919,7 +919,7 @@ git commit -m "feat: add dashboard risks and task table"
 - Modify: `web/src/styles.css`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/project-dashboard-frontend/tasks.md`
 
-- [ ] **Step 1: Write failing tests for timeline and portrait guidance**
+- [x] **Step 1: Write failing tests for timeline and portrait guidance**
 
 Append to `DashboardPage.test.tsx`:
 
@@ -939,7 +939,7 @@ it("includes mobile landscape guidance", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify RED**
+- [x] **Step 2: Run test to verify RED**
 
 Run:
 
@@ -950,7 +950,7 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: FAIL because timeline and landscape gate are not implemented.
 
-- [ ] **Step 3: Implement timeline and landscape gate**
+- [x] **Step 3: Implement timeline and landscape gate**
 
 Create `web/src/features/project/ProjectTimeline.tsx`:
 
@@ -1160,7 +1160,7 @@ Append CSS:
 }
 ```
 
-- [ ] **Step 4: Run test to verify GREEN**
+- [x] **Step 4: Run test to verify GREEN**
 
 Run:
 
@@ -1171,11 +1171,11 @@ npm test -- src/features/project/DashboardPage.test.tsx
 
 Expected: PASS.
 
-- [ ] **Step 5: Check off OpenSpec tasks 3.1, 3.2, 3.3, 4.1, 4.2**
+- [x] **Step 5: Check off OpenSpec tasks 3.1, 3.2, 3.3, 4.1, 4.2**
 
 In `tasks.md`, check off timeline and responsive implementation tasks after tests pass.
 
-- [ ] **Step 6: Commit timeline and mobile behavior**
+- [x] **Step 6: Commit timeline and mobile behavior**
 
 Run:
 
@@ -1193,7 +1193,7 @@ git commit -m "feat: add project timeline and landscape guidance"
 - Modify: `00_AI协作工作区/03_版本迭代/CHANGELOG.md`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/project-dashboard-frontend/tasks.md`
 
-- [ ] **Step 1: Run full automated verification**
+- [x] **Step 1: Run full automated verification**
 
 Run:
 
@@ -1205,7 +1205,7 @@ npm run build
 
 Expected: all tests pass and build succeeds.
 
-- [ ] **Step 2: Run local browser visual checks**
+- [x] **Step 2: Run local browser visual checks**
 
 Start the dev server:
 
@@ -1222,7 +1222,7 @@ Use browser checks for:
 
 If any text overflows or overlaps, adjust CSS before continuing.
 
-- [ ] **Step 3: Update version records**
+- [x] **Step 3: Update version records**
 
 In `VERSION.md`, add or update:
 
@@ -1245,12 +1245,12 @@ In `CHANGELOG.md`, add:
 - 可交给 Claude Code 审查：是。
 ```
 
-- [ ] **Step 4: Check off OpenSpec task 4.3**
+- [x] **Step 4: Check off OpenSpec task 4.3**
 
 In `tasks.md`, change:
 
 ```md
-- [ ] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
+- [x] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
 ```
 
 to:
@@ -1259,7 +1259,7 @@ to:
 - [x] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
 ```
 
-- [ ] **Step 5: Commit verification records**
+- [x] **Step 5: Commit verification records**
 
 Run:
 
@@ -1272,7 +1272,7 @@ git commit -m "chore: record project dashboard version"
 
 ## Final Build Gate
 
-- [ ] Run:
+- [x] Run:
 
 ```bash
 cd web
@@ -1280,9 +1280,9 @@ npm test
 npm run build
 ```
 
-- [ ] Confirm every checkbox in `openspec/changes/project-dashboard-frontend/tasks.md` is checked.
-- [ ] If review mode is `standard` or `thorough`, run the requested code review step before build guard.
-- [ ] Run Comet build guard:
+- [x] Confirm every checkbox in `openspec/changes/project-dashboard-frontend/tasks.md` is checked.
+- [x] If review mode is `standard` or `thorough`, run the requested code review step before build guard.
+- [x] Run Comet build guard:
 
 ```bash
 cd 00_AI协作工作区/05_Comet工作区/codex-openspec
