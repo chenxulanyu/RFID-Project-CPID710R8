@@ -3,6 +3,8 @@ import { getProjectProgress } from "../../services/projectService";
 import type { ProjectProgressData } from "../../types/project";
 import { buildDashboardModel, type DashboardModel } from "./dashboardMetrics";
 import { ProjectSummaryDashboard } from "./ProjectSummaryDashboard";
+import { RiskTaskStrip } from "./RiskTaskStrip";
+import { TaskDetailTable } from "./TaskDetailTable";
 
 function getCurrentDateString(): string {
   return new Date().toISOString().slice(0, 10);
@@ -24,6 +26,8 @@ export function DashboardPage({ today = getCurrentDateString() }: { today?: stri
   return (
     <section className="dashboard-page">
       <ProjectSummaryDashboard model={model} />
+      <RiskTaskStrip tasks={model.riskTasks} />
+      <TaskDetailTable tasks={model.tasks} />
     </section>
   );
 }

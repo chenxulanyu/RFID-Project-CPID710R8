@@ -143,3 +143,137 @@ body {
 .metric-card-danger {
   border-color: #db6b5f;
 }
+
+.section-heading-row {
+  align-items: baseline;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.section-heading-row h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.section-heading-row span {
+  color: #64748b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.risk-strip,
+.dashboard-panel {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+}
+
+.risk-list {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.risk-pill {
+  border: 1px solid #d9e2ec;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: grid;
+  flex: 0 0 220px;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+}
+
+.risk-pill span,
+.risk-pill em {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.risk-pill em {
+  color: #8b3f35;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.empty-state {
+  color: #64748b;
+  margin: 0;
+}
+
+.table-scroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.dashboard-task-table {
+  min-width: 1060px;
+}
+
+.dashboard-task-table th,
+.dashboard-task-table td {
+  max-width: 220px;
+  overflow-wrap: anywhere;
+}
+
+.cell-strong {
+  font-weight: 700;
+}
+
+.progress-cell {
+  align-items: center;
+  display: grid;
+  gap: 6px;
+  min-width: 92px;
+}
+
+.progress-track {
+  background: #edf2f7;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-track span {
+  background: #2f80c0;
+  display: block;
+  height: 100%;
+}
+
+.status-badge {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  max-width: 140px;
+  overflow: hidden;
+  padding: 5px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.warning-overdue,
+.status-start-delayed {
+  background: #fff1ed;
+  border-color: #db6b5f;
+  color: #8b3f35;
+}
+
+.warning-due-today,
+.warning-within-week {
+  background: #fff7db;
+  border-color: #e0b341;
+  color: #735500;
+}

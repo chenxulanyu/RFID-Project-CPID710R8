@@ -6,9 +6,9 @@
 
 ## 2. Task Detail View
 
-- [ ] 2.1 Build a high-density task detail table with schedule, progress, owner, warning, and remark fields.
-- [ ] 2.2 Add visual status treatments for completion ratio, overdue days, due-today, due-within-week, and future warning states.
-- [ ] 2.3 Support grouped milestone/task presentation matching the CPID710R8 schedule structure.
+- [x] 2.1 Build a high-density task detail table with schedule, progress, owner, warning, and remark fields.
+- [x] 2.2 Add visual status treatments for completion ratio, overdue days, due-today, due-within-week, and future warning states.
+- [x] 2.3 Support grouped milestone/task presentation matching the CPID710R8 schedule structure.
 
 ## 3. Timeline or Gantt View
 
