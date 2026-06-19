@@ -2,6 +2,7 @@
 change: admin-progress-backend
 design-doc: docs/superpowers/specs/2026-06-19-admin-progress-backend-design.md
 base-ref: fce3b6781c7ce754fae9a5dd976635f489d4c0fa
+archived-with: 2026-06-19-admin-progress-backend
 ---
 
 # Admin Progress Backend Implementation Plan
@@ -13,8 +14,6 @@ base-ref: fce3b6781c7ce754fae9a5dd976635f489d4c0fa
 **Architecture:** Extend the existing project repository/service boundary so public dashboard reads and admin writes share one data contract. Use a localStorage-backed repository for the first version, with validation and admin service methods isolated from UI components. Replace `/admin` with a left-list/right-detail admin page that preserves overflow-safe layout constraints.
 
 **Tech Stack:** React, TypeScript, Vite, Vitest, React Testing Library, CSS, browser `localStorage`.
-
----
 
 ## File Structure
 
