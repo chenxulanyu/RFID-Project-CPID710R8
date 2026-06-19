@@ -19,10 +19,24 @@ export interface ProjectRepository {
   restoreTask(taskId: string): Promise<ProjectTaskInput>;
 }
 
+export interface StorageAdapter {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem?(key: string): void;
+}
+
+export interface LocalProjectRepositoryOptions {
+  initialSnapshot?: ProjectDataSnapshot;
+  storage?: StorageAdapter | null;
+  storageKey?: string;
+}
+
 const initialSnapshot: ProjectDataSnapshot = {
   project: cpid710r8Project,
   tasks: cpid710r8TaskInputs,
 };
+
+const defaultStorageKey = "cpid710r8-project-progress";
 
 function cloneSnapshot(snapshot: ProjectDataSnapshot): ProjectDataSnapshot {
   return {
@@ -31,15 +45,47 @@ function cloneSnapshot(snapshot: ProjectDataSnapshot): ProjectDataSnapshot {
   };
 }
 
+function isSnapshot(input: ProjectDataSnapshot | LocalProjectRepositoryOptions): input is ProjectDataSnapshot {
+  return "project" in input && "tasks" in input;
+}
+
+function getBrowserStorage(): StorageAdapter | null {
+  return typeof window === "undefined" ? null : window.localStorage;
+}
+
+function readStoredSnapshot(storage: StorageAdapter, storageKey: string): ProjectDataSnapshot | null {
+  const raw = storage.getItem(storageKey);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as ProjectDataSnapshot;
+    if (!parsed.project || !Array.isArray(parsed.tasks)) return null;
+    return cloneSnapshot(parsed);
+  } catch {
+    return null;
+  }
+}
+
 export class LocalProjectRepository implements ProjectRepository {
   private snapshot: ProjectDataSnapshot;
+  private readonly storage: StorageAdapter | null;
+  private readonly storageKey: string;
 
-  constructor(snapshot: ProjectDataSnapshot = initialSnapshot) {
-    this.snapshot = cloneSnapshot(snapshot);
+  constructor(input: ProjectDataSnapshot | LocalProjectRepositoryOptions = {}) {
+    const options = isSnapshot(input) ? { initialSnapshot: input, storage: null } : input;
+    this.storage = options.storage === undefined ? getBrowserStorage() : options.storage;
+    this.storageKey = options.storageKey ?? defaultStorageKey;
+    const fallbackSnapshot = options.initialSnapshot ?? initialSnapshot;
+    const storedSnapshot = this.storage ? readStoredSnapshot(this.storage, this.storageKey) : null;
+    this.snapshot = cloneSnapshot(storedSnapshot ?? fallbackSnapshot);
   }
 
   static fromSnapshot(snapshot: ProjectDataSnapshot): LocalProjectRepository {
-    return new LocalProjectRepository(snapshot);
+    return new LocalProjectRepository({ initialSnapshot: snapshot, storage: null });
+  }
+
+  private persistSnapshot() {
+    this.storage?.setItem(this.storageKey, JSON.stringify(this.snapshot));
   }
 
   async getProject(): Promise<Project> {
@@ -48,6 +94,7 @@ export class LocalProjectRepository implements ProjectRepository {
 
   async saveProject(project: Project): Promise<Project> {
     this.snapshot = { ...this.snapshot, project: { ...project } };
+    this.persistSnapshot();
     return this.getProject();
   }
 
@@ -66,6 +113,7 @@ export class LocalProjectRepository implements ProjectRepository {
         ? this.snapshot.tasks.map((item, index) => (index === existingIndex ? nextTask : item))
         : [...this.snapshot.tasks, nextTask];
     this.snapshot = { ...this.snapshot, tasks: nextTasks };
+    this.persistSnapshot();
     return { ...nextTask };
   }
 

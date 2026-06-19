@@ -153,4 +153,35 @@ describe("admin write service", () => {
       createProjectTask(repository, task({ id: "bad-ratio", taskName: "错误进度", manualCompletionRatio: 1.2 })),
     ).rejects.toThrow("完成比例必须在 0 到 100% 之间");
   });
+
+  it("persists admin changes across local repository instances", async () => {
+    const storage = new Map<string, string>();
+    const firstRepository = new LocalProjectRepository({
+      storage: {
+        getItem: (key) => storage.get(key) ?? null,
+        setItem: (key, value) => storage.set(key, value),
+        removeItem: (key) => storage.delete(key),
+      },
+      storageKey: "test-project",
+      initialSnapshot: { project, tasks: [] },
+    });
+
+    await saveProjectMetadata(firstRepository, { ...project, name: "持久化项目" });
+    await createProjectTask(firstRepository, task({ id: "persisted-task", taskName: "持久化任务" }));
+
+    const secondRepository = new LocalProjectRepository({
+      storage: {
+        getItem: (key) => storage.get(key) ?? null,
+        setItem: (key, value) => storage.set(key, value),
+        removeItem: (key) => storage.delete(key),
+      },
+      storageKey: "test-project",
+      initialSnapshot: { project, tasks: [] },
+    });
+
+    const data = await getProjectProgress("2026-06-19", secondRepository);
+
+    expect(data.project.name).toBe("持久化项目");
+    expect(data.tasks.map((item) => item.id)).toEqual(["persisted-task"]);
+  });
 });

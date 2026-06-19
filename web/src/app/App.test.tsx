@@ -15,11 +15,11 @@ describe("App routing", () => {
     expect(screen.getByText("总体进度")).toBeInTheDocument();
   });
 
-  it("renders admin placeholder without edit controls", () => {
+  it("renders admin maintenance page", async () => {
     window.history.pushState({}, "", "/admin");
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "后台维护占位" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /保存|编辑|新增/ })).not.toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "后台进度维护" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "新增任务" })).toBeInTheDocument();
   });
 });

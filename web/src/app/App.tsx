@@ -12,7 +12,7 @@ export function App() {
     <main className="app-shell">
       <nav className="top-nav" aria-label="主导航">
         <a href="/">项目仪表盘</a>
-        <a href="/admin">后台占位</a>
+        <a href="/admin">后台维护</a>
       </nav>
       {pathname === "/admin" ? <AdminPlaceholder /> : <DashboardPage />}
     </main>

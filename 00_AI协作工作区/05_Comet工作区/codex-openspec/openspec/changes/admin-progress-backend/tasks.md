@@ -7,10 +7,10 @@
 
 ## 2. Admin Maintenance UI or Endpoint
 
-- [ ] 2.1 Provide a management entry for editing project metadata.
-- [ ] 2.2 Provide a management entry for creating or updating task progress data.
-- [ ] 2.3 Provide management actions for archiving and restoring tasks without physical deletion.
-- [ ] 2.4 Keep management routes or endpoints separated from public display routes pending final authentication decisions.
+- [x] 2.1 Provide a management entry for editing project metadata.
+- [x] 2.2 Provide a management entry for creating or updating task progress data.
+- [x] 2.3 Provide management actions for archiving and restoring tasks without physical deletion.
+- [x] 2.4 Keep management routes or endpoints separated from public display routes pending final authentication decisions.
 
 ## 3. Validation and Derived Data
 

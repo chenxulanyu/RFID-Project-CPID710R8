@@ -59,3 +59,13 @@
 - 修复 `getDashboardStatus` 的防御性优先级：`actualEndDate` / `actualStartDate` 优先于 legacy `elapsedDays` fallback，避免不一致导入数据把已完成任务误判为进行中。
 - 增强当前日期 marker 可见性：增加白色边框，使其在深色任务条上保持清晰。
 - 新增回归测试：不一致任务数据下 actual dates 优先，以及当前日期 marker 必须定位在任务轨道容器内。
+
+## admin-progress-backend v1.0 - 2026-06-20
+
+- 新增后台进度维护页 `/admin`，支持项目基础信息编辑、任务新增、任务更新、软归档和恢复。
+- 新增项目维护服务与验证模块，覆盖必填字段、计划/实际日期顺序、任务 ID 重复和手动完成比例边界。
+- 新增可替换 repository 合约；首版使用浏览器 `localStorage` 持久化，测试场景保留纯内存 snapshot adapter，后续可替换 CloudBase adapter。
+- 公共仪表盘读取默认隐藏已归档任务，后台读取包含已归档任务；实际结束日期优先于手动完成比例，已完成任务显示 100%。
+- 后台页复用移动端横屏提示，并为表单、任务列表、按钮和消息区域增加换行、截断或滚动约束，降低文字和框体溢出风险。
+- 验证：`npm test` 通过，8 个测试文件、38 条测试用例通过。
+- 可交给 Claude Code 审查：是。
