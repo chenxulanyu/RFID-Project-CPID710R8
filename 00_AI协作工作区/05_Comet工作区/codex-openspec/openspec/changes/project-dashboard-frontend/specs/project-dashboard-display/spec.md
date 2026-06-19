@@ -7,6 +7,10 @@ The system SHALL display a project summary dashboard with project name, project 
 - **WHEN** a user opens the project dashboard page
 - **THEN** the user sees high-level project progress and risk indicators without editing data
 
+#### Scenario: Identify delayed starts
+- **WHEN** a task's planned start date is before today and the task has no actual start date
+- **THEN** the dashboard counts and labels the task as start-delayed rather than merely not-started
+
 ### Requirement: Task detail table
 The system SHALL display project tasks in a readable detail table including task grouping, task name, planned dates, actual dates, duration, completion ratio, overdue days, warning state, resource owner, responsible person, and remarks when available.
 
@@ -34,3 +38,7 @@ The system SHALL guide mobile users toward landscape viewing when the viewport i
 #### Scenario: Open dashboard on portrait phone
 - **WHEN** a user opens the dashboard on a narrow portrait mobile viewport
 - **THEN** the system displays a landscape guidance state or equivalent layout behavior that protects table and timeline readability
+
+#### Scenario: Preserve readable layout
+- **WHEN** the dashboard is viewed on desktop or mobile landscape viewport sizes
+- **THEN** dashboard text, metric cards, task table cells, timeline bars, and guidance copy fit within their containers without unreadable overflow or incoherent overlap
