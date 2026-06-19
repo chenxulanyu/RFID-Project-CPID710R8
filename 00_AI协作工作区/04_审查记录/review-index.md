@@ -9,3 +9,4 @@
 | 2026-06-19 | Claude Code | web-app-foundation v1.1 | [Claude审查-v1.1.md](Claude审查-v1.1.md) | 通过 |
 | 2026-06-19 | Claude Code | project-dashboard-frontend v1.1 | [Claude审查-project-dashboard-frontend-v1.1.md](Claude审查-project-dashboard-frontend-v1.1.md) | 有条件通过 |
 | 2026-06-19 | Codex | project-dashboard-frontend v1.1 -> v1.2 | [Codex修复回应-project-dashboard-frontend-v1.2.md](Codex修复回应-project-dashboard-frontend-v1.2.md) | 已采纳 blocking 并修复 |
+| 2026-06-19 | Claude Code | project-dashboard-frontend v1.2 | [Claude审查-project-dashboard-frontend-v1.2.md](Claude审查-project-dashboard-frontend-v1.2.md) | 通过 |
