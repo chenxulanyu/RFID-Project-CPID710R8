@@ -1,5 +1,5 @@
 workflow: full
-phase: open
+phase: build
 context_compression: off
 build_mode: null
 build_pause: null
@@ -10,7 +10,7 @@ isolation: null
 verify_mode: null
 auto_transition: true
 base_ref: null
-design_doc: null
+design_doc: docs/superpowers/specs/2026-06-19-admin-progress-backend-design.md
 plan: null
 verify_result: pending
 verification_report: null
@@ -18,3 +18,5 @@ branch_status: pending
 created_at: 2026-06-19
 verified_at: null
 archived: false
+handoff_context: openspec/changes/admin-progress-backend/.comet/handoff/design-context.json
+handoff_hash: 1b27156b863cb17fd2989748e6b6431997f994a59ef48096474b1ed82722b192
