@@ -8,7 +8,8 @@ function toUtcDate(date: string): Date {
 }
 
 export function calculateCalendarDays(startDate: string, endDate: string): number {
-  return Math.floor((toUtcDate(endDate).getTime() - toUtcDate(startDate).getTime()) / MS_PER_DAY) + 1;
+  const days = Math.floor((toUtcDate(endDate).getTime() - toUtcDate(startDate).getTime()) / MS_PER_DAY) + 1;
+  return Math.max(days, 0);
 }
 
 export function calculateCompletionRatio({
@@ -22,8 +23,9 @@ export function calculateCompletionRatio({
 }): number {
   if (isFinished) return 1;
   if (plannedDurationDays <= 0 || elapsedDays <= 0) return 0;
-  if (elapsedDays >= plannedDurationDays) return 0.99;
-  return Math.min(elapsedDays / plannedDurationDays, 1);
+  if (elapsedDays > plannedDurationDays) return 0.99;
+  if (plannedDurationDays === 1) return 0.5;
+  return Math.min(elapsedDays / plannedDurationDays, 0.95);
 }
 
 export function getWarningState({

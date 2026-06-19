@@ -13,4 +13,4 @@
 
 ## 业务功能版本
 
-- `web-app-foundation`: `v1.0`
+- `web-app-foundation`: `v1.1`

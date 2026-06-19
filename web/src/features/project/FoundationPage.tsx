@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { getProjectProgress } from "../../services/projectService";
 import type { ProjectProgressData } from "../../types/project";
 
+function getCurrentDateString(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export function FoundationPage() {
   const [data, setData] = useState<ProjectProgressData | null>(null);
 
   useEffect(() => {
-    void getProjectProgress().then(setData);
+    void getProjectProgress(getCurrentDateString()).then(setData);
   }, []);
 
   if (!data) {
