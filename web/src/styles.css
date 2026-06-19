@@ -10,6 +10,14 @@ body {
   margin: 0;
 }
 
+.landscape-content {
+  min-width: 0;
+}
+
+.landscape-gate {
+  display: none;
+}
+
 .app-shell {
   box-sizing: border-box;
   min-height: 100vh;
@@ -276,4 +284,196 @@ body {
   background: #fff7db;
   border-color: #e0b341;
   color: #735500;
+}
+
+.timeline-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.timeline-frame {
+  box-sizing: border-box;
+  display: grid;
+  gap: 8px;
+  min-width: 1040px;
+  position: relative;
+}
+
+.timeline-axis {
+  align-items: center;
+  color: #64748b;
+  display: grid;
+  font-size: 12px;
+  grid-template-columns: 220px 1fr 1fr 1fr;
+  min-height: 24px;
+}
+
+.timeline-axis strong {
+  color: #17202a;
+  font-size: 12px;
+  font-weight: 800;
+  justify-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-axis span:last-child {
+  justify-self: end;
+}
+
+.timeline-today {
+  background: #17202a;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  left: calc(220px + 44%);
+  line-height: 1;
+  max-width: 88px;
+  overflow: hidden;
+  padding: 5px 8px;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 28px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.timeline-row {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 220px 1fr;
+  min-height: 34px;
+  min-width: 0;
+}
+
+.timeline-label {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 44px 1fr;
+  min-width: 0;
+}
+
+.timeline-label strong,
+.timeline-label span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-label strong {
+  color: #536173;
+  font-size: 12px;
+}
+
+.timeline-label span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.timeline-track {
+  background: #edf2f7;
+  border-radius: 999px;
+  height: 18px;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.timeline-bar {
+  align-items: center;
+  border-radius: 999px;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  font-size: 11px;
+  font-weight: 800;
+  height: 100%;
+  justify-content: flex-end;
+  min-width: 24px;
+  overflow: hidden;
+  padding: 0 7px;
+  position: absolute;
+  top: 0;
+}
+
+.timeline-bar span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-bar.status-finished {
+  background: #2f855a;
+}
+
+.timeline-bar.status-in-progress {
+  background: #2f80c0;
+}
+
+.timeline-bar.status-start-delayed,
+.timeline-bar.warning-overdue {
+  background: #c4473c;
+}
+
+.timeline-bar.status-not-started {
+  background: #6b7a90;
+}
+
+@media (max-width: 1100px) {
+  .metric-grid {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 18px;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(116px, 1fr));
+  }
+
+  .section-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  .landscape-content {
+    display: none;
+  }
+
+  .landscape-gate {
+    align-content: center;
+    box-sizing: border-box;
+    display: grid;
+    gap: 10px;
+    min-height: calc(100vh - 36px);
+    padding: 24px;
+    text-align: center;
+  }
+
+  .landscape-gate h1 {
+    font-size: 28px;
+    line-height: 1.15;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .landscape-gate p {
+    color: #536173;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 320px;
+    overflow-wrap: anywhere;
+  }
 }

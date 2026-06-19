@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { getProjectProgress } from "../../services/projectService";
 import type { ProjectProgressData } from "../../types/project";
 import { buildDashboardModel, type DashboardModel } from "./dashboardMetrics";
+import { LandscapeGate } from "./LandscapeGate";
 import { ProjectSummaryDashboard } from "./ProjectSummaryDashboard";
+import { ProjectTimeline } from "./ProjectTimeline";
 import { RiskTaskStrip } from "./RiskTaskStrip";
 import { TaskDetailTable } from "./TaskDetailTable";
 
@@ -24,10 +26,13 @@ export function DashboardPage({ today = getCurrentDateString() }: { today?: stri
   }
 
   return (
-    <section className="dashboard-page">
-      <ProjectSummaryDashboard model={model} />
-      <RiskTaskStrip tasks={model.riskTasks} />
-      <TaskDetailTable tasks={model.tasks} />
-    </section>
+    <LandscapeGate>
+      <section className="dashboard-page">
+        <ProjectSummaryDashboard model={model} />
+        <RiskTaskStrip tasks={model.riskTasks} />
+        <TaskDetailTable tasks={model.tasks} />
+        <ProjectTimeline model={model} />
+      </section>
+    </LandscapeGate>
   );
 }

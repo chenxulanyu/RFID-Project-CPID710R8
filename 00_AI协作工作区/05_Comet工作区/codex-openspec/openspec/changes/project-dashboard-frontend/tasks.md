@@ -12,12 +12,12 @@
 
 ## 3. Timeline or Gantt View
 
-- [ ] 3.1 Implement a timeline or Gantt-style visualization using planned task start and end dates.
-- [ ] 3.2 Represent task progress or status in the timeline without requiring edit capability.
-- [ ] 3.3 Verify overlapping and upcoming tasks are visually distinguishable.
+- [x] 3.1 Implement a timeline or Gantt-style visualization using planned task start and end dates.
+- [x] 3.2 Represent task progress or status in the timeline without requiring edit capability.
+- [x] 3.3 Verify overlapping and upcoming tasks are visually distinguishable.
 
 ## 4. Responsive and Mobile Behavior
 
-- [ ] 4.1 Implement desktop layout constraints so dashboard, table, and timeline remain readable.
-- [ ] 4.2 Implement mobile portrait landscape guidance or equivalent landscape-first behavior.
+- [x] 4.1 Implement desktop layout constraints so dashboard, table, and timeline remain readable.
+- [x] 4.2 Implement mobile portrait landscape guidance or equivalent landscape-first behavior.
 - [ ] 4.3 Verify the dashboard on desktop and mobile landscape viewport sizes.
