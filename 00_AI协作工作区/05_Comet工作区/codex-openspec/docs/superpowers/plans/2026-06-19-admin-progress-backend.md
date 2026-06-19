@@ -40,7 +40,7 @@ base-ref: fce3b6781c7ce754fae9a5dd976635f489d4c0fa
 - Modify: `web/src/services/projectService.ts`
 - Create/Modify: `web/src/services/projectAdminService.test.ts`
 
-- [ ] **Step 1: Write failing service tests for active reads, manual progress, and actual end priority**
+- [x] **Step 1: Write failing service tests for active reads, manual progress, and actual end priority**
 
 Add tests to `web/src/services/projectAdminService.test.ts`:
 
@@ -125,7 +125,7 @@ describe("admin repository read integration", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and verify they fail for missing admin fields/repository**
+- [x] **Step 2: Run tests and verify they fail for missing admin fields/repository**
 
 Run:
 
@@ -136,7 +136,7 @@ npm test -- src/services/projectAdminService.test.ts
 
 Expected: FAIL because `LocalProjectRepository`, admin task fields, or filtering behavior is missing.
 
-- [ ] **Step 3: Extend project types**
+- [x] **Step 3: Extend project types**
 
 Update `web/src/types/project.ts`:
 
@@ -159,7 +159,7 @@ export interface ProjectTaskInput {
 }
 ```
 
-- [ ] **Step 4: Implement repository contract and local snapshot adapter**
+- [x] **Step 4: Implement repository contract and local snapshot adapter**
 
 Update `web/src/services/projectRepository.ts`:
 
@@ -252,7 +252,7 @@ export class LocalProjectRepository implements ProjectRepository {
 export class MockProjectRepository extends LocalProjectRepository {}
 ```
 
-- [ ] **Step 5: Update derived completion priority**
+- [x] **Step 5: Update derived completion priority**
 
 Modify `deriveTask` in `web/src/services/projectService.ts` so completion follows actual-end, manual, automatic:
 
@@ -274,7 +274,7 @@ return {
 };
 ```
 
-- [ ] **Step 6: Run tests and commit**
+- [x] **Step 6: Run tests and commit**
 
 Run:
 
@@ -301,7 +301,7 @@ git commit -m "feat: add admin repository data contract"
 - Modify: `web/src/services/projectAdminService.test.ts`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/admin-progress-backend/tasks.md`
 
-- [ ] **Step 1: Add failing validation and write-service tests**
+- [x] **Step 1: Add failing validation and write-service tests**
 
 Append to `web/src/services/projectAdminService.test.ts`:
 
@@ -387,7 +387,7 @@ describe("admin write service", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and verify they fail**
+- [x] **Step 2: Run tests and verify they fail**
 
 Run:
 
@@ -398,7 +398,7 @@ npm test -- src/services/projectAdminService.test.ts
 
 Expected: FAIL because `projectAdminService` and `projectValidation` are missing.
 
-- [ ] **Step 3: Implement validation helpers**
+- [x] **Step 3: Implement validation helpers**
 
 Create `web/src/services/projectValidation.ts`:
 
@@ -452,7 +452,7 @@ export function validateTaskInput(task: ProjectTaskInput): void {
 }
 ```
 
-- [ ] **Step 4: Implement admin service methods**
+- [x] **Step 4: Implement admin service methods**
 
 Create `web/src/services/projectAdminService.ts`:
 
@@ -507,7 +507,7 @@ export async function restoreProjectTask(repository: ProjectRepository, taskId: 
 }
 ```
 
-- [ ] **Step 5: Run tests, update OpenSpec task checkboxes, and commit**
+- [x] **Step 5: Run tests, update OpenSpec task checkboxes, and commit**
 
 Run:
 
@@ -558,7 +558,7 @@ git commit -m "feat: add admin project write service"
 - Modify: `00_AI协作工作区/03_版本迭代/CHANGELOG.md`
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/admin-progress-backend/tasks.md`
 
-- [ ] **Step 1: Write failing admin page tests**
+- [x] **Step 1: Write failing admin page tests**
 
 Create `web/src/features/project/AdminPage.test.tsx`:
 
@@ -626,7 +626,7 @@ describe("AdminPage", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and verify they fail**
+- [x] **Step 2: Run tests and verify they fail**
 
 Run:
 
@@ -637,7 +637,7 @@ npm test -- src/features/project/AdminPage.test.tsx
 
 Expected: FAIL because `AdminPage` is missing.
 
-- [ ] **Step 3: Implement admin page and route**
+- [x] **Step 3: Implement admin page and route**
 
 Create `web/src/features/project/AdminPage.tsx` with:
 
@@ -669,7 +669,7 @@ Modify `web/src/app/App.tsx` nav text:
 <a href="/admin">后台维护</a>
 ```
 
-- [ ] **Step 4: Add admin CSS**
+- [x] **Step 4: Add admin CSS**
 
 Append admin styles to `web/src/styles.css`:
 
@@ -788,7 +788,7 @@ Append admin styles to `web/src/styles.css`:
 }
 ```
 
-- [ ] **Step 5: Run component tests and full suite**
+- [x] **Step 5: Run component tests and full suite**
 
 Run:
 
@@ -801,7 +801,7 @@ npm run build
 
 Expected: PASS.
 
-- [ ] **Step 6: Update version records and tasks**
+- [x] **Step 6: Update version records and tasks**
 
 Update `00_AI协作工作区/03_版本迭代/VERSION.md`:
 
@@ -831,7 +831,7 @@ Update OpenSpec tasks:
 - [x] 2.4 ...
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 Commit:
 
@@ -842,7 +842,7 @@ git commit -m "feat: add admin progress maintenance UI"
 
 ## Final Build Gate
 
-- [ ] **Step 1: Run full verification**
+- [x] **Step 1: Run full verification**
 
 Run:
 
@@ -854,7 +854,7 @@ npm run build
 
 Expected: PASS.
 
-- [ ] **Step 2: Run OpenSpec validation**
+- [x] **Step 2: Run OpenSpec validation**
 
 Run:
 
@@ -865,7 +865,7 @@ openspec validate admin-progress-backend --strict
 
 Expected: PASS.
 
-- [ ] **Step 3: Confirm tasks complete**
+- [x] **Step 3: Confirm tasks complete**
 
 Run:
 
