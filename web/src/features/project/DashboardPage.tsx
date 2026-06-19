@@ -8,18 +8,45 @@ import { ProjectTimeline } from "./ProjectTimeline";
 import { RiskTaskStrip } from "./RiskTaskStrip";
 import { TaskDetailTable } from "./TaskDetailTable";
 
-function getCurrentDateString(): string {
-  return new Date().toISOString().slice(0, 10);
+function padDatePart(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+export function getCurrentDateString(date = new Date()): string {
+  return [
+    date.getFullYear(),
+    padDatePart(date.getMonth() + 1),
+    padDatePart(date.getDate()),
+  ].join("-");
 }
 
 export function DashboardPage({ today = getCurrentDateString() }: { today?: string }) {
   const [model, setModel] = useState<DashboardModel | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    void getProjectProgress(today).then((data: ProjectProgressData) => {
-      setModel(buildDashboardModel({ project: data.project, tasks: data.tasks, today }));
-    });
+    let isActive = true;
+
+    setError(false);
+    setModel(null);
+    void getProjectProgress(today)
+      .then((data: ProjectProgressData) => {
+        if (!isActive) return;
+        setModel(buildDashboardModel({ project: data.project, tasks: data.tasks, today }));
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setError(true);
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, [today]);
+
+  if (error) {
+    return <p role="alert">项目数据加载失败，请稍后重试。</p>;
+  }
 
   if (!model) {
     return <p>正在加载项目仪表盘...</p>;

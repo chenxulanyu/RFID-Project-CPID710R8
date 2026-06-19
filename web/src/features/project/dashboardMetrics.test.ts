@@ -129,4 +129,45 @@ describe("dashboardMetrics", () => {
       0,
     );
   });
+
+  it("keeps legacy elapsedDays status compatible when actual dates are missing", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({
+          id: "legacy-finished",
+          taskName: "历史已完成",
+          elapsedDays: "finished",
+          completionRatio: 1,
+        }),
+        task({
+          id: "legacy-active",
+          taskName: "历史进行中",
+          elapsedDays: 4,
+          completionRatio: 0.4,
+        }),
+      ],
+    });
+
+    expect(model.metrics.finishedTasks).toBe(1);
+    expect(model.metrics.inProgressTasks).toBe(1);
+    expect(model.tasks.find((item) => item.id === "legacy-finished")?.dashboardStatus).toBe(
+      "finished",
+    );
+    expect(model.tasks.find((item) => item.id === "legacy-active")?.dashboardStatus).toBe(
+      "in-progress",
+    );
+  });
+
+  it("derives the current date position inside the timeline range", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-29",
+      tasks: [task({ id: "task", taskName: "时间轴任务" })],
+    });
+
+    expect(model.timelineRange.todayPercent).toBeGreaterThan(49);
+    expect(model.timelineRange.todayPercent).toBeLessThan(51);
+  });
 });

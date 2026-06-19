@@ -35,6 +35,7 @@ export interface DashboardModel {
     startDate: string;
     endDate: string;
     totalDays: number;
+    todayPercent: number;
   };
 }
 
@@ -43,6 +44,8 @@ function compareDate(left: string, right: string): number {
 }
 
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
+  if (task.elapsedDays === "finished") return "finished";
+  if (typeof task.elapsedDays === "number" && task.elapsedDays > 0) return "in-progress";
   if (task.actualEndDate) return "finished";
   if (task.actualStartDate) return "in-progress";
   if (compareDate(task.plannedStartDate, today) < 0) return "start-delayed";
@@ -87,6 +90,11 @@ function buildTimeline(task: ProjectTask, rangeStart: string, totalDays: number)
     leftPercent: clampPercent((offsetDays / totalDays) * 100),
     widthPercent: clampPercent((durationDays / totalDays) * 100),
   };
+}
+
+function buildTodayPercent(rangeStart: string, today: string, totalDays: number): number {
+  const offsetDays = calculateCalendarDays(rangeStart, today) - 1;
+  return clampPercent((offsetDays / totalDays) * 100);
 }
 
 export function buildDashboardModel({
@@ -134,6 +142,7 @@ export function buildDashboardModel({
       startDate: project.plannedStartDate,
       endDate: project.plannedEndDate,
       totalDays,
+      todayPercent: buildTodayPercent(project.plannedStartDate, today, totalDays),
     },
   };
 }

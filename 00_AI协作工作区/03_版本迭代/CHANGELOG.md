@@ -41,3 +41,12 @@
 - 验证：`npm run build` 通过。
 - 视觉验证：桌面 `1440x900`、手机横屏 `844x390`、手机竖屏 `390x844` 均无页面级横向溢出；手机竖屏仅显示横屏提示。
 - 可交给 Claude Code 审查：是。
+
+## project-dashboard-frontend v1.1 - 2026-06-19
+
+- 处理 Codex standard code review gate 反馈：3 条 Important 和 1 条 Minor 均采纳。
+- 修复 `dashboardStatus` 对旧 `elapsedDays` 数据的兼容：`finished` 保持已完成，数字型已耗时任务保持进行中。
+- 修复计划时间轴当前日期标记写死位置的问题，改为根据项目周期和当前日期派生 `todayPercent`。
+- 修复默认当前日期使用 UTC 口径的问题，改为基于浏览器本地日期字段生成 `YYYY-MM-DD`。
+- 新增项目数据加载失败提示，并在组件卸载或日期切换时避免过期异步更新。
+- 新增回归测试：旧 `elapsedDays` 状态兼容、时间轴当前日期位置、本地日期格式化、加载失败提示。

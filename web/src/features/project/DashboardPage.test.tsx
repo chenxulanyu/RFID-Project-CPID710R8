@@ -1,8 +1,28 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { DashboardPage } from "./DashboardPage";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getProjectProgress } from "../../services/projectService";
+import { DashboardPage, getCurrentDateString } from "./DashboardPage";
+
+vi.mock("../../services/projectService", () => ({
+  getProjectProgress: vi.fn(async () => {
+    const actual = await vi.importActual<typeof import("../../services/projectService")>(
+      "../../services/projectService",
+    );
+    return actual.getProjectProgress("2026-06-19");
+  }),
+}));
 
 describe("DashboardPage", () => {
+  beforeEach(() => {
+    vi.mocked(getProjectProgress).mockClear();
+    vi.mocked(getProjectProgress).mockImplementation(async () => {
+      const actual = await vi.importActual<typeof import("../../services/projectService")>(
+        "../../services/projectService",
+      );
+      return actual.getProjectProgress("2026-06-19");
+    });
+  });
+
   it("renders project summary KPI cards", async () => {
     render(<DashboardPage today="2026-06-19" />);
 
@@ -34,5 +54,19 @@ describe("DashboardPage", () => {
     render(<DashboardPage today="2026-06-19" />);
 
     expect(await screen.findByText("建议横屏查看")).toBeInTheDocument();
+  });
+
+  it("formats the default current date from local calendar fields", () => {
+    const date = new Date(2026, 5, 19, 1, 2, 3);
+
+    expect(getCurrentDateString(date)).toBe("2026-06-19");
+  });
+
+  it("shows an error message when project data loading fails", async () => {
+    vi.mocked(getProjectProgress).mockRejectedValueOnce(new Error("network down"));
+
+    render(<DashboardPage today="2026-06-19" />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("项目数据加载失败");
   });
 });
