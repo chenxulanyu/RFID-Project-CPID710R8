@@ -17,7 +17,7 @@ verification_report: docs/superpowers/reports/2026-06-19-web-app-foundation-veri
 branch_status: handled
 created_at: 2026-06-19
 verified_at: 2026-06-19
-archived: false
+archived: true
 handoff_context: openspec/changes/web-app-foundation/.comet/handoff/design-context.json
 handoff_hash: 009a7d1f836741a7eaf11382aa4b2c84bec53a832da08db14363eb72555b5703
 build_command: scripts/comet-build-web.sh

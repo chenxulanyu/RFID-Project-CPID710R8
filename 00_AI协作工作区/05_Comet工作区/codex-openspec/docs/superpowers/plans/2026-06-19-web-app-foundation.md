@@ -2,6 +2,7 @@
 change: web-app-foundation
 design-doc: docs/superpowers/specs/2026-06-19-web-app-foundation-design.md
 base-ref: no-git-repo-before-implementation
+archived-with: 2026-06-19-web-app-foundation
 ---
 
 # Web App Foundation Implementation Plan
@@ -14,6 +15,7 @@ base-ref: no-git-repo-before-implementation
 
 **Tech Stack:** React, Vite, TypeScript, Vitest, React Testing Library, CSS modules or plain CSS, npm scripts.
 
+archived-with: 2026-06-19-web-app-foundation
 ---
 
 ## File Structure

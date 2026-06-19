@@ -2,6 +2,8 @@
 comet_change: web-app-foundation
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-19-web-app-foundation
+status: final
 ---
 
 # Web App Foundation Technical Design
