@@ -1,0 +1,14 @@
+{
+  "change": "web-app-foundation",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "009a7d1f836741a7eaf11382aa4b2c84bec53a832da08db14363eb72555b5703",
+  "files": [
+    { "path": "openspec/changes/web-app-foundation/proposal.md", "sha256": "0f64542379ef27906c8fce63d9a6f594b86b9e929ab7e05412139a02215080fc" },
+    { "path": "openspec/changes/web-app-foundation/design.md", "sha256": "35ac2e406d66c9de8065989e15de9d2a6e7737c87a85baff361be0b434cfdaca" },
+    { "path": "openspec/changes/web-app-foundation/tasks.md", "sha256": "76a23c5f71cd3fbee965be687120b0f424254203d379a6b2152750b1eedd9547" },
+    { "path": "openspec/changes/web-app-foundation/specs/project-web-foundation/spec.md", "sha256": "a3ff5f54b3bf5890d279500133b69239da05459326a58f0e4a9cb602bf9ae8e8" }
+  ]
+}
