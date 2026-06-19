@@ -20,4 +20,4 @@ verified_at: null
 archived: false
 handoff_context: openspec/changes/project-dashboard-frontend/.comet/handoff/design-context.json
 handoff_hash: e49a236e1f9a2705aadb24f02408366ada4e1278133b1c0691619b7621796678
-build_command: cd ../../../web && npm run build
+build_command: scripts/comet-build-web.sh
