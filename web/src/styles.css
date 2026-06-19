@@ -71,3 +71,75 @@ body {
 .task-table th {
   background: #dfe8f5;
 }
+
+.dashboard-page {
+  display: grid;
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 1320px;
+  min-width: 0;
+}
+
+.dashboard-hero {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.dashboard-title-block h1 {
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.12;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-meta {
+  color: #536173;
+  margin: 10px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.metric-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  min-width: 0;
+}
+
+.metric-card {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 8px;
+  box-sizing: border-box;
+  min-height: 88px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.metric-card span {
+  color: #536173;
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.metric-card strong {
+  color: #17202a;
+  display: block;
+  font-size: 30px;
+  line-height: 1;
+  margin-top: 12px;
+}
+
+.metric-card-primary {
+  border-color: #6aa3d8;
+}
+
+.metric-card-warning {
+  border-color: #e0b341;
+}
+
+.metric-card-danger {
+  border-color: #db6b5f;
+}

@@ -7,12 +7,12 @@ describe("App routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the project foundation page", async () => {
+  it("renders the project dashboard page", async () => {
     window.history.pushState({}, "", "/");
     render(<App />);
 
     expect(await screen.findByText(/CPID710R8 Check Point/)).toBeInTheDocument();
-    expect(screen.getByText("硬件架构选型+关键器件确认")).toBeInTheDocument();
+    expect(screen.getByText("总体进度")).toBeInTheDocument();
   });
 
   it("renders admin placeholder without edit controls", () => {

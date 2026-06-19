@@ -1,7 +1,7 @@
 ## 1. Dashboard Metrics
 
 - [x] 1.1 Implement derived dashboard metrics for task counts, overall progress, overdue tasks, and warning counts.
-- [ ] 1.2 Build the project summary dashboard section with project period, duration, elapsed days, and progress indicators.
+- [x] 1.2 Build the project summary dashboard section with project period, duration, elapsed days, and progress indicators.
 - [x] 1.3 Verify dashboard metrics match the underlying task data.
 
 ## 2. Task Detail View
