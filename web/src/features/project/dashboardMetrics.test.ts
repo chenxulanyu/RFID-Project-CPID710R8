@@ -160,6 +160,26 @@ describe("dashboardMetrics", () => {
     );
   });
 
+  it("treats actual dates as authoritative when elapsedDays is inconsistent", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({
+          id: "finished-conflict",
+          taskName: "已完成冲突数据",
+          actualEndDate: "2026-06-10",
+          elapsedDays: 10,
+          completionRatio: 1,
+        }),
+      ],
+    });
+
+    expect(model.metrics.finishedTasks).toBe(1);
+    expect(model.metrics.inProgressTasks).toBe(0);
+    expect(model.tasks[0].dashboardStatus).toBe("finished");
+  });
+
   it("derives the current date position inside the timeline range", () => {
     const model = buildDashboardModel({
       project,

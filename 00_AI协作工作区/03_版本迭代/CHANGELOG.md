@@ -51,3 +51,11 @@
 - 新增项目数据加载失败提示，并在组件卸载或日期切换时避免过期异步更新。
 - 新增回归测试：旧 `elapsedDays` 状态兼容、时间轴当前日期位置、本地日期格式化、加载失败提示。
 - 处理 Codex 复审反馈：将时间轴当前日期标记定位修正为相对任务轨道起点，而非相对整体时间轴容器。
+
+## project-dashboard-frontend v1.2 - 2026-06-19
+
+- 处理 Claude Code `Claude审查-project-dashboard-frontend-v1.1.md` 的有条件通过意见。
+- 修复时间轴当前日期标记的 CSS 百分比基准：新增与任务行同网格的 `timeline-today-track`，使 marker 的 `left: <todayPercent>%` 相对任务轨道宽度定位。
+- 修复 `getDashboardStatus` 的防御性优先级：`actualEndDate` / `actualStartDate` 优先于 legacy `elapsedDays` fallback，避免不一致导入数据把已完成任务误判为进行中。
+- 增强当前日期 marker 可见性：增加白色边框，使其在深色任务条上保持清晰。
+- 新增回归测试：不一致任务数据下 actual dates 优先，以及当前日期 marker 必须定位在任务轨道容器内。
