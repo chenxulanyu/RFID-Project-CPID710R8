@@ -2,6 +2,8 @@
 comet_change: project-dashboard-frontend
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-19-project-dashboard-frontend
+status: final
 ---
 
 # Project Dashboard Frontend Technical Design

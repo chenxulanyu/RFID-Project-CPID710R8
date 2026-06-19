@@ -2,6 +2,7 @@
 change: project-dashboard-frontend
 design-doc: docs/superpowers/specs/2026-06-19-project-dashboard-frontend-design.md
 base-ref: 1588b0728c331f05c398d188e2ebb71aa2ffc09e
+archived-with: 2026-06-19-project-dashboard-frontend
 ---
 
 # Project Dashboard Frontend Implementation Plan
@@ -14,6 +15,7 @@ base-ref: 1588b0728c331f05c398d188e2ebb71aa2ffc09e
 
 **Tech Stack:** React, TypeScript, Vite, Vitest, React Testing Library, CSS.
 
+archived-with: 2026-06-19-project-dashboard-frontend
 ---
 
 ## File Structure
