@@ -7,8 +7,8 @@
     "npm": ">=11.6.0"
   },
   "scripts": {
-    "install": "npm install --workspace web --ignore-scripts",
-    "build": "npm run build --workspace web",
+    "install": "npm install --workspace web --ignore-scripts && mkdir -p web/node_modules",
+    "build": "npm run install && npm run build --workspace web",
     "start": "node serve.mjs"
   },
   "workspaces": [
