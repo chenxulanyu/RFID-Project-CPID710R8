@@ -271,6 +271,117 @@ describe("CloudBaseProjectRepository writes", () => {
     });
   });
 
+  it("accepts project save readback when CloudBase returns only the document _id", async () => {
+    class DocumentIdOnlyCollection {
+      private document: Record<string, unknown>;
+
+      constructor(document: Record<string, unknown>) {
+        const { id: _idField, ...withoutId } = document;
+        this.document = { ...withoutId, _id: project.id };
+      }
+
+      doc(id: string) {
+        return {
+          get: async () => ({ data: { ...this.document, _id: id } }),
+          set: async (nextDocument: Record<string, unknown>) => {
+            const { id: _idField, ...withoutId } = nextDocument;
+            this.document = { ...withoutId, _id: id };
+            return { id };
+          },
+          update: async (patch: Record<string, unknown>) => {
+            const { id: _idField, ...withoutId } = patch;
+            this.document = { ...this.document, ...withoutId, _id: id };
+            return { updated: 1 };
+          },
+        };
+      }
+
+      where() {
+        return {
+          get: async () => ({ data: [] }),
+        };
+      }
+    }
+
+    class DocumentIdOnlyDatabase implements CloudBaseDatabaseLike {
+      private readonly collectionInstance = new DocumentIdOnlyCollection(projectToCloudBaseDocument(project));
+
+      collection() {
+        return this.collectionInstance;
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new DocumentIdOnlyDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(
+      repository.saveProject({
+        ...project,
+        plannedStartDate: "2026-04-01",
+        plannedEndDate: "2026-10-01",
+      }),
+    ).resolves.toMatchObject({
+      id: "cpid710r8",
+      plannedStartDate: "2026-04-01",
+      plannedEndDate: "2026-10-01",
+    });
+  });
+
+  it("retries project save readback long enough for CloudBase write propagation", async () => {
+    class EventuallyConsistentProjectCollection {
+      private readAfterWriteCount = 0;
+      private document = projectToCloudBaseDocument(project);
+      private readonly staleDocument = projectToCloudBaseDocument(project);
+
+      doc(id: string) {
+        return {
+          get: async () => {
+            if (this.readAfterWriteCount > 0 && this.readAfterWriteCount < 3) {
+              this.readAfterWriteCount += 1;
+              return { data: { ...this.staleDocument, _id: id } };
+            }
+            return { data: { ...this.document, _id: id } };
+          },
+          set: async (nextDocument: Record<string, unknown>) => {
+            this.document = { ...nextDocument, _id: id };
+            this.readAfterWriteCount = 1;
+            return { id };
+          },
+          update: async (patch: Record<string, unknown>) => {
+            this.document = { ...this.document, ...patch, _id: id };
+            this.readAfterWriteCount = 1;
+            return { updated: 1 };
+          },
+        };
+      }
+
+      where() {
+        return {
+          get: async () => ({ data: [] }),
+        };
+      }
+    }
+
+    class EventuallyConsistentProjectDatabase implements CloudBaseDatabaseLike {
+      private readonly collectionInstance = new EventuallyConsistentProjectCollection();
+
+      collection() {
+        return this.collectionInstance;
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new EventuallyConsistentProjectDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(repository.saveProject({ ...project, plannedStartDate: "2026-04-02" })).resolves.toMatchObject({
+      plannedStartDate: "2026-04-02",
+    });
+  });
+
   it("updates existing project and task documents instead of inserting duplicates", async () => {
     class UpdateOnlyCollection {
       constructor(private readonly documents: Map<string, Record<string, unknown>>) {}
@@ -371,6 +482,29 @@ describe("CloudBaseProjectRepository writes", () => {
 
     await expect(repository.saveTaskInput(task({ id: "task-error", taskName: "写入失败任务" }))).rejects.toThrow(
       "CloudBase保存失败：不能更新_id的值",
+    );
+  });
+
+  it("reports a permission-oriented error when CloudBase updates no existing document", async () => {
+    class UpdateZeroDatabase implements CloudBaseDatabaseLike {
+      collection(): CloudBaseCollectionLike {
+        return {
+          doc: (id: string): CloudBaseDocumentReferenceLike => ({
+            get: async () => ({ data: { ...projectToCloudBaseDocument(project), _id: id } }),
+            set: async () => ({ id }),
+            update: async () => ({ updated: 0 }),
+          }),
+          where: (): CloudBaseQueryLike => ({
+            get: async () => ({ data: [] }),
+          }),
+        };
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({ database: new UpdateZeroDatabase(), projectId: "cpid710r8" });
+
+    await expect(repository.saveProject({ ...project, plannedStartDate: "2026-04-03" })).rejects.toThrow(
+      "CloudBase保存失败：没有记录被更新，请检查集合写权限或文档归属",
     );
   });
 

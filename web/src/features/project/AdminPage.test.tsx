@@ -43,15 +43,26 @@ describe("AdminPage", () => {
     expect(screen.getByDisplayValue("更新后的任务名称")).toBeInTheDocument();
   });
 
-  it("keeps the task save button beside the archive actions", async () => {
+  it("places project and task save actions at the left edge of their sections", async () => {
+    const { container } = render(<AdminPage today="2026-06-19" />);
+
+    await screen.findByRole("heading", { name: "任务详情" });
+    const projectSection = container.querySelectorAll(".admin-section")[0];
+    const taskSection = container.querySelectorAll(".admin-section")[1];
+    expect(projectSection).toBeTruthy();
+    expect(taskSection).toBeTruthy();
+    expect(projectSection?.querySelector(".admin-actions")).toHaveClass("admin-actions-left");
+    expect(taskSection?.querySelector(".admin-actions")).toHaveClass("admin-actions-left");
+  });
+
+  it("orders task save before archive actions", async () => {
     const { container } = render(<AdminPage today="2026-06-19" />);
 
     await screen.findByRole("heading", { name: "任务详情" });
     const taskSection = container.querySelectorAll(".admin-section")[1];
-    expect(taskSection).toBeTruthy();
-    const actionRow = taskSection?.querySelector(".admin-actions");
-    expect(actionRow).toHaveTextContent("保存任务信息");
-    expect(actionRow).toHaveTextContent("归档任务");
+    const actionButtons = [...(taskSection?.querySelectorAll("button") ?? [])].map((button) => button.textContent);
+
+    expect(actionButtons).toEqual(["保存任务信息", "归档任务"]);
   });
 
   it("creates, archives, and restores a task", async () => {

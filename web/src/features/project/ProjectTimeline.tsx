@@ -13,16 +13,7 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
       <div className="timeline-scroll">
         <div className="timeline-frame" aria-label="项目计划时间轴">
           <div className="timeline-axis" aria-hidden="true">
-            <span>{model.timelineRange.startDate}</span>
             <strong>当前日期：{model.today}</strong>
-            <span>{model.timelineRange.endDate}</span>
-          </div>
-          <div className="timeline-today-row">
-            <div className="timeline-today-track" aria-label="当前日期位置">
-              <div className="timeline-today" style={{ left: `${model.timelineRange.todayPercent}%` }}>
-                当前日期
-              </div>
-            </div>
           </div>
           {model.tasks.map((task) => (
             <div className="timeline-row" key={task.id}>
@@ -39,9 +30,7 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
                   }}
                   title={`${task.taskName}：${task.statusLabel}，完成 ${formatPercent(task.completionRatio)}`}
                 >
-                  <span className="timeline-date timeline-date-start">{task.plannedStartDate}</span>
                   <span className="timeline-percent">{formatPercent(task.completionRatio)}</span>
-                  <span className="timeline-date timeline-date-end">{task.plannedEndDate}</span>
                 </div>
               </div>
             </div>

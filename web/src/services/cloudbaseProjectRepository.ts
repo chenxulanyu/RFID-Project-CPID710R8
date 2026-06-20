@@ -32,6 +32,8 @@ export interface CloudBaseProjectRepositoryOptions {
 
 const defaultProjectsCollection = "projects";
 const defaultTasksCollection = "project_tasks";
+const projectReadbackAttempts = 5;
+const projectReadbackDelayMs = 120;
 
 function optionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.length > 0 && value !== "undefined" && value !== "null" ? value : undefined;
@@ -65,6 +67,12 @@ function projectMatchesExpected(left: Project, right: Project): boolean {
     actual.plannedEndDate === expected.plannedEndDate &&
     actual.calendarMode === expected.calendarMode
   );
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 function requiredString(value: unknown, fallback: string): string {
@@ -159,6 +167,9 @@ export class CloudBaseProjectRepository implements ProjectRepository {
       const message = typeof errorResult.message === "string" ? errorResult.message : "CloudBase写入失败";
       throw new Error(`CloudBase保存失败：${message}`);
     }
+    if (result && typeof result === "object" && "updated" in result && (result as { updated?: unknown }).updated === 0) {
+      throw new Error("CloudBase保存失败：没有记录被更新，请检查集合写权限或文档归属");
+    }
   }
 
   private async saveDocument(collectionName: string, id: string, document: CloudBaseDocument): Promise<void> {
@@ -190,14 +201,14 @@ export class CloudBaseProjectRepository implements ProjectRepository {
       return projectFromCloudBaseDocument(document);
     };
 
-    const firstRead = await readBackProject();
-    if (projectMatchesExpected(project, firstRead)) {
-      return firstRead;
-    }
-
-    const secondRead = await readBackProject();
-    if (projectMatchesExpected(project, secondRead)) {
-      return secondRead;
+    for (let attempt = 0; attempt < projectReadbackAttempts; attempt += 1) {
+      const readBack = await readBackProject();
+      if (projectMatchesExpected(project, readBack)) {
+        return readBack;
+      }
+      if (attempt < projectReadbackAttempts - 1) {
+        await sleep(projectReadbackDelayMs);
+      }
     }
 
     throw new Error("CloudBase保存失败：项目回读结果与提交内容不一致");

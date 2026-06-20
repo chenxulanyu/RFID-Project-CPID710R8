@@ -267,7 +267,7 @@ export function AdminPage({
                   />
                 </label>
               </div>
-              <div className="admin-actions">
+              <div className="admin-actions admin-actions-left">
                 <button className="primary-button" type="button" onClick={handleProjectSave}>
                   保存项目信息
                 </button>
@@ -336,7 +336,10 @@ export function AdminPage({
                 </label>
               </div>
 
-              <div className="admin-actions">
+              <div className="admin-actions admin-actions-left">
+                <button className="primary-button" type="button" onClick={handleTaskSave}>
+                  保存任务信息
+                </button>
                 {!isNewTask && !selectedTask.isArchived ? (
                   <button className="danger-button" type="button" onClick={handleArchive}>
                     归档任务
@@ -347,9 +350,6 @@ export function AdminPage({
                     恢复任务
                   </button>
                 ) : null}
-                <button className="primary-button" type="button" onClick={handleTaskSave}>
-                  保存任务信息
-                </button>
               </div>
             </section>
           ) : null}

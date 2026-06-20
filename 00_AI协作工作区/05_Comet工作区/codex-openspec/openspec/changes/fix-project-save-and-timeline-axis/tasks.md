@@ -1,0 +1,24 @@
+## 1. Root cause and CloudBase save
+
+- [x] 1.1 Add regression coverage for CloudBase project save readback shapes and write propagation delay.
+- [x] 1.2 Adjust project save confirmation to tolerate short write propagation delay while still requiring matching business fields.
+- [x] 1.3 Add permission diagnostics for CloudBase `updated: 0` responses and run focused CloudBase repository tests.
+
+## 2. Admin layout
+
+- [x] 2.1 Move the project save button to the left side of the project information box.
+- [x] 2.2 Reorder task actions so saving task information is leftmost and archive/restore follows.
+- [x] 2.3 Add or update admin layout tests.
+
+## 3. Timeline display
+
+- [x] 3.1 Remove start/end date labels from timeline bars.
+- [x] 3.2 Remove the black current-date marker and axis start/end tick labels.
+- [x] 3.3 Keep a single current date text under the timeline title area.
+- [x] 3.4 Add or update timeline tests.
+
+## 4. Records and verification
+
+- [x] 4.1 Update VERSION and CHANGELOG.
+- [x] 4.2 Run focused tests.
+- [x] 4.3 Run full web tests and build.

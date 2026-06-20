@@ -47,18 +47,15 @@ describe("DashboardPage", () => {
 
     const timeline = await screen.findByRole("region", { name: "计划时间轴" });
     expect(within(timeline).getByText("硬件架构选型+关键器件确认")).toBeInTheDocument();
-    expect(within(timeline).getByText("当前日期")).toBeInTheDocument();
+    expect(within(timeline).getByText("当前日期：2026-06-19")).toBeInTheDocument();
   });
 
-  it("positions the current date marker against the timeline track", async () => {
+  it("does not render the old current date marker track", async () => {
     render(<DashboardPage today="2026-06-29" />);
 
     const timeline = await screen.findByRole("region", { name: "计划时间轴" });
-    const markerTrack = within(timeline).getByLabelText("当前日期位置");
-    expect(markerTrack).toHaveClass("timeline-today-track");
-    expect(within(markerTrack).getByText("当前日期")).toHaveStyle({
-      left: "49.72677595628415%",
-    });
+    expect(within(timeline).getByText("当前日期：2026-06-29")).toBeInTheDocument();
+    expect(within(timeline).queryByLabelText("当前日期位置")).not.toBeInTheDocument();
   });
 
   it("renders the dashboard without the old mobile landscape guidance", async () => {

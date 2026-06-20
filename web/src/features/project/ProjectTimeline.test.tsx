@@ -52,7 +52,7 @@ describe("ProjectTimeline", () => {
     expect(percent).toHaveTextContent("95%");
   });
 
-  it("shows start and end dates inside the gantt bar", () => {
+  it("keeps only the completion percentage inside the gantt bar", () => {
     const model = buildDashboardModel({
       project,
       today: "2026-06-19",
@@ -64,7 +64,22 @@ describe("ProjectTimeline", () => {
     const { container } = render(<ProjectTimeline model={model} />);
     const bar = container.querySelector(".timeline-bar");
 
-    expect(bar).toHaveTextContent("2026-06-01");
-    expect(bar).toHaveTextContent("2026-06-10");
+    expect(bar).toHaveTextContent("100%");
+    expect(bar).not.toHaveTextContent("2026-06-01");
+    expect(bar).not.toHaveTextContent("2026-06-10");
+  });
+
+  it("shows a single current date text without the previous marker track", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [task({ id: "timeline", taskName: "时间轴任务", actualStartDate: "2026-06-01" })],
+    });
+
+    const { container, getByText } = render(<ProjectTimeline model={model} />);
+
+    expect(getByText("当前日期：2026-06-19")).toBeInTheDocument();
+    expect(container.querySelector(".timeline-today-track")).toBeNull();
+    expect(container.querySelector(".timeline-today")).toBeNull();
   });
 });
