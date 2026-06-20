@@ -107,3 +107,11 @@
 - 新增 `Codex审查回应-repository-and-deployment-v1.0.md`，逐条记录 I1、M1 均采纳。
 - 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
 - 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+
+## repository-and-deployment v1.2 - 2026-06-20
+
+- 接入真实 CloudBase 前端环境变量后，修复 Vitest 受本地 `.env.local` 影响而切换到 CloudBase 数据源的问题；测试初始化固定使用本地示例数据源，生产构建和扣子部署仍按环境变量选择数据源。
+- 说明：本地无法加入 CloudBase 安全域名时，浏览器本地访问 CloudBase 失败属于预期限制；最终 CloudBase 连通性应在已加入安全域名的扣子部署域名上验证。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+- 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
