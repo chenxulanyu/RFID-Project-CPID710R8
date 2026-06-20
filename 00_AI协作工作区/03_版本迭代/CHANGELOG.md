@@ -124,3 +124,15 @@
 - 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
 - 验证：按 `.coze` 的部署构建等价命令 `cd web && npm install && npm run build` 通过。
 - 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
+
+## repository-and-deployment v1.4 - 2026-06-20
+
+- 修复扣子 runtime 打包阶段在仓库根目录执行 `npm install` 时找不到 `package.json` 的问题；新增根目录空壳 `package.json`，通过 npm workspace 指向 `web/`。
+- 调整 `.coze` 构建命令：先在仓库根目录执行 `npm install`，再进入 `web/` 执行 Vite 构建。
+- 更新部署说明，补充根目录 `package.json` 是扣子 runtime 打包阶段的入口适配文件。
+- 新增根目录 `package-lock.json`，锁定扣子根目录 workspace 安装解析结果。
+- 验证：根目录 `npm install` 通过。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+- 验证：按 `.coze` 的部署构建等价命令 `npm install && cd web && npm run build` 通过。
+- 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。

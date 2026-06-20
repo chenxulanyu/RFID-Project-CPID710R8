@@ -78,10 +78,11 @@ git push -u origin main
 用户在扣子编程中手动执行部署时，推荐使用：
 
 - 根目录：仓库根目录
+- 根目录 `package.json`：用于满足扣子 runtime 打包阶段在仓库根目录执行 `npm install` 的要求，并通过 workspace 指向 `web/`
 - 平台配置文件：仓库根目录 `.coze`
-- 开发构建：`.coze` 会执行 `cd web && npm install`
+- 开发构建：`.coze` 会执行 `npm install`
 - 开发运行：`.coze` 会执行 `cd web && npm run dev -- --host 0.0.0.0 --port ${DEPLOY_RUN_PORT}`
-- 部署构建：`.coze` 会执行 `cd web && npm install && npm run build`
+- 部署构建：`.coze` 会执行 `npm install && cd web && npm run build`
 - 部署运行：`.coze` 会执行 `cd web && npm run preview -- --host 0.0.0.0 --port ${DEPLOY_RUN_PORT}`
 - 环境变量：按本文档的 CloudBase 变量配置
 

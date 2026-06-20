@@ -2,9 +2,9 @@
 requires = ["nodejs-24"]
 
 [dev]
-build = ["sh", "-c", "cd web && npm install"]
+build = ["sh", "-c", "npm install"]
 run = ["sh", "-c", "cd web && npm run dev -- --host 0.0.0.0 --port ${DEPLOY_RUN_PORT}"]
 
 [deploy]
-build = ["sh", "-c", "cd web && npm install && npm run build"]
+build = ["sh", "-c", "npm install && cd web && npm run build"]
 run = ["sh", "-c", "cd web && npm run preview -- --host 0.0.0.0 --port ${DEPLOY_RUN_PORT}"]

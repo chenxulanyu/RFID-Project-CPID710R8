@@ -1,0 +1,8 @@
+{
+  "name": "rfid-project-cpid710r8-monorepo-root",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "web"
+  ]
+}
