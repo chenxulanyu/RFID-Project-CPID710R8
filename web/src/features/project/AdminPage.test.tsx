@@ -17,15 +17,18 @@ describe("AdminPage", () => {
     expect(screen.getByLabelText("任务名称")).toBeInTheDocument();
   });
 
-  it("saves a task update and shows a success message", async () => {
+  it("saves project metadata and task detail with one action", async () => {
     render(<AdminPage today="2026-06-19" />);
 
+    fireEvent.change(await screen.findByLabelText("项目名称"), { target: { value: "更新后的项目名称" } });
     const taskName = await screen.findByLabelText("任务名称");
     fireEvent.change(taskName, { target: { value: "更新后的任务名称" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存任务" }));
+    expect(screen.getByRole("button", { name: "保存项目与任务" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
 
-    expect(await screen.findByRole("status")).toHaveTextContent("任务已保存");
-    expect(screen.getByText("更新后的任务名称")).toBeInTheDocument();
+    expect(await screen.findByRole("status")).toHaveTextContent("项目与任务已保存");
+    expect(screen.getByDisplayValue("更新后的项目名称")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("更新后的任务名称")).toBeInTheDocument();
   });
 
   it("shows validation errors for invalid planned dates", async () => {
@@ -33,7 +36,7 @@ describe("AdminPage", () => {
 
     fireEvent.change(await screen.findByLabelText("计划开始"), { target: { value: "2026-06-10" } });
     fireEvent.change(screen.getByLabelText("计划结束"), { target: { value: "2026-06-01" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存任务" }));
+    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("计划结束日期不能早于开始日期");
   });
@@ -42,7 +45,7 @@ describe("AdminPage", () => {
     render(<AdminPage today="2026-06-19" />);
 
     fireEvent.change(await screen.findByLabelText("任务名称"), { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存任务" }));
+    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("任务名称不能为空");
   });
@@ -59,7 +62,7 @@ describe("AdminPage", () => {
     fireEvent.change(screen.getByLabelText("计划结束"), { target: { value: "2026-07-05" } });
     fireEvent.change(screen.getByLabelText("资源方"), { target: { value: "芯联" } });
     fireEvent.change(screen.getByLabelText("责任人"), { target: { value: "负责人" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存任务" }));
+    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
 
     expect(await screen.findByText("新增后台任务")).toBeInTheDocument();
 

@@ -1,4 +1,4 @@
-import { cpid710r8TaskInputs } from "../data/cpid710r8Mock";
+import { cpid710r8Project, cpid710r8TaskInputs } from "../data/cpid710r8Mock";
 import type { Project, ProjectTaskInput } from "../types/project";
 import type { ListTaskOptions, ProjectRepository } from "./projectRepository";
 
@@ -34,7 +34,7 @@ const defaultProjectsCollection = "projects";
 const defaultTasksCollection = "project_tasks";
 
 function optionalString(value: unknown): string | undefined {
-  return typeof value === "string" && value.length > 0 ? value : undefined;
+  return typeof value === "string" && value.length > 0 && value !== "undefined" && value !== "null" ? value : undefined;
 }
 
 function optionalNumber(value: unknown): number | undefined {
@@ -43,6 +43,10 @@ function optionalNumber(value: unknown): number | undefined {
 
 function optionalBoolean(value: unknown): boolean | undefined {
   return typeof value === "boolean" ? value : undefined;
+}
+
+function requiredString(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.length > 0 && value !== "undefined" && value !== "null" ? value : fallback;
 }
 
 function firstDocument(data: CloudBaseDocument | CloudBaseDocument[] | null): CloudBaseDocument | null {
@@ -71,21 +75,22 @@ function mergeTaskInputs(seedTasks: ProjectTaskInput[], cloudTasks: ProjectTaskI
 }
 
 export function projectToCloudBaseDocument(project: Project): CloudBaseDocument {
-  return { _id: project.id, ...project, updatedAt: new Date().toISOString() };
+  return { ...project, updatedAt: new Date().toISOString() };
 }
 
 export function projectFromCloudBaseDocument(document: CloudBaseDocument): Project {
   return {
-    id: String(document._id ?? document.id),
-    name: String(document.name),
-    plannedStartDate: String(document.plannedStartDate),
-    plannedEndDate: String(document.plannedEndDate),
+    id: requiredString(document._id ?? document.id, cpid710r8Project.id),
+    name: requiredString(document.name, cpid710r8Project.name),
+    plannedStartDate: requiredString(document.plannedStartDate, "2026-03-30"),
+    plannedEndDate: requiredString(document.plannedEndDate, "2026-09-28"),
     calendarMode: document.calendarMode === "workdays" ? "workdays" : "calendar-days",
   };
 }
 
 export function taskToCloudBaseDocument(task: ProjectTaskInput, projectId: string): CloudBaseDocument {
-  return { _id: task.id, projectId, ...task, updatedAt: new Date().toISOString() };
+  const { id, ...rest } = task;
+  return { ...rest, id, projectId, updatedAt: new Date().toISOString() };
 }
 
 export function taskFromCloudBaseDocument(document: CloudBaseDocument): ProjectTaskInput {
@@ -120,6 +125,14 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     this.tasksCollection = options.tasksCollection ?? defaultTasksCollection;
   }
 
+  private async assertWriteSucceeded(result: unknown): Promise<void> {
+    if (result && typeof result === "object" && "code" in result && typeof (result as { code?: unknown }).code === "string") {
+      const errorResult = result as { code?: unknown; message?: unknown };
+      const message = typeof errorResult.message === "string" ? errorResult.message : "CloudBase写入失败";
+      throw new Error(`CloudBase保存失败：${message}`);
+    }
+  }
+
   async getProject(): Promise<Project> {
     const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
     const document = firstDocument(response.data);
@@ -128,8 +141,22 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async saveProject(project: Project): Promise<Project> {
-    await this.database.collection(this.projectsCollection).doc(project.id).set(projectToCloudBaseDocument(project));
-    return project;
+    const reference = this.database.collection(this.projectsCollection).doc(project.id);
+    await this.assertWriteSucceeded(await reference.set(projectToCloudBaseDocument(project)));
+    const saved = await reference.get();
+    const document = firstDocument(saved.data);
+    if (!document) throw new Error(`CloudBase project not found after save: ${project.id}`);
+    const persisted = projectFromCloudBaseDocument(document);
+    if (
+      persisted.id !== project.id ||
+      persisted.name !== project.name ||
+      persisted.plannedStartDate !== project.plannedStartDate ||
+      persisted.plannedEndDate !== project.plannedEndDate ||
+      persisted.calendarMode !== project.calendarMode
+    ) {
+      throw new Error("CloudBase保存失败：项目回读结果与提交内容不一致");
+    }
+    return persisted;
   }
 
   async listTaskInputs(options: ListTaskOptions = {}): Promise<ProjectTaskInput[]> {
@@ -142,8 +169,31 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async saveTaskInput(task: ProjectTaskInput): Promise<ProjectTaskInput> {
-    await this.database.collection(this.tasksCollection).doc(task.id).set(taskToCloudBaseDocument(task, this.projectId));
-    return { ...task };
+    const reference = this.database.collection(this.tasksCollection).doc(task.id);
+    await this.assertWriteSucceeded(await reference.set(taskToCloudBaseDocument(task, this.projectId)));
+    const saved = await reference.get();
+    const document = firstDocument(saved.data);
+    if (!document) throw new Error(`Task not found after save: ${task.id}`);
+    const persisted = taskFromCloudBaseDocument(document);
+    if (
+      persisted.id !== task.id ||
+      persisted.milestoneCode !== task.milestoneCode ||
+      persisted.projectContent !== task.projectContent ||
+      persisted.taskName !== task.taskName ||
+      persisted.plannedStartDate !== task.plannedStartDate ||
+      persisted.plannedEndDate !== task.plannedEndDate ||
+      persisted.actualStartDate !== task.actualStartDate ||
+      persisted.actualEndDate !== task.actualEndDate ||
+      persisted.resourceOwner !== task.resourceOwner ||
+      persisted.responsiblePerson !== task.responsiblePerson ||
+      persisted.remarks !== task.remarks ||
+      persisted.manualCompletionRatio !== task.manualCompletionRatio ||
+      persisted.isArchived !== task.isArchived ||
+      persisted.archivedAt !== task.archivedAt
+    ) {
+      throw new Error("CloudBase保存失败：任务回读结果与提交内容不一致");
+    }
+    return persisted;
   }
 
   async archiveTask(taskId: string, archivedAt: string): Promise<ProjectTaskInput> {

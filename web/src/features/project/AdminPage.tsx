@@ -42,6 +42,20 @@ function optionalTaskValue(field: keyof ProjectTaskInput, value: string): string
   return ["actualStartDate", "actualEndDate", "remarks"].includes(field) && value === "" ? undefined : value;
 }
 
+function sanitizeTaskForSave(task: ProjectTaskInput, isNewTask: boolean): ProjectTaskInput {
+  const normalized = {
+    ...task,
+    manualCompletionRatio:
+      task.manualCompletionRatio === undefined
+        ? undefined
+        : Math.min(Math.max(task.manualCompletionRatio, 0), 1),
+  };
+  if (isNewTask) {
+    return { ...normalized, isArchived: false, archivedAt: undefined };
+  }
+  return normalized;
+}
+
 export function AdminPage({
   today = "2026-06-19",
   repository,
@@ -97,31 +111,20 @@ export function AdminPage({
     setIsNewTask(false);
   }
 
-  async function handleProjectSave() {
-    if (!project) return;
+  async function handleSaveAll() {
+    if (!project || !selectedTask) return;
     setError(null);
     setMessage(null);
     try {
-      const saved = await saveProjectMetadata(activeRepository, project);
-      setProject(saved);
-      setMessage("项目已保存");
+      const savedProject = await saveProjectMetadata(activeRepository, project);
+      const savedTask = isNewTask
+        ? await createProjectTask(activeRepository, sanitizeTaskForSave(selectedTask, true))
+        : await updateProjectTask(activeRepository, sanitizeTaskForSave(selectedTask, false));
+      setProject(savedProject);
+      await reload(savedTask.id, savedTask.isArchived ? "archived" : "active");
+      setMessage("项目与任务已保存");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "项目保存失败");
-    }
-  }
-
-  async function handleTaskSave() {
-    if (!selectedTask) return;
-    setError(null);
-    setMessage(null);
-    try {
-      const saved = isNewTask
-        ? await createProjectTask(activeRepository, selectedTask)
-        : await updateProjectTask(activeRepository, selectedTask);
-      await reload(saved.id, saved.isArchived ? "archived" : "active");
-      setMessage("任务已保存");
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "任务保存失败");
+      setError(caught instanceof Error ? caught.message : "保存失败");
     }
   }
 
@@ -234,8 +237,8 @@ export function AdminPage({
                   </label>
                 </div>
                 <div className="admin-actions">
-                  <button className="primary-button" type="button" onClick={handleProjectSave}>
-                    保存项目
+                  <button className="primary-button" type="button" onClick={handleSaveAll}>
+                    保存项目与任务
                   </button>
                 </div>
               </div>
@@ -301,9 +304,6 @@ export function AdminPage({
                 </div>
 
                 <div className="admin-actions">
-                  <button className="primary-button" type="button" onClick={handleTaskSave}>
-                    保存任务
-                  </button>
                   {!isNewTask && !selectedTask.isArchived ? (
                     <button className="danger-button" type="button" onClick={handleArchive}>
                       归档任务

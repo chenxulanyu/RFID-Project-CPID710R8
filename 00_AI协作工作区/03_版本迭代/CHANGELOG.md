@@ -167,3 +167,13 @@
 - 修复旧浏览器 `localStorage` 中 3 条任务快照覆盖新种子的问题；读取旧种子快照时自动升级为 31 条完整任务并保留本地覆盖。
 - 修复手机竖屏旋转范围：将横屏旋转容器上移到 `App`，顶部“项目仪表盘 / 后台维护”导航和页面内容一起旋转。
 - 新增回归测试覆盖 CloudBase 默认配置、CloudBase 合并覆盖、localStorage 旧快照升级和导航旋转容器范围。
+
+## fix-cloudbase-persistence-and-admin-save v1.0 - 2026-06-20
+
+- 修复 CloudBase 项目文档和任务文档的写入确认：保存后必须检查返回结果并回读校验，避免 SDK 错误体被误判为成功。
+- 修复项目周期与时间轴异常：CloudBase 项目文档缺失计划周期字段时回退到种子默认值，避免前端显示 `undefined`。
+- 修复后台保存交互：项目基础信息与当前任务详情通过单一保存动作一起提交，归档与恢复保持独立。
+- 新增回归测试：CloudBase 缺字段回退、CloudBase 错误返回拒绝成功、统一保存按钮和联合保存流程。
+- 验证：`npm test -- src/services/cloudbaseProjectRepository.test.ts src/features/project/AdminPage.test.tsx` 通过。
+- 验证：`npm test` 通过，10 个测试文件、57 条测试用例通过。
+- 验证：`npm run build` 通过。

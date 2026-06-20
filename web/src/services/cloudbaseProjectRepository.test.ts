@@ -2,11 +2,14 @@ import { describe, expect, it } from "vitest";
 import type { Project, ProjectTaskInput } from "../types/project";
 import {
   CloudBaseProjectRepository,
+  type CloudBaseCollectionLike,
+  type CloudBaseDatabaseLike,
+  type CloudBaseDocumentReferenceLike,
+  type CloudBaseQueryLike,
   projectFromCloudBaseDocument,
   projectToCloudBaseDocument,
   taskFromCloudBaseDocument,
   taskToCloudBaseDocument,
-  type CloudBaseDatabaseLike,
 } from "./cloudbaseProjectRepository";
 
 const project: Project = {
@@ -88,7 +91,7 @@ describe("CloudBase project document mapping", () => {
   it("round-trips project fields without service-side secrets", () => {
     const document = projectToCloudBaseDocument(project);
     expect(document).toMatchObject({
-      _id: "cpid710r8",
+      id: "cpid710r8",
       name: "CPID710R8 项目",
       calendarMode: "calendar-days",
     });
@@ -107,8 +110,8 @@ describe("CloudBase project document mapping", () => {
       archivedAt: "2026-06-19",
     });
     const document = taskToCloudBaseDocument(input, "cpid710r8");
-    expect(document).toMatchObject({ _id: "task-1", projectId: "cpid710r8", manualCompletionRatio: 0.45 });
-    expect(taskFromCloudBaseDocument(document)).toEqual(input);
+    expect(document).toMatchObject({ id: "task-1", projectId: "cpid710r8", manualCompletionRatio: 0.45 });
+    expect(taskFromCloudBaseDocument({ _id: input.id, ...document })).toEqual(input);
   });
 });
 
@@ -187,6 +190,22 @@ describe("CloudBaseProjectRepository reads", () => {
 
     expect(await repository.getProject()).toEqual(project);
   });
+
+  it("falls back to seeded project dates when the CloudBase project document is incomplete", async () => {
+    const database = new FakeDatabase("array");
+    database.collections.set(
+      "projects",
+      new Map([["cpid710r8", { _id: "cpid710r8", id: "cpid710r8", name: "CPID710R8 项目进度管理" }]]),
+    );
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    expect(await repository.getProject()).toMatchObject({
+      id: "cpid710r8",
+      name: "CPID710R8 项目进度管理",
+      plannedStartDate: "2026-03-30",
+      plannedEndDate: "2026-09-28",
+    });
+  });
 });
 
 describe("CloudBaseProjectRepository writes", () => {
@@ -202,6 +221,37 @@ describe("CloudBaseProjectRepository writes", () => {
       id: "task-2",
       manualCompletionRatio: 0.7,
     });
+  });
+
+  it("fails instead of reporting success when CloudBase returns an error body", async () => {
+    class ErrorDatabase implements CloudBaseDatabaseLike {
+      readonly collections = new Map<string, Map<string, Record<string, unknown>>>();
+
+      collection(name: string): CloudBaseCollectionLike {
+        if (!this.collections.has(name)) this.collections.set(name, new Map());
+        const documents = this.collections.get(name)!;
+        return {
+          doc: (id: string): CloudBaseDocumentReferenceLike => ({
+            get: async () => {
+              const document = documents.get(id);
+              if (!document) return { data: null };
+              return { data: { ...document } };
+            },
+            set: async () => ({ code: "INVALID_PARAM", message: "不能更新_id的值" }),
+            update: async () => ({ code: "INVALID_PARAM", message: "不能更新_id的值" }),
+          }),
+          where: (_query: Record<string, unknown>): CloudBaseQueryLike => ({
+            get: async () => ({ data: [...documents.values()].map((document) => ({ ...document })) }),
+          }),
+        };
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({ database: new ErrorDatabase(), projectId: "cpid710r8" });
+
+    await expect(repository.saveTaskInput(task({ id: "task-error", taskName: "写入失败任务" }))).rejects.toThrow(
+      "CloudBase保存失败：不能更新_id的值",
+    );
   });
 
   it("archives and restores tasks without deleting the document", async () => {

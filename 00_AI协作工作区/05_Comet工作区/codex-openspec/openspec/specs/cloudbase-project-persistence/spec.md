@@ -2,7 +2,6 @@
 
 ## Purpose
 定义 CPID710R8 项目进度网站接入腾讯云 CloudBase 的数据持久化能力，包括数据结构、repository 适配、安全配置边界、本地回退和连通性验证路径。
-
 ## Requirements
 ### Requirement: CloudBase data schema
 The system SHALL define CloudBase data structures for project metadata and project task progress records that preserve the shared project progress data contract.
@@ -12,11 +11,17 @@ The system SHALL define CloudBase data structures for project metadata and proje
 - **THEN** its identity, project association, schedule, progress, owner, warning-relevant fields, and remarks can be restored into the shared project progress model
 
 ### Requirement: CloudBase repository adapter
-The system SHALL provide a CloudBase-backed repository adapter that supports reading project data and writing administrative updates through the existing service contract.
+The system SHALL provide a CloudBase-backed repository adapter that supports reading project data and writing administrative updates through the existing service contract, and SHALL treat malformed or incomplete remote documents as invalid so the UI can fall back to seeded defaults rather than rendering undefined values.
 
 #### Scenario: Read project data from CloudBase
 - **WHEN** CloudBase configuration is present and the frontend or backend requests project data
 - **THEN** the system reads project metadata and task records from CloudBase through the repository adapter
+- **AND** missing required project fields are recovered from the seeded default project values
+
+#### Scenario: Reject malformed write results
+- **WHEN** CloudBase returns an error code or the saved document cannot be read back consistently
+- **THEN** the system MUST report the save as failed
+- **AND** the system MUST NOT treat the write as successful
 
 ### Requirement: Secret-safe configuration
 The system SHALL configure CloudBase credentials through environment variables or deployment secrets and MUST NOT commit real credentials to the repository or planning artifacts.
@@ -50,3 +55,5 @@ The system SHALL include a verification path for confirming CloudBase read and w
 #### Scenario: Verify cloud persistence
 - **WHEN** valid CloudBase credentials and environment configuration are provided
 - **THEN** a verification command or documented check confirms that project data can be read and updated
+- **AND** the verification proves both read and write round-trip behavior
+
