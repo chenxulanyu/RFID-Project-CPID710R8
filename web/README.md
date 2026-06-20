@@ -36,28 +36,51 @@ npm run preview
 
 ## Current Routes
 
-- `/`: project foundation page that loads CPID710R8 mock project data through the project service.
-- `/admin`: placeholder route only. It does not provide edit, save, authentication, or CloudBase write behavior.
+- `/`: project foundation page that loads CPID710R8 project data through the project service.
+- `/dashboard`: project progress dashboard.
+- `/admin`: project progress maintenance page for metadata and task updates.
 
 ## Data Source Boundary
 
-The UI must read project progress data through `src/services/projectService.ts`.
+The UI reads and writes project progress data through `src/services/projectService.ts`,
+`src/services/projectAdminService.ts`, and the `ProjectRepository` interface in
+`src/services/projectRepository.ts`.
 
-The default implementation uses `MockProjectRepository` in `src/services/projectRepository.ts`, which reads from `src/data/cpid710r8Mock.ts`.
+Available repository implementations:
 
-Future backend or CloudBase work should replace the repository implementation while preserving the service contract:
+- `LocalProjectRepository`: mock/localStorage-backed data for development, review, and demo.
+- `CloudBaseProjectRepository`: Tencent CloudBase-backed project metadata and task data.
 
-```ts
-export interface ProjectRepository {
-  getProject(): Promise<Project>;
-  listTaskInputs(): Promise<ProjectTaskInput[]>;
-}
-```
+React components must not import CloudBase SDK directly.
 
-This keeps display components independent from mock data, local persistence, or CloudBase storage details.
+## CloudBase Configuration
 
-## CloudBase Status
+Copy `web/.env.example` to a local `.env` file when configuring CloudBase. Keep real
+values out of Git.
 
-This foundation does not require CloudBase credentials. It must run with mock data when CloudBase configuration is absent.
+Required frontend-safe variables for CloudBase mode:
 
-Real CloudBase schema, environment variables, credentials, and connectivity checks belong to the `cloudbase-persistence` change. Do not commit real CloudBase secrets to this repository.
+- `VITE_PROJECT_DATA_SOURCE=cloudbase`
+- `VITE_CLOUDBASE_ENV_ID`
+- `VITE_CLOUDBASE_ACCESS_KEY` for the Web SDK Publishable Key when required
+- `VITE_CLOUDBASE_PROJECT_ID`
+- `VITE_CLOUDBASE_PROJECTS_COLLECTION`
+- `VITE_CLOUDBASE_TASKS_COLLECTION`
+
+Do not add `secretId`, `secretKey`, or other server-side credentials to Vite frontend
+environment variables. Browser direct access also requires CloudBase console setup for
+allowed origins or security domains, authentication mode, and database permission rules
+before enabling write access.
+
+When CloudBase config is absent or `VITE_PROJECT_DATA_SOURCE=local`, the app falls back
+to local data and does not require CloudBase credentials.
+
+## CloudBase Verification
+
+Before production deployment:
+
+1. Configure CloudBase allowed origins/security domains for the deployed website.
+2. Configure authentication and database permission rules for project reads and admin writes.
+3. Set the Vite variables in the deployment platform.
+4. Use non-sensitive test data to confirm project read, task update, archive, and restore
+   behavior from `/admin`.

@@ -80,3 +80,12 @@
 - 验证：`npm test` 通过，8 个测试文件、39 条测试用例通过。
 - 验证：`npm run build` 通过。
 - 验证：`openspec validate admin-progress-backend --strict` 通过。
+
+## cloudbase-persistence v1.0 - 2026-06-20
+
+- 新增 CloudBase 项目进度持久化设计和实施计划，确认采用前端直连 CloudBase Web SDK 的静态部署路径。
+- 新增 `CloudBaseProjectRepository`，通过现有 `ProjectRepository` 契约读写项目元数据和任务进度数据。
+- 新增数据源工厂，支持 `local` 与 `cloudbase` 模式切换；CloudBase 配置缺失时保留本地/mock fallback。
+- 新增前端配置安全边界：仅允许环境 ID、Publishable Key、项目 ID 和集合名等 Web SDK 公开配置，显式拒绝 `secretId` / `secretKey` 等服务端密钥进入前端配置。
+- 新增 `web/.env.example` 与 CloudBase 配置说明，记录安全域名/允许来源、认证方式和数据库权限规则等上线前要求。
+- 真实 CloudBase 读写连通性验证待用户提供 CloudBase 环境信息后执行。
