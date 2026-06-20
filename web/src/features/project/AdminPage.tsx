@@ -26,9 +26,13 @@ function emptyTask(): ProjectTaskInput {
   };
 }
 
+function hasTaskName(task: ProjectTaskInput): boolean {
+  return typeof task.taskName === "string" && task.taskName.trim().length > 0;
+}
+
 function taskVisible(task: ProjectTaskInput, filter: TaskFilter) {
-  if (filter === "archived") return Boolean(task.isArchived) && Boolean(task.taskName);
-  return !task.isArchived && Boolean(task.taskName);
+  if (filter === "archived") return Boolean(task.isArchived) && hasTaskName(task);
+  return !task.isArchived && hasTaskName(task);
 }
 
 function percentToRatio(value: string): number | undefined {

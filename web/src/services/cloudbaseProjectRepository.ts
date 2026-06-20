@@ -37,7 +37,7 @@ const projectReadbackAttempts = 5;
 const projectReadbackDelayMs = 120;
 
 function optionalString(value: unknown): string | undefined {
-  return typeof value === "string" && value.length > 0 && value !== "undefined" && value !== "null" ? value : undefined;
+  return typeof value === "string" && value.trim().length > 0 && value !== "undefined" && value !== "null" ? value : undefined;
 }
 
 function optionalNumber(value: unknown): number | undefined {
