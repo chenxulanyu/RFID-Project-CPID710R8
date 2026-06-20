@@ -149,6 +149,7 @@
 - 验证：根目录 `npm start` 可进入 Vite preview，并正确使用 `DEPLOY_RUN_PORT`。
 - 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
 - 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
+<<<<<<< HEAD
 
 ## seed-full-project-tasks v1.0 - 2026-06-20
 
