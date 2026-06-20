@@ -20,3 +20,4 @@ verified_at: null
 archived: false
 handoff_context: openspec/changes/cloudbase-persistence/.comet/handoff/design-context.json
 handoff_hash: cea080d9ab7031f0e9b734eda32b752b2105d126fcf383fa5e4fbf64e4a1f77c
+build_command: cd ../../../web && npm run build
