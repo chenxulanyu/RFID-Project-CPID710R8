@@ -9,7 +9,7 @@
   "scripts": {
     "install": "npm install --workspace web --ignore-scripts",
     "build": "npm run build --workspace web",
-    "start": "npm run preview --workspace web -- --host 0.0.0.0 --port ${DEPLOY_RUN_PORT:-4173}"
+    "start": "node serve.mjs"
   },
   "workspaces": [
     "web"
