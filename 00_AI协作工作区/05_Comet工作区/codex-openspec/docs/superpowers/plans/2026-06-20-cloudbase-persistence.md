@@ -36,7 +36,7 @@ base-ref: ba22e83ab71fc990e92442f778adfa1ccce88b02
 - Create: `web/src/services/cloudbaseProjectRepository.ts`
 - Create: `web/src/services/cloudbaseProjectRepository.test.ts`
 
-- [ ] **Step 1: Write failing mapping and read tests**
+- [x] **Step 1: Write failing mapping and read tests**
 
 Create `web/src/services/cloudbaseProjectRepository.test.ts` with:
 
@@ -178,7 +178,7 @@ describe("CloudBaseProjectRepository reads", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -188,7 +188,7 @@ cd web && npm test -- src/services/cloudbaseProjectRepository.test.ts
 
 Expected: FAIL because `cloudbaseProjectRepository.ts` does not exist.
 
-- [ ] **Step 3: Implement mapping helpers and read repository**
+- [x] **Step 3: Implement mapping helpers and read repository**
 
 Create `web/src/services/cloudbaseProjectRepository.ts` with the minimal implementation for the tests:
 
@@ -327,7 +327,7 @@ export class CloudBaseProjectRepository implements ProjectRepository {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run:
 
@@ -337,7 +337,7 @@ cd web && npm test -- src/services/cloudbaseProjectRepository.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add web/src/services/cloudbaseProjectRepository.ts web/src/services/cloudbaseProjectRepository.test.ts
@@ -350,7 +350,7 @@ git commit -m "feat: add cloudbase repository mapping"
 - Modify: `web/src/services/cloudbaseProjectRepository.test.ts`
 - Modify: `web/src/services/cloudbaseProjectRepository.ts`
 
-- [ ] **Step 1: Add failing write tests**
+- [x] **Step 1: Add failing write tests**
 
 Append to `web/src/services/cloudbaseProjectRepository.test.ts`:
 
@@ -390,7 +390,7 @@ describe("CloudBaseProjectRepository writes", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify failure if behavior is incomplete**
+- [x] **Step 2: Run test to verify failure if behavior is incomplete**
 
 Run:
 
@@ -400,7 +400,7 @@ cd web && npm test -- src/services/cloudbaseProjectRepository.test.ts
 
 Expected: FAIL only if the initial Task 1 implementation does not fully preserve write/archive semantics. If it already passes, record in the commit body that Task 1 implementation covered the behavior.
 
-- [ ] **Step 3: Adjust implementation only if needed**
+- [x] **Step 3: Adjust implementation only if needed**
 
 If the restore assertion fails because `archivedAt` remains present, update `restoreTask` in `web/src/services/cloudbaseProjectRepository.ts` to save a task object without `archivedAt`:
 
@@ -413,7 +413,7 @@ async restoreTask(taskId: string): Promise<ProjectTaskInput> {
 }
 ```
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run:
 
@@ -423,7 +423,7 @@ cd web && npm test -- src/services/cloudbaseProjectRepository.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add web/src/services/cloudbaseProjectRepository.ts web/src/services/cloudbaseProjectRepository.test.ts
@@ -438,7 +438,7 @@ git commit -m "test: cover cloudbase repository writes"
 - Modify: `web/package.json`
 - Modify: `web/package-lock.json`
 
-- [ ] **Step 1: Install CloudBase Web SDK**
+- [x] **Step 1: Install CloudBase Web SDK**
 
 Run:
 
@@ -448,7 +448,7 @@ cd web && npm install @cloudbase/js-sdk
 
 Expected: `@cloudbase/js-sdk` appears in `dependencies`.
 
-- [ ] **Step 2: Write failing factory tests**
+- [x] **Step 2: Write failing factory tests**
 
 Create `web/src/services/projectRepositoryFactory.test.ts`:
 
@@ -496,7 +496,7 @@ describe("project repository factory", () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 Run:
 
@@ -506,7 +506,7 @@ cd web && npm test -- src/services/projectRepositoryFactory.test.ts
 
 Expected: FAIL because `projectRepositoryFactory.ts` does not exist.
 
-- [ ] **Step 4: Implement repository factory**
+- [x] **Step 4: Implement repository factory**
 
 Create `web/src/services/projectRepositoryFactory.ts`:
 
@@ -589,7 +589,7 @@ export function createProjectRepository(
 }
 ```
 
-- [ ] **Step 5: Run factory tests**
+- [x] **Step 5: Run factory tests**
 
 Run:
 
@@ -599,7 +599,7 @@ cd web && npm test -- src/services/projectRepositoryFactory.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add web/package.json web/package-lock.json web/src/services/projectRepositoryFactory.ts web/src/services/projectRepositoryFactory.test.ts
@@ -614,7 +614,7 @@ git commit -m "feat: add project repository factory"
 - Modify: `web/src/services/projectService.test.ts`
 - Modify: `web/src/features/project/AdminPage.test.tsx`
 
-- [ ] **Step 1: Write failing service wiring test**
+- [x] **Step 1: Write failing service wiring test**
 
 Update `web/src/services/projectService.test.ts` imports and add a mock before the describe block:
 
@@ -647,7 +647,7 @@ it("uses the repository factory for default reads", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -657,7 +657,7 @@ cd web && npm test -- src/services/projectService.test.ts
 
 Expected: FAIL because `getProjectProgress` still constructs `DefaultProjectRepository` directly.
 
-- [ ] **Step 3: Update project service default repository**
+- [x] **Step 3: Update project service default repository**
 
 Modify `web/src/services/projectService.ts`:
 
@@ -677,7 +677,7 @@ export async function getProjectProgress(
 ): Promise<ProjectProgressData> {
 ```
 
-- [ ] **Step 4: Wire admin placeholder**
+- [x] **Step 4: Wire admin placeholder**
 
 Modify `web/src/features/project/AdminPlaceholder.tsx`:
 
@@ -691,7 +691,7 @@ export function AdminPlaceholder() {
 }
 ```
 
-- [ ] **Step 5: Run targeted tests**
+- [x] **Step 5: Run targeted tests**
 
 Run:
 
@@ -701,7 +701,7 @@ cd web && npm test -- src/services/projectService.test.ts src/features/project/A
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add web/src/services/projectService.ts web/src/features/project/AdminPlaceholder.tsx web/src/services/projectService.test.ts web/src/features/project/AdminPage.test.tsx
@@ -717,7 +717,7 @@ git commit -m "feat: wire repository factory into app"
 - Modify: `00_AI协作工作区/03_版本迭代/VERSION.md`
 - Modify: `00_AI协作工作区/03_版本迭代/CHANGELOG.md`
 
-- [ ] **Step 1: Add placeholder env example**
+- [x] **Step 1: Add placeholder env example**
 
 Create `web/.env.example`:
 
@@ -733,7 +733,7 @@ VITE_CLOUDBASE_PROJECTS_COLLECTION=projects
 VITE_CLOUDBASE_TASKS_COLLECTION=project_tasks
 ```
 
-- [ ] **Step 2: Verify ignore rules**
+- [x] **Step 2: Verify ignore rules**
 
 Confirm `.gitignore` keeps `.env` and `.env.*` ignored while allowing `.env.example`:
 
@@ -745,7 +745,7 @@ Confirm `.gitignore` keeps `.env` and `.env.*` ignored while allowing `.env.exam
 
 If these lines are already present, do not change the file.
 
-- [ ] **Step 3: Update README CloudBase docs**
+- [x] **Step 3: Update README CloudBase docs**
 
 Replace the stale Data Source Boundary and CloudBase sections in `web/README.md` with:
 
@@ -796,7 +796,7 @@ Before production deployment:
    behavior from `/admin`.
 ```
 
-- [ ] **Step 4: Update version records**
+- [x] **Step 4: Update version records**
 
 Append a CloudBase persistence entry to `00_AI协作工作区/03_版本迭代/CHANGELOG.md` and update
 `00_AI协作工作区/03_版本迭代/VERSION.md` according to the existing format. Include:
@@ -806,7 +806,7 @@ Append a CloudBase persistence entry to `00_AI协作工作区/03_版本迭代/CH
 - Local fallback behavior.
 - Real CloudBase verification deferred until user provides environment details.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add .gitignore web/.env.example web/README.md 00_AI协作工作区/03_版本迭代/VERSION.md 00_AI协作工作区/03_版本迭代/CHANGELOG.md
@@ -818,7 +818,7 @@ git commit -m "docs: document cloudbase persistence config"
 **Files:**
 - Modify: `00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/cloudbase-persistence/tasks.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -828,7 +828,7 @@ cd web && npm test
 
 Expected: all test files PASS.
 
-- [ ] **Step 2: Run production build**
+- [x] **Step 2: Run production build**
 
 Run:
 
@@ -838,7 +838,7 @@ cd web && npm run build
 
 Expected: TypeScript and Vite build PASS.
 
-- [ ] **Step 3: Validate OpenSpec change**
+- [x] **Step 3: Validate OpenSpec change**
 
 Run:
 
@@ -848,11 +848,11 @@ cd 00_AI协作工作区/05_Comet工作区/codex-openspec && openspec validate cl
 
 Expected: change is valid.
 
-- [ ] **Step 4: Check off OpenSpec tasks**
+- [x] **Step 4: Check off OpenSpec tasks**
 
 Update `openspec/changes/cloudbase-persistence/tasks.md` to check all completed items. For 4.2 and 4.3, record that real read/write verification is prepared but deferred until the user provides CloudBase environment details.
 
-- [ ] **Step 5: Commit task sync**
+- [x] **Step 5: Commit task sync**
 
 ```bash
 git add 00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/cloudbase-persistence/tasks.md
