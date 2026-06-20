@@ -1,0 +1,5 @@
+name: admin-and-timeline-polish
+workflow: hotfix
+phase: open
+review_mode: standard
+verify_result: pending

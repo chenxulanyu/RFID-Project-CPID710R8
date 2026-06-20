@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Project, ProjectTaskInput } from "../types/project";
 import {
+  deleteProjectTask,
   archiveProjectTask,
   createProjectTask,
   restoreProjectTask,
@@ -223,5 +224,13 @@ describe("admin write service", () => {
 
     expect(tasks).toHaveLength(31);
     expect(new Set(tasks.map((item) => item.milestoneCode)).size).toBe(20);
+  });
+  it("deletes a task permanently", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({ project, tasks: [] });
+    await createProjectTask(repository, task({ id: "to-delete", taskName: "待删除任务" }));
+    expect((await repository.listTaskInputs({ includeArchived: true })).length).toBe(1);
+
+    await deleteProjectTask(repository, "to-delete");
+    expect((await repository.listTaskInputs({ includeArchived: true })).length).toBe(0);
   });
 });

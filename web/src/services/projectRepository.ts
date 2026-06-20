@@ -17,6 +17,7 @@ export interface ProjectRepository {
   saveTaskInput(task: ProjectTaskInput): Promise<ProjectTaskInput>;
   archiveTask(taskId: string, archivedAt: string): Promise<ProjectTaskInput>;
   restoreTask(taskId: string): Promise<ProjectTaskInput>;
+  deleteTask(taskId: string): Promise<void>;
 }
 
 export interface StorageAdapter {
@@ -159,6 +160,13 @@ export class LocalProjectRepository implements ProjectRepository {
     if (!task) throw new Error(`Task not found: ${taskId}`);
     const { archivedAt: _archivedAt, ...restored } = task;
     return this.saveTaskInput({ ...restored, isArchived: false });
+  }
+
+  async deleteTask(taskId: string): Promise<void> {
+    const task = this.snapshot.tasks.find((item) => item.id === taskId);
+    if (!task) throw new Error(`Task not found: ${taskId}`);
+    this.snapshot = { ...this.snapshot, tasks: this.snapshot.tasks.filter((item) => item.id !== taskId) };
+    this.persistSnapshot();
   }
 }
 

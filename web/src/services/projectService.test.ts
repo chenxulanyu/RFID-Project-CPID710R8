@@ -166,6 +166,9 @@ describe("project service", () => {
       restoreTask: async () => {
         throw new Error("not used");
       },
+      deleteTask: async () => {
+        throw new Error("not used");
+      },
     };
 
     const data = await getProjectProgress("2026-06-19", repository);

@@ -10,11 +10,11 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
           {model.timelineRange.startDate} 至 {model.timelineRange.endDate}
         </span>
       </div>
+      <div className="section-heading-row" style={{ marginTop: 8 }}>
+        <span>当前日期：{model.today}</span>
+      </div>
       <div className="timeline-scroll">
         <div className="timeline-frame" aria-label="项目计划时间轴">
-          <div className="timeline-axis" aria-hidden="true">
-            <strong>当前日期：{model.today}</strong>
-          </div>
           {model.tasks.map((task) => (
             <div className="timeline-row" key={task.id}>
               <div className="timeline-label">

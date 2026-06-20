@@ -27,6 +27,7 @@ describe("AdminPage", () => {
 
     fireEvent.click(await screen.findByRole("checkbox", { name: "确认修改项目信息" }));
     fireEvent.change(screen.getByLabelText("项目名称"), { target: { value: "更新后的项目名称" } });
+    fireEvent.change(screen.getByLabelText("项目计划结束"), { target: { value: "2026-10-16" } });
     fireEvent.click(screen.getByRole("button", { name: "保存项目信息" }));
 
     expect(await screen.findByRole("status")).toHaveTextContent("项目信息已保存");

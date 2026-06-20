@@ -11,7 +11,22 @@ export async function getAdminProjectData(repository: ProjectRepository) {
 }
 
 export async function saveProjectMetadata(repository: ProjectRepository, project: Project): Promise<Project> {
-  validateProject(project);
+  const allTasks = await repository.listTaskInputs({ includeArchived: true });
+  const activeDates = allTasks
+    .filter((t) => !t.isArchived)
+    .map((t) => t.plannedStartDate)
+    .filter(Boolean)
+    .sort();
+  const endDates = allTasks
+    .filter((t) => !t.isArchived)
+    .map((t) => t.plannedEndDate)
+    .filter(Boolean)
+    .sort();
+  const taskDateRange = {
+    earliestStartDate: activeDates.length > 0 ? activeDates[0] : undefined,
+    latestEndDate: endDates.length > 0 ? endDates[endDates.length - 1] : undefined,
+  };
+  validateProject(project, taskDateRange);
   return repository.saveProject(project);
 }
 
@@ -33,6 +48,13 @@ export async function updateProjectTask(
 ): Promise<ProjectTaskInput> {
   validateTaskInput(task);
   return repository.saveTaskInput(task);
+}
+
+export async function deleteProjectTask(
+  repository: ProjectRepository,
+  taskId: string,
+): Promise<void> {
+  await repository.deleteTask(taskId);
 }
 
 export async function archiveProjectTask(

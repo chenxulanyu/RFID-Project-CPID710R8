@@ -102,6 +102,24 @@ function countUniqueMilestones(tasks: ProjectTask[]): number {
   return new Set(tasks.map((task) => task.milestoneCode)).size;
 }
 
+function computeTimelineRange(project: Project, tasks: ProjectTask[]) {
+  if (tasks.length === 0) {
+    return {
+      startDate: project.plannedStartDate,
+      endDate: project.plannedEndDate,
+      totalDays: Math.max(calculateCalendarDays(project.plannedStartDate, project.plannedEndDate), 1),
+    };
+  }
+  const taskStartDates = tasks.map((t) => t.plannedStartDate).filter(Boolean).sort();
+  const taskEndDates = tasks.map((t) => t.plannedEndDate).filter(Boolean).sort();
+  const earliestTaskStart = taskStartDates.length > 0 ? taskStartDates[0] : project.plannedStartDate;
+  const latestTaskEnd = taskEndDates.length > 0 ? taskEndDates[taskEndDates.length - 1] : project.plannedEndDate;
+  const startDate = project.plannedStartDate < earliestTaskStart ? project.plannedStartDate : earliestTaskStart;
+  const endDate = project.plannedEndDate > latestTaskEnd ? project.plannedEndDate : latestTaskEnd;
+  const totalDays = Math.max(calculateCalendarDays(startDate, endDate), 1);
+  return { startDate, endDate, totalDays };
+}
+
 export function buildDashboardModel({
   project,
   tasks,
@@ -111,7 +129,7 @@ export function buildDashboardModel({
   tasks: ProjectTask[];
   today: string;
 }): DashboardModel {
-  const totalDays = Math.max(calculateCalendarDays(project.plannedStartDate, project.plannedEndDate), 1);
+  const { startDate: rangeStart, endDate: rangeEnd, totalDays } = computeTimelineRange(project, tasks);
   const dashboardTasks = tasks.map((task) => {
     const dashboardStatus = getDashboardStatus(task, today);
     return {
@@ -119,7 +137,7 @@ export function buildDashboardModel({
       dashboardStatus,
       statusLabel: getStatusLabel(dashboardStatus),
       riskLabel: getRiskLabel(task, dashboardStatus),
-      timeline: buildTimeline(task, project.plannedStartDate, totalDays),
+      timeline: buildTimeline(task, rangeStart, totalDays),
     };
   });
 
@@ -145,10 +163,10 @@ export function buildDashboardModel({
     riskTasks: dashboardTasks.filter((task) => isRiskTask(task, task.dashboardStatus)),
     tasks: dashboardTasks,
     timelineRange: {
-      startDate: project.plannedStartDate,
+      startDate: rangeStart,
       endDate: project.plannedEndDate,
       totalDays,
-      todayPercent: buildTodayPercent(project.plannedStartDate, today, totalDays),
+      todayPercent: buildTodayPercent(rangeStart, today, totalDays),
     },
   };
 }

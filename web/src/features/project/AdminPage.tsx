@@ -3,6 +3,7 @@ import type { Project, ProjectTaskInput } from "../../types/project";
 import {
   archiveProjectTask,
   createProjectTask,
+  deleteProjectTask,
   getAdminProjectData,
   restoreProjectTask,
   saveProjectMetadata,
@@ -26,7 +27,8 @@ function emptyTask(): ProjectTaskInput {
 }
 
 function taskVisible(task: ProjectTaskInput, filter: TaskFilter) {
-  return filter === "archived" ? Boolean(task.isArchived) : !task.isArchived;
+  if (filter === "archived") return Boolean(task.isArchived);
+  return !task.isArchived && Boolean(task.taskName);
 }
 
 function percentToRatio(value: string): number | undefined {
@@ -169,6 +171,37 @@ export function AdminPage({
     }
   }
 
+  function autoAdjustProjectDates() {
+    if (!project) return;
+    const allTasks = tasks;
+    const dates = allTasks
+      .map((t) => t.plannedStartDate)
+      .filter(Boolean)
+      .sort();
+    const startDate = dates.length > 0 ? dates[0] : project.plannedStartDate;
+    const endDates = allTasks
+      .map((t) => t.plannedEndDate)
+      .filter(Boolean)
+      .sort();
+    const endDate = endDates.length > 0 ? endDates[endDates.length - 1] : project.plannedEndDate;
+    if (startDate !== project.plannedStartDate || endDate !== project.plannedEndDate) {
+      setProject({ ...project, plannedStartDate: startDate, plannedEndDate: endDate });
+    }
+  }
+
+  async function handleDelete() {
+    if (!selectedTask?.id) return;
+    setError(null);
+    setMessage(null);
+    try {
+      await deleteProjectTask(activeRepository, selectedTask.id);
+      await reload(undefined, "archived");
+      setMessage("任务已删除");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "任务删除失败");
+    }
+  }
+
   return (
     <section className="dashboard-page">
       <div className="dashboard-hero">
@@ -234,7 +267,11 @@ export function AdminPage({
                   <input
                     type="checkbox"
                     checked={projectEditEnabled}
-                    onChange={(event) => setProjectEditEnabled(event.target.checked)}
+                    onChange={(event) => {
+                    const next = event.target.checked;
+                    setProjectEditEnabled(next);
+                    if (!next) autoAdjustProjectDates();
+                  }}
                   />
                   <span>确认修改项目信息</span>
                 </label>
@@ -348,6 +385,11 @@ export function AdminPage({
                 {!isNewTask && selectedTask.isArchived ? (
                   <button className="ghost-button" type="button" onClick={handleRestore}>
                     恢复任务
+                  </button>
+                ) : null}
+                {!isNewTask && selectedTask.isArchived ? (
+                  <button className="danger-button" type="button" onClick={handleDelete}>
+                    删除任务
                   </button>
                 ) : null}
               </div>

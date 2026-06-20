@@ -62,6 +62,10 @@ class FakeCollection {
         this.documents.set(id, { ...current, ...patch, _id: id });
         return { updated: 1 };
       },
+      remove: async () => {
+        this.documents.delete(id);
+        return { deleted: 1 };
+      },
     };
   }
 
@@ -246,6 +250,7 @@ describe("CloudBaseProjectRepository reads", () => {
             },
             set: async () => ({ id: "cpid710r8" }),
             update: async () => ({ updated: 1 }),
+          remove: async () => ({ deleted: 1 }),
           }),
           where: (): CloudBaseQueryLike => ({
             get: async () => ({ data: [] }),
@@ -275,6 +280,7 @@ describe("CloudBaseProjectRepository reads", () => {
             get: async () => ({ data: { ...projectToCloudBaseDocument(project), _id: id } }),
             set: async () => ({ id }),
             update: async () => ({ updated: 1 }),
+          remove: async () => ({ deleted: 1 }),
           }),
           where: (): CloudBaseQueryLike => ({
             get: async () => {
@@ -628,6 +634,52 @@ describe("CloudBaseProjectRepository writes", () => {
     });
   });
 
+  it("does not reject a new task when CloudBase set returns updated: 0", async () => {
+    class SetReturnsUpdatedZeroCollection {
+      private documents = new Map<string, Record<string, unknown>>();
+
+      doc(id: string) {
+        return {
+          get: async () => ({ data: this.documents.get(id) ? { ...this.documents.get(id)! } : null }),
+          set: async (nextDocument: Record<string, unknown>) => { this.documents.set(id, { ...nextDocument, _id: id }); return { updated: 0 }; },
+          update: async (patch: Record<string, unknown>) => {
+            const current = this.documents.get(id);
+            if (current) {
+              this.documents.set(id, { ...current, ...patch });
+              return { updated: 1 };
+            }
+            return { updated: 0 };
+          },
+          remove: async () => ({ deleted: 1 }),
+        };
+      }
+
+      where(query: Record<string, unknown>) {
+        return {
+          get: async () => ({
+            data: [...this.documents.values()]
+              .filter((document) => Object.entries(query).every(([key, value]) => document[key] === value)),
+          }),
+        };
+      }
+    }
+
+    class SetReturnsUpdatedZeroDatabase implements CloudBaseDatabaseLike {
+      private readonly col = new SetReturnsUpdatedZeroCollection();
+      collection() { return this.col; }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new SetReturnsUpdatedZeroDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(repository.saveTaskInput(task({ id: "new-task", taskName: "新任务" }))).resolves.toMatchObject({
+      id: "new-task",
+      taskName: "新任务",
+    });
+  });
+
   it("saves project and task documents", async () => {
     const database = new FakeDatabase();
     const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
@@ -658,6 +710,7 @@ describe("CloudBaseProjectRepository writes", () => {
             },
             set: async () => ({ code: "INVALID_PARAM", message: "不能更新_id的值" }),
             update: async () => ({ code: "INVALID_PARAM", message: "不能更新_id的值" }),
+          remove: async () => ({ deleted: 1 }),
           }),
           where: (_query: Record<string, unknown>): CloudBaseQueryLike => ({
             get: async () => ({ data: [...documents.values()].map((document) => ({ ...document })) }),
@@ -681,6 +734,7 @@ describe("CloudBaseProjectRepository writes", () => {
             get: async () => ({ data: { ...projectToCloudBaseDocument(project), _id: id } }),
             set: async () => ({ id }),
             update: async () => ({ updated: 0 }),
+          remove: async () => ({ deleted: 1 }),
           }),
           where: (): CloudBaseQueryLike => ({
             get: async () => ({ data: [] }),
@@ -715,5 +769,39 @@ describe("CloudBaseProjectRepository writes", () => {
       isArchived: false,
       archivedAt: undefined,
     });
+  });
+  it("deletes a task and removes it from all queries", async () => {
+    const database = new FakeDatabase();
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+    await repository.saveTaskInput(task({ id: "delete-me", taskName: "待删除任务" }));
+    expect((await repository.listTaskInputs({ includeArchived: true })).some((item) => item.id === "delete-me")).toBe(true);
+
+    await repository.deleteTask("delete-me");
+    expect((await repository.listTaskInputs({ includeArchived: true })).some((item) => item.id === "delete-me")).toBe(false);
+  });
+
+  it("propagates CloudBase error code on delete failure", async () => {
+    class DeleteErrorDatabase implements CloudBaseDatabaseLike {
+      private readonly col = {
+        doc(_id: string) {
+          return {
+            get: async () => ({ data: null } as { data: null }),
+            set: async () => ({ updated: 0 }),
+            update: async () => ({ updated: 0 }),
+            remove: async () => ({ code: "PERMISSION_DENIED", message: "无删除权限" }),
+          };
+        },
+        where(_query: Record<string, unknown>) {
+          return { get: async () => ({ data: [] }) };
+        },
+      };
+      collection() { return this.col; }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new DeleteErrorDatabase(),
+      projectId: "cpid710r8",
+    });
+    await expect(repository.deleteTask("any-id")).rejects.toThrow("CloudBase保存失败：无删除权限");
   });
 });

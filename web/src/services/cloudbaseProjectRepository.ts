@@ -8,6 +8,7 @@ export interface CloudBaseDocumentReferenceLike {
   get(): Promise<{ data: CloudBaseDocument | CloudBaseDocument[] | null }>;
   set(document: CloudBaseDocument): Promise<unknown>;
   update(patch: CloudBaseDocument): Promise<unknown>;
+  remove?(): Promise<unknown>;
 }
 
 export interface CloudBaseQueryLike {
@@ -204,7 +205,13 @@ export class CloudBaseProjectRepository implements ProjectRepository {
       await this.assertWriteSucceeded(await reference.update(document));
       return existing.documentId;
     }
-    await this.assertWriteSucceeded(await reference.set(document));
+    // set creates a new document — "no record updated" is not an error here
+    const setResult = await reference.set(document);
+    if (setResult && typeof setResult === "object" && "code" in setResult && typeof (setResult as { code?: unknown }).code === "string") {
+      const errorResult = setResult as { code?: unknown; message?: unknown };
+      const message = typeof errorResult.message === "string" ? errorResult.message : "CloudBase写入失败";
+      throw new Error(`CloudBase保存失败：${message}`);
+    }
     return id;
   }
 
@@ -300,6 +307,17 @@ export class CloudBaseProjectRepository implements ProjectRepository {
       throw new Error("CloudBase保存失败：任务回读结果与提交内容不一致");
     }
     return persisted;
+  }
+
+  async deleteTask(taskId: string): Promise<void> {
+    const reference = this.database.collection(this.tasksCollection).doc(taskId);
+    if (!reference.remove) throw new Error("CloudBase保存失败：当前数据库适配器不支持删除操作");
+    const result = await reference.remove();
+    if (result && typeof result === "object" && "code" in result && typeof (result as { code?: unknown }).code === "string") {
+      const errorResult = result as { code?: unknown; message?: unknown };
+      const message = typeof errorResult.message === "string" ? errorResult.message : "CloudBase删除失败";
+      throw new Error(`CloudBase保存失败：${message}`);
+    }
   }
 
   async archiveTask(taskId: string, archivedAt: string): Promise<ProjectTaskInput> {

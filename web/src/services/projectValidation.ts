@@ -22,12 +22,23 @@ function assertDateOrder(start: string | undefined, end: string | undefined, fie
   }
 }
 
-export function validateProject(project: Project): void {
+export interface TaskDateRange {
+  earliestStartDate?: string;
+  latestEndDate?: string;
+}
+
+export function validateProject(project: Project, taskDateRange?: TaskDateRange): void {
   requireText(project.id, "id", "项目 ID");
   requireText(project.name, "name", "项目名称");
   requireText(project.plannedStartDate, "plannedStartDate", "项目计划开始日期");
   requireText(project.plannedEndDate, "plannedEndDate", "项目计划结束日期");
   assertDateOrder(project.plannedStartDate, project.plannedEndDate, "plannedEndDate", "项目计划");
+  if (taskDateRange?.earliestStartDate && project.plannedStartDate && project.plannedStartDate > taskDateRange.earliestStartDate) {
+    throw new ProjectValidationError("项目计划开始日期不能晚于已有任务的最早开始日期", "plannedStartDate");
+  }
+  if (taskDateRange?.latestEndDate && project.plannedEndDate && project.plannedEndDate < taskDateRange.latestEndDate) {
+    throw new ProjectValidationError("项目计划结束日期不能早于已有任务的最晚结束日期", "plannedEndDate");
+  }
 }
 
 export function validateTaskInput(task: ProjectTaskInput): void {

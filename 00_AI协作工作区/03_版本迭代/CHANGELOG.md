@@ -228,3 +228,16 @@
 - 新增回归测试覆盖自动 `_id` 项目文档更新失败后的固定文档写入兜底。
 - 验证：`npm test --workspace web` 通过，13 个测试文件、76 条测试用例通过。
 - 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。
+
+## admin-and-timeline-polish v1.0 - 2026-06-20
+
+- 修复新任务保存首次提示 `updated: 0` 错误的问题：`saveDocument` 中 `set` 路径不再检查 `updated: 0`（`set` 创建新文档时返回 `updated: 0` 是正常行为），只检查 error code。
+- 修复风险任务栏切换后显示异常：`.risk-pill` 设置固定 `min-height`，任务名称允许换行；`.risk-list` 改为 `flex-wrap: wrap` 去掉水平滚动。
+- 修复时间轴当前日期居中问题：当前日期移到计划时间轴标题下方独立一行，左对齐。
+- 修复归档列表空隙：`taskVisible` 过滤掉 `taskName` 为空的任务，不再渲染空按钮占位。
+- 新增已归档任务删除功能：`ProjectRepository` 接口增加 `deleteTask`，`LocalProjectRepository` 和 `CloudBaseProjectRepository` 分别实现；`AdminPage` 已归档任务旁增加删除按钮。
+- 新增项目时间范围自动计算：取消勾选"确认修改项目信息"时自动根据任务日期调整项目起止日期；`validateProject` 增加 `taskDateRange` 参数校验项目日期不能窄于任务日期范围；`buildDashboardModel` 的 `timelineRange` 优先使用任务实际日期范围（若项目日期更宽则使用项目日期）。
+- 新增回归测试覆盖：CloudBase `set` 不报 `updated: 0`、删除任务、项目日期边界校验。
+- 验证：`npm test --workspace web` 通过，13 个测试文件、80 条测试用例通过。
+- 验证：`npm run build --workspace web` 通过。
+- 可交给 Claude Code 审查：是。
