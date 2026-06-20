@@ -56,7 +56,7 @@ function createCloudBaseDatabase(config: NonNullable<ProjectDataSourceConfig["cl
     env: config.envId,
     accessKey: config.accessKey,
   });
-  return app.database() as CloudBaseDatabaseLike;
+  return app.database() as unknown as CloudBaseDatabaseLike;
 }
 
 export function createProjectRepository(
