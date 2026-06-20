@@ -1,8 +1,5 @@
 import type { DashboardModel } from "./dashboardMetrics";
-
-function percent(value: number) {
-  return `${Math.round(value * 100)}%`;
-}
+import { formatPercent } from "./formatters";
 
 export function ProjectSummaryDashboard({ model }: { model: DashboardModel }) {
   const { project, metrics, today } = model;
@@ -21,7 +18,7 @@ export function ProjectSummaryDashboard({ model }: { model: DashboardModel }) {
       <div className="metric-grid" aria-label="项目关键指标">
         <article className="metric-card metric-card-primary">
           <span>总体进度</span>
-          <strong>{percent(metrics.overallProgress)}</strong>
+          <strong>{formatPercent(metrics.overallProgress)}</strong>
         </article>
         <article className="metric-card">
           <span>任务总数</span>

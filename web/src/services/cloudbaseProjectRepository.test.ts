@@ -209,6 +209,64 @@ describe("CloudBaseProjectRepository reads", () => {
 });
 
 describe("CloudBaseProjectRepository writes", () => {
+  it("updates existing project and task documents instead of inserting duplicates", async () => {
+    class UpdateOnlyCollection {
+      constructor(private readonly documents: Map<string, Record<string, unknown>>) {}
+
+      doc(id: string) {
+        return {
+          get: async () => {
+            const document = this.documents.get(id);
+            return { data: document ? { ...document } : null };
+          },
+          set: async () => {
+            throw {
+              code: "DATABASE_REQUEST_FAILED",
+              message: `multiple write errors: [{write errors: [{E11000 duplicate key error collection: tnt-nhxtark38.projects index: _id_ dup key: { : \"${id}\" }}]}, {<nil>}]`,
+            };
+          },
+          update: async (patch: Record<string, unknown>) => {
+            const current = this.documents.get(id);
+            if (!current) throw new Error(`Missing document: ${id}`);
+            const next = { ...current, ...patch, _id: id };
+            this.documents.set(id, next);
+            return { updated: 1 };
+          },
+        };
+      }
+
+      where() {
+        return {
+          get: async () => ({ data: [...this.documents.values()].map((document) => ({ ...document })) }),
+        };
+      }
+    }
+
+    class UpdateOnlyDatabase implements CloudBaseDatabaseLike {
+      readonly collections = new Map<string, Map<string, Record<string, unknown>>>();
+
+      collection(name: string) {
+        if (!this.collections.has(name)) this.collections.set(name, new Map());
+        return new UpdateOnlyCollection(this.collections.get(name)!);
+      }
+    }
+
+    const database = new UpdateOnlyDatabase();
+    database.collections.set("projects", new Map([["cpid710r8", projectToCloudBaseDocument(project)]]));
+    database.collections.set(
+      "project_tasks",
+      new Map([["task-2", taskToCloudBaseDocument(task({ id: "task-2", taskName: "原任务" }), "cpid710r8")]]),
+    );
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    await expect(repository.saveProject({ ...project, name: "更新项目" })).resolves.toMatchObject({ name: "更新项目" });
+    await expect(repository.saveTaskInput(task({ id: "task-2", taskName: "更新任务", manualCompletionRatio: 0.7 }))).resolves.toMatchObject({
+      id: "task-2",
+      taskName: "更新任务",
+      manualCompletionRatio: 0.7,
+    });
+  });
+
   it("saves project and task documents", async () => {
     const database = new FakeDatabase();
     const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });

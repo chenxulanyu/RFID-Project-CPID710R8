@@ -177,3 +177,10 @@
 - 验证：`npm test -- src/services/cloudbaseProjectRepository.test.ts src/features/project/AdminPage.test.tsx` 通过。
 - 验证：`npm test` 通过，10 个测试文件、57 条测试用例通过。
 - 验证：`npm run build` 通过。
+
+## fix-cloudbase-persistence-and-admin-save v1.1 - 2026-06-20
+
+- 修复 CloudBase 现有文档保存时仍用 `set` 导致 `_id` 重复键错误的问题；写入改为“存在则 `update`，不存在才 `set`”。
+- 修复任务恢复时 `archivedAt` 残留导致回读校验失败的问题；恢复路径现在显式清空归档时间。
+- 保持任务创建、更新、归档与恢复流程不变，并补充回归测试覆盖已有文档更新与恢复清理。
+- 验证：`npm test -- src/services/cloudbaseProjectRepository.test.ts src/features/project/AdminPage.test.tsx src/services/projectAdminService.test.ts` 通过。

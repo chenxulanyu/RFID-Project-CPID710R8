@@ -15,8 +15,8 @@
 
 - `web-app-foundation`: `v1.1`
 - `project-dashboard-frontend`: `v1.2`
-- `admin-progress-backend`: `v1.1`
-- `cloudbase-persistence`: `v1.0`
+- `admin-progress-backend`: `v1.2`
+- `cloudbase-persistence`: `v1.1`
 - `repository-and-deployment`: `v1.5`
 - `seed-full-project-tasks`: `v1.0`
 - `fix-cloudbase-and-mobile-shell`: `v1.0`

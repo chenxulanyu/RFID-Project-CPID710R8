@@ -1,8 +1,5 @@
 import type { DashboardModel } from "./dashboardMetrics";
-
-function progressPercent(value: number) {
-  return `${Math.round(value * 100)}%`;
-}
+import { formatPercent } from "./formatters";
 
 export function ProjectTimeline({ model }: { model: DashboardModel }) {
   return (
@@ -40,9 +37,9 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
                     left: `${task.timeline.leftPercent}%`,
                     width: `${Math.max(task.timeline.widthPercent, 1.4)}%`,
                   }}
-                  title={`${task.taskName}：${task.statusLabel}，完成 ${progressPercent(task.completionRatio)}`}
+                  title={`${task.taskName}：${task.statusLabel}，完成 ${formatPercent(task.completionRatio)}`}
                 >
-                  <span>{progressPercent(task.completionRatio)}</span>
+                  <span>{formatPercent(task.completionRatio)}</span>
                 </div>
               </div>
             </div>

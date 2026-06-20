@@ -90,7 +90,13 @@ export function projectFromCloudBaseDocument(document: CloudBaseDocument): Proje
 
 export function taskToCloudBaseDocument(task: ProjectTaskInput, projectId: string): CloudBaseDocument {
   const { id, ...rest } = task;
-  return { ...rest, id, projectId, updatedAt: new Date().toISOString() };
+  return {
+    ...rest,
+    archivedAt: task.archivedAt ?? null,
+    id,
+    projectId,
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 export function taskFromCloudBaseDocument(document: CloudBaseDocument): ProjectTaskInput {
@@ -133,6 +139,18 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     }
   }
 
+  private async saveDocument(collectionName: string, id: string, document: CloudBaseDocument): Promise<void> {
+    const collection = this.database.collection(collectionName);
+    const reference = collection.doc(id);
+    const existing = await reference.get();
+    const currentDocument = firstDocument(existing.data);
+    if (currentDocument) {
+      await this.assertWriteSucceeded(await reference.update(document));
+      return;
+    }
+    await this.assertWriteSucceeded(await reference.set(document));
+  }
+
   async getProject(): Promise<Project> {
     const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
     const document = firstDocument(response.data);
@@ -142,7 +160,7 @@ export class CloudBaseProjectRepository implements ProjectRepository {
 
   async saveProject(project: Project): Promise<Project> {
     const reference = this.database.collection(this.projectsCollection).doc(project.id);
-    await this.assertWriteSucceeded(await reference.set(projectToCloudBaseDocument(project)));
+    await this.saveDocument(this.projectsCollection, project.id, projectToCloudBaseDocument(project));
     const saved = await reference.get();
     const document = firstDocument(saved.data);
     if (!document) throw new Error(`CloudBase project not found after save: ${project.id}`);
@@ -170,7 +188,7 @@ export class CloudBaseProjectRepository implements ProjectRepository {
 
   async saveTaskInput(task: ProjectTaskInput): Promise<ProjectTaskInput> {
     const reference = this.database.collection(this.tasksCollection).doc(task.id);
-    await this.assertWriteSucceeded(await reference.set(taskToCloudBaseDocument(task, this.projectId)));
+    await this.saveDocument(this.tasksCollection, task.id, taskToCloudBaseDocument(task, this.projectId));
     const saved = await reference.get();
     const document = firstDocument(saved.data);
     if (!document) throw new Error(`Task not found after save: ${task.id}`);

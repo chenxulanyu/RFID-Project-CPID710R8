@@ -7,47 +7,40 @@ describe("AdminPage", () => {
     window.localStorage.clear();
   });
 
-  it("renders project metadata and a left-list right-detail task editor", async () => {
+  it("locks project metadata until editing is confirmed", async () => {
     render(<AdminPage today="2026-06-19" />);
 
     expect(await screen.findByRole("heading", { name: "后台进度维护" })).toBeInTheDocument();
-    expect(screen.queryByText("建议横屏查看")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("项目名称")).toBeInTheDocument();
-    expect(screen.getByRole("list", { name: "任务列表" })).toBeInTheDocument();
-    expect(screen.getByLabelText("任务名称")).toBeInTheDocument();
+    expect(screen.getByLabelText("项目名称")).toBeDisabled();
+    expect(screen.getByLabelText("项目计划开始")).toBeDisabled();
+    expect(screen.getByLabelText("项目计划结束")).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "确认修改项目信息" }));
+
+    expect(screen.getByLabelText("项目名称")).toBeEnabled();
+    expect(screen.getByLabelText("项目计划开始")).toBeEnabled();
+    expect(screen.getByLabelText("项目计划结束")).toBeEnabled();
   });
 
-  it("saves project metadata and task detail with one action", async () => {
+  it("saves project metadata independently from task details", async () => {
     render(<AdminPage today="2026-06-19" />);
 
-    fireEvent.change(await screen.findByLabelText("项目名称"), { target: { value: "更新后的项目名称" } });
-    const taskName = await screen.findByLabelText("任务名称");
-    fireEvent.change(taskName, { target: { value: "更新后的任务名称" } });
-    expect(screen.getByRole("button", { name: "保存项目与任务" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: "确认修改项目信息" }));
+    fireEvent.change(screen.getByLabelText("项目名称"), { target: { value: "更新后的项目名称" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存项目信息" }));
 
-    expect(await screen.findByRole("status")).toHaveTextContent("项目与任务已保存");
+    expect(await screen.findByRole("status")).toHaveTextContent("项目信息已保存");
     expect(screen.getByDisplayValue("更新后的项目名称")).toBeInTheDocument();
+  });
+
+  it("saves task details independently from project metadata", async () => {
+    render(<AdminPage today="2026-06-19" />);
+
+    fireEvent.change(await screen.findByLabelText("任务名称"), { target: { value: "更新后的任务名称" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存任务信息" }));
+
+    expect(await screen.findByRole("status")).toHaveTextContent("任务信息已保存");
     expect(screen.getByDisplayValue("更新后的任务名称")).toBeInTheDocument();
-  });
-
-  it("shows validation errors for invalid planned dates", async () => {
-    render(<AdminPage today="2026-06-19" />);
-
-    fireEvent.change(await screen.findByLabelText("计划开始"), { target: { value: "2026-06-10" } });
-    fireEvent.change(screen.getByLabelText("计划结束"), { target: { value: "2026-06-01" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
-
-    expect(await screen.findByRole("alert")).toHaveTextContent("计划结束日期不能早于开始日期");
-  });
-
-  it("shows validation errors after clearing a required text field", async () => {
-    render(<AdminPage today="2026-06-19" />);
-
-    fireEvent.change(await screen.findByLabelText("任务名称"), { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
-
-    expect(await screen.findByRole("alert")).toHaveTextContent("任务名称不能为空");
   });
 
   it("creates, archives, and restores a task", async () => {
@@ -62,7 +55,7 @@ describe("AdminPage", () => {
     fireEvent.change(screen.getByLabelText("计划结束"), { target: { value: "2026-07-05" } });
     fireEvent.change(screen.getByLabelText("资源方"), { target: { value: "芯联" } });
     fireEvent.change(screen.getByLabelText("责任人"), { target: { value: "负责人" } });
-    fireEvent.click(screen.getByRole("button", { name: "保存项目与任务" }));
+    fireEvent.click(screen.getByRole("button", { name: "保存任务信息" }));
 
     expect(await screen.findByText("新增后台任务")).toBeInTheDocument();
 
@@ -76,5 +69,14 @@ describe("AdminPage", () => {
     expect(await screen.findByRole("status")).toHaveTextContent("任务已恢复");
     fireEvent.click(screen.getByRole("button", { name: "活跃任务" }));
     expect(screen.getByText("新增后台任务")).toBeInTheDocument();
+  });
+
+  it("shows validation errors after clearing a required text field", async () => {
+    render(<AdminPage today="2026-06-19" />);
+
+    fireEvent.change(await screen.findByLabelText("任务名称"), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存任务信息" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("任务名称不能为空");
   });
 });

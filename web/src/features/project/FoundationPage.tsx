@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getProjectProgress } from "../../services/projectService";
 import type { ProjectProgressData } from "../../types/project";
+import { formatPercent } from "./formatters";
 
 function getCurrentDateString(): string {
   return new Date().toISOString().slice(0, 10);
@@ -53,7 +54,7 @@ export function FoundationPage() {
               <td>
                 {task.plannedStartDate} 至 {task.plannedEndDate}
               </td>
-              <td>{Math.round(task.completionRatio * 100)}%</td>
+              <td>{formatPercent(task.completionRatio)}</td>
               <td>{task.responsiblePerson}</td>
             </tr>
           ))}

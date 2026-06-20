@@ -1,8 +1,5 @@
 import type { DashboardTask } from "./dashboardMetrics";
-
-function percent(value: number) {
-  return `${Math.round(value * 100)}%`;
-}
+import { formatPercent } from "./formatters";
 
 function actualPeriod(task: DashboardTask) {
   if (!task.actualStartDate && !task.actualEndDate) return "未开始";
@@ -46,7 +43,7 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                     <span className="progress-track" aria-hidden="true">
                       <span style={{ width: `${Math.round(task.completionRatio * 100)}%` }} />
                     </span>
-                    {percent(task.completionRatio)}
+                    {formatPercent(task.completionRatio)}
                   </span>
                 </td>
                 <td>
