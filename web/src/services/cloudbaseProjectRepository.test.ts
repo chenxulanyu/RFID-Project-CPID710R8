@@ -37,11 +37,18 @@ function task(overrides: Partial<ProjectTaskInput> & Pick<ProjectTaskInput, "id"
 }
 
 class FakeCollection {
-  constructor(private readonly documents: Map<string, Record<string, unknown>>) {}
+  constructor(
+    private readonly documents: Map<string, Record<string, unknown>>,
+    private readonly docGetMode: "object" | "array" = "object",
+  ) {}
 
   doc(id: string) {
     return {
-      get: async () => ({ data: this.documents.get(id) ? { ...this.documents.get(id) } : null }),
+      get: async () => {
+        const document = this.documents.get(id);
+        if (!document) return { data: null };
+        return { data: this.docGetMode === "array" ? [{ ...document }] : { ...document } };
+      },
       set: async (document: Record<string, unknown>) => {
         this.documents.set(id, { ...document, _id: id });
         return { id };
@@ -69,9 +76,11 @@ class FakeCollection {
 class FakeDatabase implements CloudBaseDatabaseLike {
   readonly collections = new Map<string, Map<string, Record<string, unknown>>>();
 
+  constructor(private readonly docGetMode: "object" | "array" = "object") {}
+
   collection(name: string) {
     if (!this.collections.has(name)) this.collections.set(name, new Map());
-    return new FakeCollection(this.collections.get(name)!);
+    return new FakeCollection(this.collections.get(name)!, this.docGetMode);
   }
 }
 
@@ -128,6 +137,14 @@ describe("CloudBaseProjectRepository reads", () => {
       "active",
       "archived",
     ]);
+  });
+
+  it("reads project metadata from CloudBase doc get array responses", async () => {
+    const database = new FakeDatabase("array");
+    database.collections.set("projects", new Map([["cpid710r8", projectToCloudBaseDocument(project)]]));
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    expect(await repository.getProject()).toEqual(project);
   });
 });
 

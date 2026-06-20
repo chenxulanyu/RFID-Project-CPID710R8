@@ -4,7 +4,7 @@ import type { ListTaskOptions, ProjectRepository } from "./projectRepository";
 type CloudBaseDocument = Record<string, unknown>;
 
 export interface CloudBaseDocumentReferenceLike {
-  get(): Promise<{ data: CloudBaseDocument | null }>;
+  get(): Promise<{ data: CloudBaseDocument | CloudBaseDocument[] | null }>;
   set(document: CloudBaseDocument): Promise<unknown>;
   update(patch: CloudBaseDocument): Promise<unknown>;
 }
@@ -42,6 +42,10 @@ function optionalNumber(value: unknown): number | undefined {
 
 function optionalBoolean(value: unknown): boolean | undefined {
   return typeof value === "boolean" ? value : undefined;
+}
+
+function firstDocument(data: CloudBaseDocument | CloudBaseDocument[] | null): CloudBaseDocument | null {
+  return Array.isArray(data) ? data[0] ?? null : data;
 }
 
 export function projectToCloudBaseDocument(project: Project): CloudBaseDocument {
@@ -96,8 +100,9 @@ export class CloudBaseProjectRepository implements ProjectRepository {
 
   async getProject(): Promise<Project> {
     const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
-    if (!response.data) throw new Error(`CloudBase project not found: ${this.projectId}`);
-    return projectFromCloudBaseDocument(response.data);
+    const document = firstDocument(response.data);
+    if (!document) throw new Error(`CloudBase project not found: ${this.projectId}`);
+    return projectFromCloudBaseDocument(document);
   }
 
   async saveProject(project: Project): Promise<Project> {
