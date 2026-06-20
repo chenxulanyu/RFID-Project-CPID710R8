@@ -36,3 +36,11 @@
 - [x] 6.2 Add regression coverage for saving back to the auto-id project document.
 - [x] 6.3 Implement lookup fallback from `doc(projectId)` to `where({ id: projectId })`.
 - [x] 6.4 Run full web tests and build.
+
+## 7. Auto-id write fallback and layout polish
+
+- [x] 7.1 Add regression coverage for auto-id project update returning `updated: 0`.
+- [x] 7.2 Write a fixed-id project document when an auto-id project document cannot be updated.
+- [x] 7.3 Stabilize risk task card height and wrapping.
+- [x] 7.4 Stretch the admin task list to the task detail area height.
+- [x] 7.5 Run full web tests and build.

@@ -558,6 +558,76 @@ describe("CloudBaseProjectRepository writes", () => {
     expect(database.collections.get("projects")?.has("cpid710r8")).toBe(false);
   });
 
+  it("creates a fixed-id project document when the auto-id document cannot be updated", async () => {
+    class AutoIdReadOnlyCollection {
+      readonly documents = new Map<string, Record<string, unknown>>([
+        [
+          "60977a436a36660000ef6fde615ae52c",
+          {
+            _id: "60977a436a36660000ef6fde615ae52c",
+            id: "cpid710r8",
+            name: "CPID710R8 项目进度管理",
+            plannedStartDate: "2026-03-30",
+            plannedEndDate: "2026-09-28",
+            calendarMode: "calendar-days",
+          },
+        ],
+      ]);
+
+      doc(id: string) {
+        return {
+          get: async () => {
+            const document = this.documents.get(id);
+            return { data: document ? { ...document } : null };
+          },
+          set: async (document: Record<string, unknown>) => {
+            this.documents.set(id, { ...document, _id: id });
+            return { id };
+          },
+          update: async (patch: Record<string, unknown>) => {
+            if (id === "60977a436a36660000ef6fde615ae52c") return { updated: 0 };
+            const current = this.documents.get(id);
+            if (!current) return { updated: 0 };
+            this.documents.set(id, { ...current, ...patch, _id: id });
+            return { updated: 1 };
+          },
+        };
+      }
+
+      where(query: Record<string, unknown>) {
+        return {
+          get: async () => ({
+            data: [...this.documents.values()]
+              .filter((document) => Object.entries(query).every(([key, value]) => document[key] === value))
+              .map((document) => ({ ...document })),
+          }),
+        };
+      }
+    }
+
+    class AutoIdReadOnlyDatabase implements CloudBaseDatabaseLike {
+      readonly collectionInstance = new AutoIdReadOnlyCollection();
+
+      collection() {
+        return this.collectionInstance;
+      }
+    }
+
+    const database = new AutoIdReadOnlyDatabase();
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    await expect(repository.saveProject({ ...project, name: "固定文档项目" })).resolves.toMatchObject({
+      id: "cpid710r8",
+      name: "固定文档项目",
+    });
+
+    expect(database.collectionInstance.documents.get("cpid710r8")).toMatchObject({
+      _id: "cpid710r8",
+      id: "cpid710r8",
+      name: "固定文档项目",
+    });
+  });
+
   it("saves project and task documents", async () => {
     const database = new FakeDatabase();
     const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });

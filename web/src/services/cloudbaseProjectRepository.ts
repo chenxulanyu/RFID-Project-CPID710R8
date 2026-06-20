@@ -165,13 +165,17 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     this.tasksCollection = options.tasksCollection ?? defaultTasksCollection;
   }
 
+  private isUpdatedZero(result: unknown): boolean {
+    return Boolean(result && typeof result === "object" && "updated" in result && (result as { updated?: unknown }).updated === 0);
+  }
+
   private async assertWriteSucceeded(result: unknown): Promise<void> {
     if (result && typeof result === "object" && "code" in result && typeof (result as { code?: unknown }).code === "string") {
       const errorResult = result as { code?: unknown; message?: unknown };
       const message = typeof errorResult.message === "string" ? errorResult.message : "CloudBase写入失败";
       throw new Error(`CloudBase保存失败：${message}`);
     }
-    if (result && typeof result === "object" && "updated" in result && (result as { updated?: unknown }).updated === 0) {
+    if (this.isUpdatedZero(result)) {
       throw new Error("CloudBase保存失败：没有记录被更新，请检查集合写权限或文档归属");
     }
   }
@@ -204,6 +208,26 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     return id;
   }
 
+  private async saveProjectDocument(project: Project): Promise<string> {
+    const collection = this.database.collection(this.projectsCollection);
+    const document = projectToCloudBaseDocument(project);
+    const existing = await this.findDocument(this.projectsCollection, project.id);
+    const reference = collection.doc(existing.documentId);
+
+    if (existing.document) {
+      const updateResult = await reference.update(document);
+      if (this.isUpdatedZero(updateResult) && existing.documentId !== project.id) {
+        await this.assertWriteSucceeded(await collection.doc(project.id).set(document));
+        return project.id;
+      }
+      await this.assertWriteSucceeded(updateResult);
+      return existing.documentId;
+    }
+
+    await this.assertWriteSucceeded(await reference.set(document));
+    return project.id;
+  }
+
   async getProject(): Promise<Project> {
     try {
       const { document } = await this.findDocument(this.projectsCollection, this.projectId);
@@ -214,7 +238,7 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async saveProject(project: Project): Promise<Project> {
-    const savedDocumentId = await this.saveDocument(this.projectsCollection, project.id, projectToCloudBaseDocument(project));
+    const savedDocumentId = await this.saveProjectDocument(project);
     const reference = this.database.collection(this.projectsCollection).doc(savedDocumentId);
     const readBackProject = async () => {
       const saved = await reference.get();

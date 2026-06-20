@@ -219,3 +219,12 @@
 - 新增回归测试覆盖自动 `_id` 项目文档的读取和保存更新。
 - 验证：`npm test --workspace web` 通过，13 个测试文件、75 条测试用例通过。
 - 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。
+
+## fix-project-save-and-timeline-axis v1.3 - 2026-06-20
+
+- 修复 `projects` 自动 `_id` 文档可读但不可更新时项目信息保存失败的问题：保存时若自动 `_id` 文档更新返回 `updated: 0`，改为写入固定 `_id=cpid710r8` 的当前用户可维护项目文档。
+- 优化前台风险任务区：风险卡片保持稳定最小高度，任务名称允许换行，避免从后台切回前台后内容显示不全。
+- 优化后台维护布局：左侧任务列表随右侧任务信息区域拉伸到底，不再被视口高度限制压短。
+- 新增回归测试覆盖自动 `_id` 项目文档更新失败后的固定文档写入兜底。
+- 验证：`npm test --workspace web` 通过，13 个测试文件、76 条测试用例通过。
+- 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。
