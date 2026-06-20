@@ -503,7 +503,6 @@ body {
 }
 
 .admin-task-list {
-  align-content: start;
   display: grid;
   gap: 8px;
   flex: 1;
@@ -656,7 +655,6 @@ body {
   }
 
   .admin-task-list {
-  align-content: start;
     flex: initial;
     max-height: none;
   }
