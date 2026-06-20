@@ -89,3 +89,21 @@
 - 新增前端配置安全边界：仅允许环境 ID、Publishable Key、项目 ID 和集合名等 Web SDK 公开配置，显式拒绝 `secretId` / `secretKey` 等服务端密钥进入前端配置。
 - 新增 `web/.env.example` 与 CloudBase 配置说明，记录安全域名/允许来源、认证方式和数据库权限规则等上线前要求。
 - 真实 CloudBase 读写连通性验证待用户提供 CloudBase 环境信息后执行。
+
+## repository-and-deployment v1.0 - 2026-06-20
+
+- 新增仓库根 `README.md`，说明项目目的、目录结构、本地开发、验证命令、主要页面、CloudBase 数据源边界和双 AI 协作入口。
+- 新增 `docs/deployment.md`，记录 GitHub/Gitee 发布准备、扣子手动部署建议、CloudBase 前端安全环境变量、上线前 CloudBase 配置和外部操作授权边界。
+- 新增 `docs/release-readiness-checklist.md`，覆盖本地状态、构建测试、页面检查、CloudBase 连通、敏感信息、仓库/部署授权和发布记录。
+- 确认 `.gitignore` 已排除 `.env`、`.env.*`、`node_modules/`、`dist/`、`.DS_Store` 与 `.superpowers/`，并保留 `!.env.example`。
+- 验证：敏感字段扫描仅命中禁止提交 `secretId` / `secretKey` 的测试或文档说明，未发现真实凭证。
+- 扣子部署由用户手动执行；真实线上部署验证结果待部署完成后补记。
+
+## repository-and-deployment v1.1 - 2026-06-20
+
+- 处理 Claude Code `Claude审查-repository-and-deployment-v1.0.md` 的有条件通过意见。
+- 修正 `README.md`、`docs/deployment.md`、`docs/release-readiness-checklist.md` 和 `web/README.md` 中的路由描述：删除不存在的 `/dashboard` 引用，将 `/` 明确为项目进度仪表盘。
+- 在根 `README.md` 目录结构中补充 `docs/`，覆盖新增部署说明和发布检查清单目录。
+- 新增 `Codex审查回应-repository-and-deployment-v1.0.md`，逐条记录 I1、M1 均采纳。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
