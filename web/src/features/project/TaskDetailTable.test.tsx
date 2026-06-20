@@ -35,4 +35,10 @@ describe("TaskDetailTable", () => {
 
     expect(screen.getByText("42%")).toBeInTheDocument();
   });
+
+  it("emphasizes project content ahead of task name", () => {
+    const { container } = render(<TaskDetailTable tasks={tasks} />);
+    expect(container.querySelector("tbody td:nth-child(2)")).toHaveClass("cell-strong");
+    expect(container.querySelector("tbody td:nth-child(3)")).not.toHaveClass("cell-strong");
+  });
 });

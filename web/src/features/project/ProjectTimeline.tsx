@@ -39,7 +39,9 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
                   }}
                   title={`${task.taskName}：${task.statusLabel}，完成 ${formatPercent(task.completionRatio)}`}
                 >
-                  <span>{formatPercent(task.completionRatio)}</span>
+                  <span className="timeline-date timeline-date-start">{task.plannedStartDate}</span>
+                  <span className="timeline-percent">{formatPercent(task.completionRatio)}</span>
+                  <span className="timeline-date timeline-date-end">{task.plannedEndDate}</span>
                 </div>
               </div>
             </div>

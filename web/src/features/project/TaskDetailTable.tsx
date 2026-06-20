@@ -32,8 +32,8 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
             {tasks.map((task) => (
               <tr key={task.id}>
                 <td>{task.milestoneCode}</td>
-                <td>{task.projectContent}</td>
-                <td className="cell-strong">{task.taskName}</td>
+                <td className="cell-strong">{task.projectContent}</td>
+                <td>{task.taskName}</td>
                 <td>
                   {task.plannedStartDate} 至 {task.plannedEndDate}
                 </td>

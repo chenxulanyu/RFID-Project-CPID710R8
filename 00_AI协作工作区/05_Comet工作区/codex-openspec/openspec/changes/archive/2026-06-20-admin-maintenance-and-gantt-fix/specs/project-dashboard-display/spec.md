@@ -1,8 +1,5 @@
-# project-dashboard-display Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change project-dashboard-frontend. Update Purpose after archive.
-## Requirements
 ### Requirement: Project summary dashboard
 The system SHALL display a project summary dashboard with project name, project period, total duration, elapsed duration, overall progress, task status counts, overdue tasks, and upcoming warning counts.
 
@@ -20,13 +17,6 @@ The system SHALL display project tasks in a readable detail table including task
 #### Scenario: Inspect task details
 - **WHEN** a user reviews the task detail section
 - **THEN** the user can identify each task's schedule, progress, owner, and risk information
-
-### Requirement: Emphasize project content in task details
-The system SHALL visually emphasize the project content field more strongly than the task name in task detail displays.
-
-#### Scenario: Read task detail text hierarchy
-- **WHEN** a user scans a task detail row or task card
-- **THEN** the project content text is visually emphasized before the task name
 
 ### Requirement: Timeline or Gantt visualization
 The system SHALL provide a timeline or Gantt-style visualization that represents planned task spans and indicates progress or status using the project task data.
@@ -57,3 +47,10 @@ The system SHALL guide mobile users toward landscape viewing when the viewport i
 #### Scenario: Preserve readable layout
 - **WHEN** the dashboard is viewed on desktop or mobile landscape viewport sizes
 - **THEN** dashboard text, metric cards, task table cells, timeline bars, and guidance copy fit within their containers without unreadable overflow or incoherent overlap
+
+### Requirement: Emphasize project content in task details
+The system SHALL visually emphasize the project content field more strongly than the task name in task detail displays.
+
+#### Scenario: Read task detail text hierarchy
+- **WHEN** a user scans a task detail row or task card
+- **THEN** the project content text is visually emphasized before the task name

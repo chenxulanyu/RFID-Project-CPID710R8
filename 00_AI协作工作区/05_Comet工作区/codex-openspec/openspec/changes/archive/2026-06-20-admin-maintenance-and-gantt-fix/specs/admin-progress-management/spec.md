@@ -1,8 +1,5 @@
-# admin-progress-management Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change admin-progress-backend. Update Purpose after archive.
-## Requirements
 ### Requirement: Maintain project metadata
 The system SHALL provide an administrative capability to view and update project metadata including project name, project period, and descriptive information required by the display frontend.
 

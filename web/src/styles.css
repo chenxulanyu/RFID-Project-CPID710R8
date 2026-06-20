@@ -416,23 +416,39 @@ body {
   border-radius: 999px;
   box-sizing: border-box;
   color: #ffffff;
-  display: flex;
-  gap: 4px;
+  display: grid;
+  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   font-size: 11px;
   font-weight: 800;
   height: 100%;
-  justify-content: flex-end;
-  min-width: 48px;
+  min-width: 164px;
   overflow: hidden;
   padding: 0 8px;
   position: absolute;
   top: 0;
 }
 
-.timeline-bar span {
+.timeline-date,
+.timeline-percent {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.timeline-date-start {
+  justify-self: start;
+  text-align: left;
+}
+
+.timeline-percent {
+  justify-self: center;
+}
+
+.timeline-date-end {
+  justify-self: end;
+  text-align: right;
 }
 
 .timeline-bar.status-finished {
@@ -522,7 +538,7 @@ body {
   gap: 8px;
   list-style: none;
   margin: 12px 0 0;
-  max-height: 540px;
+  max-height: min(72vh, 760px);
   overflow: auto;
   padding: 0;
 }
@@ -617,6 +633,15 @@ body {
   margin-top: 14px;
 }
 
+.admin-section .admin-actions {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.admin-section .admin-actions .primary-button {
+  margin-left: auto;
+}
+
 .admin-message {
   border-radius: 6px;
   margin-top: 12px;
@@ -657,6 +682,10 @@ body {
 
   .admin-layout {
     grid-template-columns: 1fr;
+  }
+
+  .admin-task-list {
+    max-height: none;
   }
 
   .admin-form-grid {

@@ -45,6 +45,28 @@ function optionalBoolean(value: unknown): boolean | undefined {
   return typeof value === "boolean" ? value : undefined;
 }
 
+function normalizeProjectForComparison(project: Project): Pick<Project, "id" | "name" | "plannedStartDate" | "plannedEndDate" | "calendarMode"> {
+  return {
+    id: project.id,
+    name: project.name,
+    plannedStartDate: project.plannedStartDate,
+    plannedEndDate: project.plannedEndDate,
+    calendarMode: project.calendarMode,
+  };
+}
+
+function projectMatchesExpected(left: Project, right: Project): boolean {
+  const expected = normalizeProjectForComparison(left);
+  const actual = normalizeProjectForComparison(right);
+  return (
+    actual.id === expected.id &&
+    actual.name === expected.name &&
+    actual.plannedStartDate === expected.plannedStartDate &&
+    actual.plannedEndDate === expected.plannedEndDate &&
+    actual.calendarMode === expected.calendarMode
+  );
+}
+
 function requiredString(value: unknown, fallback: string): string {
   return typeof value === "string" && value.length > 0 && value !== "undefined" && value !== "null" ? value : fallback;
 }
@@ -161,20 +183,24 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   async saveProject(project: Project): Promise<Project> {
     const reference = this.database.collection(this.projectsCollection).doc(project.id);
     await this.saveDocument(this.projectsCollection, project.id, projectToCloudBaseDocument(project));
-    const saved = await reference.get();
-    const document = firstDocument(saved.data);
-    if (!document) throw new Error(`CloudBase project not found after save: ${project.id}`);
-    const persisted = projectFromCloudBaseDocument(document);
-    if (
-      persisted.id !== project.id ||
-      persisted.name !== project.name ||
-      persisted.plannedStartDate !== project.plannedStartDate ||
-      persisted.plannedEndDate !== project.plannedEndDate ||
-      persisted.calendarMode !== project.calendarMode
-    ) {
-      throw new Error("CloudBase保存失败：项目回读结果与提交内容不一致");
+    const readBackProject = async () => {
+      const saved = await reference.get();
+      const document = firstDocument(saved.data);
+      if (!document) throw new Error(`CloudBase project not found after save: ${project.id}`);
+      return projectFromCloudBaseDocument(document);
+    };
+
+    const firstRead = await readBackProject();
+    if (projectMatchesExpected(project, firstRead)) {
+      return firstRead;
     }
-    return persisted;
+
+    const secondRead = await readBackProject();
+    if (projectMatchesExpected(project, secondRead)) {
+      return secondRead;
+    }
+
+    throw new Error("CloudBase保存失败：项目回读结果与提交内容不一致");
   }
 
   async listTaskInputs(options: ListTaskOptions = {}): Promise<ProjectTaskInput[]> {

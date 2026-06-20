@@ -209,6 +209,68 @@ describe("CloudBaseProjectRepository reads", () => {
 });
 
 describe("CloudBaseProjectRepository writes", () => {
+  it("retries a transient project readback mismatch once before failing", async () => {
+    class FlakyProjectCollection {
+      private readCount = 0;
+      private document: Record<string, unknown>;
+
+      constructor(document: Record<string, unknown>) {
+        this.document = { ...document };
+      }
+
+      doc(id: string) {
+        return {
+          get: async () => {
+            this.readCount += 1;
+            if (this.readCount === 1) {
+              return {
+                data: {
+                  ...this.document,
+                  plannedStartDate: "2026-03-31",
+                },
+              };
+            }
+            return { data: { ...this.document, _id: id } };
+          },
+          set: async (nextDocument: Record<string, unknown>) => {
+            this.document = { ...nextDocument, _id: id };
+            return { id };
+          },
+          update: async (patch: Record<string, unknown>) => {
+            this.document = { ...this.document, ...patch, _id: id };
+            return { updated: 1 };
+          },
+        };
+      }
+
+      where() {
+        return {
+          get: async () => ({ data: [] }),
+        };
+      }
+    }
+
+    class FlakyProjectDatabase implements CloudBaseDatabaseLike {
+      readonly collections = new Map<string, FlakyProjectCollection>();
+
+      collection(name: string) {
+        if (!this.collections.has(name)) {
+          this.collections.set(name, new FlakyProjectCollection(projectToCloudBaseDocument(project)));
+        }
+        return this.collections.get(name)!;
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new FlakyProjectDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(repository.saveProject({ ...project, name: "更新项目" })).resolves.toMatchObject({
+      name: "更新项目",
+    });
+  });
+
   it("updates existing project and task documents instead of inserting duplicates", async () => {
     class UpdateOnlyCollection {
       constructor(private readonly documents: Map<string, Record<string, unknown>>) {}

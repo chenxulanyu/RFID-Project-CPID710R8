@@ -184,3 +184,12 @@
 - 修复任务恢复时 `archivedAt` 残留导致回读校验失败的问题；恢复路径现在显式清空归档时间。
 - 保持任务创建、更新、归档与恢复流程不变，并补充回归测试覆盖已有文档更新与恢复清理。
 - 验证：`npm test -- src/services/cloudbaseProjectRepository.test.ts src/features/project/AdminPage.test.tsx src/services/projectAdminService.test.ts` 通过。
+
+## admin-maintenance-and-gantt-fix v1.0 - 2026-06-20
+
+- 修复 CloudBase 项目信息保存后的回读误报：保存后改为归一化比对并在首次回读不一致时轻量重试一次。
+- 调整后台维护页布局：左侧任务列表按可用高度拉伸，任务保存按钮移到归档/恢复旁边，项目编辑守卫保持不变。
+- 调整前台任务展示：项目内容加粗、任务名称常规字重，甘特图条内开始/结束时间分别贴左/贴右显示，并增强完成百分比可读性。
+- 新增/更新回归测试覆盖 CloudBase 保存重试、后台按钮位置、任务字重和甘特图标签布局。
+- 验证：`npm exec --workspace web vitest run` 通过，13 个测试文件、65 条测试用例通过。
+- 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。

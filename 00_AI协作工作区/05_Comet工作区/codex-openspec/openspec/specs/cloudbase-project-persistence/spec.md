@@ -23,6 +23,11 @@ The system SHALL provide a CloudBase-backed repository adapter that supports rea
 - **THEN** the system MUST report the save as failed
 - **AND** the system MUST NOT treat the write as successful
 
+#### Scenario: Confirm project save after write
+- **WHEN** the system saves project metadata and the first readback differs only by recoverable CloudBase serialization or timing differences
+- **THEN** the system MAY retry the readback once and compare normalized project fields before declaring failure
+- **AND** the system MUST still fail the save if the normalized values do not match the submitted metadata
+
 ### Requirement: Secret-safe configuration
 The system SHALL configure CloudBase credentials through environment variables or deployment secrets and MUST NOT commit real credentials to the repository or planning artifacts.
 
@@ -56,4 +61,3 @@ The system SHALL include a verification path for confirming CloudBase read and w
 - **WHEN** valid CloudBase credentials and environment configuration are provided
 - **THEN** a verification command or documented check confirms that project data can be read and updated
 - **AND** the verification proves both read and write round-trip behavior
-

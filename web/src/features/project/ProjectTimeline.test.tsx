@@ -46,8 +46,25 @@ describe("ProjectTimeline", () => {
 
     const { container } = render(<ProjectTimeline model={model} />);
     const bar = container.querySelector(".timeline-bar");
+    const percent = container.querySelector(".timeline-percent");
 
     expect(bar).toHaveTextContent("95%");
-    expect(bar?.querySelector("span")).toHaveTextContent("95%");
+    expect(percent).toHaveTextContent("95%");
+  });
+
+  it("shows start and end dates inside the gantt bar", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({ id: "timeline", taskName: "时间轴任务", actualStartDate: "2026-06-01", completionRatio: 1 }),
+      ],
+    });
+
+    const { container } = render(<ProjectTimeline model={model} />);
+    const bar = container.querySelector(".timeline-bar");
+
+    expect(bar).toHaveTextContent("2026-06-01");
+    expect(bar).toHaveTextContent("2026-06-10");
   });
 });

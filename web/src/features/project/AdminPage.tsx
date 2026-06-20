@@ -279,9 +279,6 @@ export function AdminPage({
             <section className="admin-panel admin-section">
               <div className="section-heading-row">
                 <h2>任务详情</h2>
-                <button className="primary-button" type="button" onClick={handleTaskSave}>
-                  保存任务信息
-                </button>
               </div>
               <div className="admin-form-grid">
                 <label className="admin-field">
@@ -350,6 +347,9 @@ export function AdminPage({
                     恢复任务
                   </button>
                 ) : null}
+                <button className="primary-button" type="button" onClick={handleTaskSave}>
+                  保存任务信息
+                </button>
               </div>
             </section>
           ) : null}
