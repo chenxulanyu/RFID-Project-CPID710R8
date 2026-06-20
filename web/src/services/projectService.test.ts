@@ -1,7 +1,39 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getProjectProgress } from "./projectService";
 
+const factoryState = vi.hoisted(() => ({ useFactoryProject: false }));
+
+vi.mock("./projectRepositoryFactory", async () => {
+  const { DefaultProjectRepository, LocalProjectRepository } =
+    await vi.importActual<typeof import("./projectRepository")>("./projectRepository");
+
+  return {
+    createProjectRepository: vi.fn(() =>
+      factoryState.useFactoryProject
+        ? LocalProjectRepository.fromSnapshot({
+            project: {
+              id: "factory-project",
+              name: "工厂项目",
+              plannedStartDate: "2026-01-01",
+              plannedEndDate: "2026-01-31",
+              calendarMode: "calendar-days",
+            },
+            tasks: [],
+          })
+        : new DefaultProjectRepository(),
+    ),
+  };
+});
+
 describe("project service", () => {
+  it("uses the repository factory for default reads", async () => {
+    factoryState.useFactoryProject = true;
+    const data = await getProjectProgress("2026-06-20");
+    factoryState.useFactoryProject = false;
+
+    expect(data.project.id).toBe("factory-project");
+  });
+
   it("loads CPID710R8 mock project data through the service boundary", async () => {
     const data = await getProjectProgress();
 
