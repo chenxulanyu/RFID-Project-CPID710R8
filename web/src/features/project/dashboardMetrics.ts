@@ -164,7 +164,7 @@ export function buildDashboardModel({
     tasks: dashboardTasks,
     timelineRange: {
       startDate: rangeStart,
-      endDate: project.plannedEndDate,
+      endDate: rangeEnd,
       totalDays,
       todayPercent: buildTodayPercent(rangeStart, today, totalDays),
     },
