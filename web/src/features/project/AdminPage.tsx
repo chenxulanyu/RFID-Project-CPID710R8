@@ -27,7 +27,7 @@ function emptyTask(): ProjectTaskInput {
 }
 
 function taskVisible(task: ProjectTaskInput, filter: TaskFilter) {
-  if (filter === "archived") return Boolean(task.isArchived);
+  if (filter === "archived") return Boolean(task.isArchived) && Boolean(task.taskName);
   return !task.isArchived && Boolean(task.taskName);
 }
 
