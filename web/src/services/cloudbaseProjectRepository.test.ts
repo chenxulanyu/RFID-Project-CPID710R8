@@ -130,3 +130,37 @@ describe("CloudBaseProjectRepository reads", () => {
     ]);
   });
 });
+
+describe("CloudBaseProjectRepository writes", () => {
+  it("saves project and task documents", async () => {
+    const database = new FakeDatabase();
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    await repository.saveProject({ ...project, name: "更新项目" });
+    await repository.saveTaskInput(task({ id: "task-2", taskName: "写入任务", manualCompletionRatio: 0.7 }));
+
+    expect(await repository.getProject()).toMatchObject({ id: "cpid710r8", name: "更新项目" });
+    expect(await repository.listTaskInputs()).toMatchObject([{ id: "task-2", manualCompletionRatio: 0.7 }]);
+  });
+
+  it("archives and restores tasks without deleting the document", async () => {
+    const database = new FakeDatabase();
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+    await repository.saveTaskInput(task({ id: "task-3", taskName: "可归档任务" }));
+
+    await repository.archiveTask("task-3", "2026-06-20");
+    expect(await repository.listTaskInputs()).toEqual([]);
+    expect((await repository.listTaskInputs({ includeArchived: true }))[0]).toMatchObject({
+      id: "task-3",
+      isArchived: true,
+      archivedAt: "2026-06-20",
+    });
+
+    await repository.restoreTask("task-3");
+    expect((await repository.listTaskInputs())[0]).toMatchObject({
+      id: "task-3",
+      isArchived: false,
+      archivedAt: undefined,
+    });
+  });
+});
