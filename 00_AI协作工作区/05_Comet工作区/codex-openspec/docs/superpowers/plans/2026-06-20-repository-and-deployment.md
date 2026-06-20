@@ -2,6 +2,7 @@
 change: repository-and-deployment
 design-doc: docs/superpowers/specs/2026-06-20-repository-and-deployment-design.md
 base-ref: df8da42b1961a23a7bad1d3609fee08a49d77bf2
+archived-with: 2026-06-20-repository-and-deployment
 ---
 
 # Repository And Deployment Implementation Plan

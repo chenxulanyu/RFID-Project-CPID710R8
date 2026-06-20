@@ -17,7 +17,7 @@ verification_report: docs/superpowers/reports/2026-06-20-repository-and-deployme
 branch_status: handled
 created_at: 2026-06-19
 verified_at: 2026-06-20
-archived: false
+archived: true
 handoff_context: openspec/changes/repository-and-deployment/.comet/handoff/design-context.json
 handoff_hash: cf1466f83c52c957a3300dcc74ad7d82da45eafdf1dde9390da9757e87aa23e4
 build_command: npm --prefix ../../../web run build
