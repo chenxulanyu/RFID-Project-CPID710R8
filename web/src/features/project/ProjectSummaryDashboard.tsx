@@ -26,6 +26,7 @@ export function ProjectSummaryDashboard({ model }: { model: DashboardModel }) {
         <article className="metric-card">
           <span>任务总数</span>
           <strong>{metrics.totalTasks}</strong>
+          <small>{metrics.totalDetailTasks} 条明细</small>
         </article>
         <article className="metric-card">
           <span>已完成</span>

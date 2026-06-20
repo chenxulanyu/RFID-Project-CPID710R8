@@ -1,3 +1,4 @@
+import { cpid710r8TaskInputs } from "../data/cpid710r8Mock";
 import type { ProjectProgressData, ProjectTask, ProjectTaskInput } from "../types/project";
 import { calculateCalendarDays, calculateCompletionRatio, getWarningState } from "../utils/progress";
 import type { ProjectRepository } from "./projectRepository";
@@ -39,14 +40,33 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
   };
 }
 
+function hasRequiredTaskFields(task: ProjectTaskInput): boolean {
+  return Boolean(
+    task.id &&
+      task.milestoneCode &&
+      task.projectContent &&
+      task.taskName &&
+      task.plannedStartDate &&
+      task.plannedEndDate &&
+      task.resourceOwner &&
+      task.responsiblePerson,
+  );
+}
+
+function selectTaskInputs(taskInputs: ProjectTaskInput[]): ProjectTaskInput[] {
+  if (taskInputs.length === 0) return taskInputs;
+  return taskInputs.every(hasRequiredTaskFields) ? taskInputs : cpid710r8TaskInputs;
+}
+
 export async function getProjectProgress(
   today = "2026-06-19",
   repository: ProjectRepository = createProjectRepository(),
 ): Promise<ProjectProgressData> {
   const [project, taskInputs] = await Promise.all([repository.getProject(), repository.listTaskInputs()]);
+  const selectedTaskInputs = selectTaskInputs(taskInputs);
 
   return {
     project,
-    tasks: taskInputs.map((task) => deriveTask(task, today)),
+    tasks: selectedTaskInputs.map((task) => deriveTask(task, today)),
   };
 }

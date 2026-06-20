@@ -61,10 +61,12 @@ describe("DashboardPage", () => {
     });
   });
 
-  it("includes mobile landscape guidance", async () => {
+  it("renders the dashboard inside the mobile landscape shell", async () => {
     render(<DashboardPage today="2026-06-19" />);
 
-    expect(await screen.findByText("建议横屏查看")).toBeInTheDocument();
+    expect(await screen.findByText(/CPID710R8 Check Point/)).toBeInTheDocument();
+    expect(document.querySelector(".landscape-shell")).toBeInTheDocument();
+    expect(screen.queryByText("建议横屏查看")).not.toBeInTheDocument();
   });
 
   it("formats the default current date from local calendar fields", () => {

@@ -149,3 +149,13 @@
 - 验证：根目录 `npm start` 可进入 Vite preview，并正确使用 `DEPLOY_RUN_PORT`。
 - 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
 - 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
+
+## seed-full-project-tasks v1.0 - 2026-06-20
+
+- 修复默认项目任务种子数据只有 3 条样例的问题；按 Excel《CPID710R8_项目进度管理.xlsx》补齐 31 条进度明细。
+- 保留 M1-M20 共 20 个里程碑关系；M5、M6、M7、M8、M9、M12 等里程碑下的多条明细任务以 `M*-001/002/003` 形式展开。
+- 调整仪表盘 KPI 口径：任务总数按唯一里程碑编号统计为 20，同时在任务总数卡片补充显示明细条数。
+- 增加前台数据保护：当 CloudBase `project_tasks` 返回旧结构或缺少必要任务字段时，自动回退到内置完整种子数据，避免线上继续显示不完整任务。
+- 移动端竖屏不再显示“建议横屏查看”提示页，改为在网页内部旋转实际内容，以横屏布局展示。
+- 新增 CloudBase `project_tasks` 导入数据文件：`00_AI协作工作区/02_需求与任务/seed-full-project-tasks/cloudbase-project_tasks-import.json`，包含 31 条明细、20 个里程碑。
+- 说明：本修复未修改 `.coze`、根 `package.json`、`serve.mjs` 等扣子部署配置文件。

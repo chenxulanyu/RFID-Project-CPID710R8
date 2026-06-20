@@ -15,6 +15,7 @@ export interface DashboardTask extends ProjectTask {
 
 export interface DashboardMetrics {
   totalTasks: number;
+  totalDetailTasks: number;
   finishedTasks: number;
   inProgressTasks: number;
   notStartedTasks: number;
@@ -97,6 +98,10 @@ function buildTodayPercent(rangeStart: string, today: string, totalDays: number)
   return clampPercent((offsetDays / totalDays) * 100);
 }
 
+function countUniqueMilestones(tasks: ProjectTask[]): number {
+  return new Set(tasks.map((task) => task.milestoneCode)).size;
+}
+
 export function buildDashboardModel({
   project,
   tasks,
@@ -119,7 +124,8 @@ export function buildDashboardModel({
   });
 
   const metrics: DashboardMetrics = {
-    totalTasks: dashboardTasks.length,
+    totalTasks: countUniqueMilestones(dashboardTasks),
+    totalDetailTasks: dashboardTasks.length,
     finishedTasks: dashboardTasks.filter((task) => task.dashboardStatus === "finished").length,
     inProgressTasks: dashboardTasks.filter((task) => task.dashboardStatus === "in-progress").length,
     notStartedTasks: dashboardTasks.filter((task) => task.dashboardStatus === "not-started").length,

@@ -18,3 +18,4 @@
 - `admin-progress-backend`: `v1.1`
 - `cloudbase-persistence`: `v1.0`
 - `repository-and-deployment`: `v1.5`
+- `seed-full-project-tasks`: `v1.0`

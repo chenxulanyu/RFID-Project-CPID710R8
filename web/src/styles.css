@@ -140,6 +140,16 @@ body {
   margin-top: 12px;
 }
 
+.metric-card small {
+  color: #64748b;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+
 .metric-card-primary {
   border-color: #6aa3d8;
 }
@@ -635,32 +645,34 @@ body {
 }
 
 @media (max-width: 760px) and (orientation: portrait) {
-  .landscape-content {
-    display: none;
+  body {
+    overflow: hidden;
   }
 
-  .landscape-gate {
-    align-content: center;
+  .landscape-shell {
     box-sizing: border-box;
-    display: grid;
-    gap: 10px;
-    min-height: calc(100vh - 36px);
-    padding: 24px;
-    text-align: center;
+    height: 100vh;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100vw;
   }
 
-  .landscape-gate h1 {
-    font-size: 28px;
-    line-height: 1.15;
-    margin: 0;
-    overflow-wrap: anywhere;
+  .landscape-content {
+    box-sizing: border-box;
+    height: 100vw;
+    left: 100%;
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    transform: rotate(90deg);
+    transform-origin: top left;
+    width: 100vh;
   }
 
-  .landscape-gate p {
-    color: #536173;
-    line-height: 1.6;
-    margin: 0 auto;
-    max-width: 320px;
-    overflow-wrap: anywhere;
+  .app-shell {
+    min-height: 100vw;
+    padding: 18px;
   }
 }

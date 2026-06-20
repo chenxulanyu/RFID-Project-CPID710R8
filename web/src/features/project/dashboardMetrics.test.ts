@@ -40,6 +40,7 @@ describe("dashboardMetrics", () => {
       tasks: [
         task({
           id: "done",
+          milestoneCode: "M1",
           taskName: "已完成",
           actualEndDate: "2026-06-03",
           completionRatio: 1,
@@ -48,6 +49,7 @@ describe("dashboardMetrics", () => {
         }),
         task({
           id: "active",
+          milestoneCode: "M2",
           taskName: "进行中",
           actualStartDate: "2026-06-01",
           completionRatio: 0.8,
@@ -56,6 +58,7 @@ describe("dashboardMetrics", () => {
         }),
         task({
           id: "late-start",
+          milestoneCode: "M3",
           taskName: "延迟启动",
           plannedStartDate: "2026-06-10",
           plannedEndDate: "2026-06-25",
@@ -63,6 +66,7 @@ describe("dashboardMetrics", () => {
         }),
         task({
           id: "future",
+          milestoneCode: "M4",
           taskName: "未来未开始",
           plannedStartDate: "2026-07-01",
           plannedEndDate: "2026-07-05",
@@ -79,6 +83,21 @@ describe("dashboardMetrics", () => {
     expect(model.tasks.find((item) => item.id === "late-start")?.dashboardStatus).toBe(
       "start-delayed",
     );
+  });
+
+  it("counts total tasks by unique milestone code while preserving detail rows", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({ id: "m5-1", milestoneCode: "M5", taskName: "PCB Layout" }),
+        task({ id: "m5-2", milestoneCode: "M5", taskName: "PCB板/屏蔽盖/物料" }),
+        task({ id: "m6-1", milestoneCode: "M6", taskName: "完成单片机测试固件" }),
+      ],
+    });
+
+    expect(model.metrics.totalTasks).toBe(2);
+    expect(model.tasks).toHaveLength(3);
   });
 
   it("collects risk tasks and timeline ranges", () => {
