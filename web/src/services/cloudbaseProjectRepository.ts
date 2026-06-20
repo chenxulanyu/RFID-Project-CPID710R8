@@ -1,3 +1,4 @@
+import { cpid710r8TaskInputs } from "../data/cpid710r8Mock";
 import type { Project, ProjectTaskInput } from "../types/project";
 import type { ListTaskOptions, ProjectRepository } from "./projectRepository";
 
@@ -46,6 +47,27 @@ function optionalBoolean(value: unknown): boolean | undefined {
 
 function firstDocument(data: CloudBaseDocument | CloudBaseDocument[] | null): CloudBaseDocument | null {
   return Array.isArray(data) ? data[0] ?? null : data;
+}
+
+function hasRequiredTaskDocumentFields(document: CloudBaseDocument): boolean {
+  return Boolean(
+    optionalString(document._id ?? document.id) &&
+      optionalString(document.milestoneCode) &&
+      optionalString(document.projectContent) &&
+      optionalString(document.taskName) &&
+      optionalString(document.plannedStartDate) &&
+      optionalString(document.plannedEndDate) &&
+      optionalString(document.resourceOwner) &&
+      optionalString(document.responsiblePerson),
+  );
+}
+
+function mergeTaskInputs(seedTasks: ProjectTaskInput[], cloudTasks: ProjectTaskInput[]): ProjectTaskInput[] {
+  const cloudTasksById = new Map(cloudTasks.map((task) => [task.id, task]));
+  const mergedSeedTasks = seedTasks.map((task) => ({ ...task, ...cloudTasksById.get(task.id) }));
+  const seedIds = new Set(seedTasks.map((task) => task.id));
+  const customCloudTasks = cloudTasks.filter((task) => !seedIds.has(task.id));
+  return [...mergedSeedTasks, ...customCloudTasks];
 }
 
 export function projectToCloudBaseDocument(project: Project): CloudBaseDocument {
@@ -112,8 +134,10 @@ export class CloudBaseProjectRepository implements ProjectRepository {
 
   async listTaskInputs(options: ListTaskOptions = {}): Promise<ProjectTaskInput[]> {
     const response = await this.database.collection(this.tasksCollection).where({ projectId: this.projectId }).get();
-    return response.data
-      .map(taskFromCloudBaseDocument)
+    const cloudTasks = response.data
+      .filter(hasRequiredTaskDocumentFields)
+      .map(taskFromCloudBaseDocument);
+    return mergeTaskInputs(cpid710r8TaskInputs, cloudTasks)
       .filter((task) => options.includeArchived || !task.isArchived);
   }
 

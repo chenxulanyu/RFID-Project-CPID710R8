@@ -9,7 +9,6 @@ import {
   updateProjectTask,
 } from "../../services/projectAdminService";
 import { LocalProjectRepository, type ProjectRepository } from "../../services/projectRepository";
-import { LandscapeGate } from "./LandscapeGate";
 
 type TaskFilter = "active" | "archived";
 
@@ -153,8 +152,7 @@ export function AdminPage({
   }
 
   return (
-    <LandscapeGate>
-      <section className="dashboard-page">
+    <section className="dashboard-page">
         <div className="dashboard-hero">
           <p className="eyebrow">Admin</p>
           <h1>后台进度维护</h1>
@@ -332,7 +330,6 @@ export function AdminPage({
             ) : null}
           </div>
         </div>
-      </section>
-    </LandscapeGate>
+    </section>
   );
 }

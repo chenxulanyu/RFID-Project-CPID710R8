@@ -4,8 +4,21 @@ import { LocalProjectRepository } from "./projectRepository";
 import { createProjectRepository, readProjectDataSourceConfig } from "./projectRepositoryFactory";
 
 describe("project repository factory", () => {
-  it("falls back to local repository when CloudBase config is missing", () => {
+  it("uses the production CloudBase defaults when data source config is omitted", () => {
     const config = readProjectDataSourceConfig({});
+
+    expect(config.source).toBe("cloudbase");
+    expect(config.cloudbase).toMatchObject({
+      envId: "webtest-d1g5ir6tl69366b35",
+      projectId: "cpid710r8",
+      projectsCollection: "projects",
+      tasksCollection: "project_tasks",
+    });
+    expect(config.cloudbase?.accessKey).toBeTruthy();
+  });
+
+  it("uses local repository when data source is explicitly local", () => {
+    const config = readProjectDataSourceConfig({ VITE_PROJECT_DATA_SOURCE: "local" });
     const repository = createProjectRepository(config);
 
     expect(config.source).toBe("local");

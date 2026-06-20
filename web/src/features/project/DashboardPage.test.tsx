@@ -61,11 +61,10 @@ describe("DashboardPage", () => {
     });
   });
 
-  it("renders the dashboard inside the mobile landscape shell", async () => {
+  it("renders the dashboard without the old mobile landscape guidance", async () => {
     render(<DashboardPage today="2026-06-19" />);
 
     expect(await screen.findByText(/CPID710R8 Check Point/)).toBeInTheDocument();
-    expect(document.querySelector(".landscape-shell")).toBeInTheDocument();
     expect(screen.queryByText("建议横屏查看")).not.toBeInTheDocument();
   });
 

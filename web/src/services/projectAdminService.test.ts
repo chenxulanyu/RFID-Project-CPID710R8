@@ -184,4 +184,44 @@ describe("admin write service", () => {
     expect(data.project.name).toBe("持久化项目");
     expect(data.tasks.map((item) => item.id)).toEqual(["persisted-task"]);
   });
+
+  it("upgrades a legacy browser snapshot to the complete default seed", async () => {
+    const storage = new Map<string, string>();
+    storage.set(
+      "test-project",
+      JSON.stringify({
+        project,
+        tasks: [
+          task({ id: "M1-001", taskName: "硬件架构选型+关键器件确认" }),
+          task({
+            id: "M5-002",
+            milestoneCode: "M5",
+            projectContent: "V1.0 PCBA打样",
+            taskName: "PCB板/屏蔽盖/物料",
+          }),
+          task({
+            id: "M6-001",
+            milestoneCode: "M6",
+            projectContent: "测试固件&驱动开发",
+            taskName: "完成单片机测试固件",
+          }),
+        ],
+      }),
+    );
+
+    const repository = new LocalProjectRepository({
+      storage: {
+        getItem: (key) => storage.get(key) ?? null,
+        setItem: (key, value) => storage.set(key, value),
+        removeItem: (key) => storage.delete(key),
+      },
+      storageKey: "test-project",
+      initialSnapshot: { project, tasks: [] },
+    });
+
+    const tasks = await repository.listTaskInputs({ includeArchived: true });
+
+    expect(tasks).toHaveLength(31);
+    expect(new Set(tasks.map((item) => item.milestoneCode)).size).toBe(20);
+  });
 });

@@ -11,7 +11,6 @@ describe("AdminPage", () => {
     render(<AdminPage today="2026-06-19" />);
 
     expect(await screen.findByRole("heading", { name: "后台进度维护" })).toBeInTheDocument();
-    expect(document.querySelector(".landscape-shell")).toBeInTheDocument();
     expect(screen.queryByText("建议横屏查看")).not.toBeInTheDocument();
     expect(screen.getByLabelText("项目名称")).toBeInTheDocument();
     expect(screen.getByRole("list", { name: "任务列表" })).toBeInTheDocument();

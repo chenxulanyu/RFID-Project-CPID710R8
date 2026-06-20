@@ -22,6 +22,14 @@ describe("App routing", () => {
     expect(screen.getByText("总体进度")).toBeInTheDocument();
   });
 
+  it("places the primary navigation inside the mobile landscape shell", async () => {
+    window.history.pushState({}, "", "/");
+    render(<App />);
+
+    expect(await screen.findByText(/CPID710R8 Check Point/)).toBeInTheDocument();
+    expect(document.querySelector(".landscape-shell .top-nav")).toBeInTheDocument();
+  });
+
   it("renders admin maintenance page", async () => {
     window.history.pushState({}, "", "/admin");
     render(<App />);

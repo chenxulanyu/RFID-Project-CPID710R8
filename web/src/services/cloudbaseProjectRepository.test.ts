@@ -132,11 +132,52 @@ describe("CloudBaseProjectRepository reads", () => {
     const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
 
     expect(await repository.getProject()).toEqual(project);
-    expect((await repository.listTaskInputs()).map((item) => item.id)).toEqual(["active"]);
-    expect((await repository.listTaskInputs({ includeArchived: true })).map((item) => item.id)).toEqual([
-      "active",
-      "archived",
-    ]);
+    expect((await repository.listTaskInputs()).map((item) => item.id)).toContain("active");
+    expect((await repository.listTaskInputs({ includeArchived: true })).map((item) => item.id)).toEqual(
+      expect.arrayContaining(["active", "archived"]),
+    );
+  });
+
+  it("merges CloudBase task overrides onto the complete default seed", async () => {
+    const database = new FakeDatabase();
+    database.collections.set(
+      "project_tasks",
+      new Map([
+        [
+          "legacy-invalid",
+          {
+            _id: "legacy-invalid",
+            projectId: "cpid710r8",
+            name: "旧占位数据",
+            status: "active",
+          },
+        ],
+        [
+          "M5-002",
+          taskToCloudBaseDocument(
+            task({
+              id: "M5-002",
+              milestoneCode: "M5",
+              projectContent: "V1.0 PCBA打样",
+              taskName: "跨设备更新后的任务",
+              manualCompletionRatio: 0.75,
+            }),
+            "cpid710r8",
+          ),
+        ],
+      ]),
+    );
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    const tasks = await repository.listTaskInputs();
+
+    expect(tasks).toHaveLength(31);
+    expect(new Set(tasks.map((item) => item.milestoneCode)).size).toBe(20);
+    expect(tasks.find((item) => item.id === "M5-002")).toMatchObject({
+      taskName: "跨设备更新后的任务",
+      manualCompletionRatio: 0.75,
+    });
+    expect(tasks.some((item) => item.id === "legacy-invalid")).toBe(false);
   });
 
   it("reads project metadata from CloudBase doc get array responses", async () => {
@@ -157,7 +198,10 @@ describe("CloudBaseProjectRepository writes", () => {
     await repository.saveTaskInput(task({ id: "task-2", taskName: "写入任务", manualCompletionRatio: 0.7 }));
 
     expect(await repository.getProject()).toMatchObject({ id: "cpid710r8", name: "更新项目" });
-    expect(await repository.listTaskInputs()).toMatchObject([{ id: "task-2", manualCompletionRatio: 0.7 }]);
+    expect((await repository.listTaskInputs()).find((item) => item.id === "task-2")).toMatchObject({
+      id: "task-2",
+      manualCompletionRatio: 0.7,
+    });
   });
 
   it("archives and restores tasks without deleting the document", async () => {
@@ -166,15 +210,15 @@ describe("CloudBaseProjectRepository writes", () => {
     await repository.saveTaskInput(task({ id: "task-3", taskName: "可归档任务" }));
 
     await repository.archiveTask("task-3", "2026-06-20");
-    expect(await repository.listTaskInputs()).toEqual([]);
-    expect((await repository.listTaskInputs({ includeArchived: true }))[0]).toMatchObject({
+    expect((await repository.listTaskInputs()).some((item) => item.id === "task-3")).toBe(false);
+    expect((await repository.listTaskInputs({ includeArchived: true })).find((item) => item.id === "task-3")).toMatchObject({
       id: "task-3",
       isArchived: true,
       archivedAt: "2026-06-20",
     });
 
     await repository.restoreTask("task-3");
-    expect((await repository.listTaskInputs())[0]).toMatchObject({
+    expect((await repository.listTaskInputs()).find((item) => item.id === "task-3")).toMatchObject({
       id: "task-3",
       isArchived: false,
       archivedAt: undefined,

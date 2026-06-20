@@ -45,6 +45,37 @@ function cloneSnapshot(snapshot: ProjectDataSnapshot): ProjectDataSnapshot {
   };
 }
 
+function mergeTaskInputs(seedTasks: ProjectTaskInput[], overrideTasks: ProjectTaskInput[]): ProjectTaskInput[] {
+  const overridesById = new Map(overrideTasks.map((task) => [task.id, task]));
+  const mergedSeedTasks = seedTasks.map((task) => ({ ...task, ...overridesById.get(task.id) }));
+  const seedIds = new Set(seedTasks.map((task) => task.id));
+  const customTasks = overrideTasks.filter((task) => !seedIds.has(task.id));
+  return [...mergedSeedTasks, ...customTasks];
+}
+
+function isLegacySeedSnapshot(snapshot: ProjectDataSnapshot, fallbackSnapshot: ProjectDataSnapshot): boolean {
+  const fallbackMilestones = new Set(fallbackSnapshot.tasks.map((task) => task.milestoneCode));
+  const snapshotMilestones = new Set(snapshot.tasks.map((task) => task.milestoneCode));
+  return (
+    snapshot.project.id === fallbackSnapshot.project.id &&
+    fallbackMilestones.size >= 20 &&
+    snapshotMilestones.size < fallbackMilestones.size &&
+    snapshot.tasks.every((task) => fallbackSnapshot.tasks.some((seedTask) => seedTask.id === task.id))
+  );
+}
+
+function upgradeStoredSnapshot(
+  storedSnapshot: ProjectDataSnapshot | null,
+  fallbackSnapshot: ProjectDataSnapshot,
+): ProjectDataSnapshot | null {
+  if (!storedSnapshot) return null;
+  if (!isLegacySeedSnapshot(storedSnapshot, fallbackSnapshot)) return storedSnapshot;
+  return {
+    project: { ...fallbackSnapshot.project, ...storedSnapshot.project },
+    tasks: mergeTaskInputs(fallbackSnapshot.tasks, storedSnapshot.tasks),
+  };
+}
+
 function isSnapshot(input: ProjectDataSnapshot | LocalProjectRepositoryOptions): input is ProjectDataSnapshot {
   return "project" in input && "tasks" in input;
 }
@@ -77,7 +108,7 @@ export class LocalProjectRepository implements ProjectRepository {
     this.storageKey = options.storageKey ?? defaultStorageKey;
     const fallbackSnapshot = options.initialSnapshot ?? initialSnapshot;
     const storedSnapshot = this.storage ? readStoredSnapshot(this.storage, this.storageKey) : null;
-    this.snapshot = cloneSnapshot(storedSnapshot ?? fallbackSnapshot);
+    this.snapshot = cloneSnapshot(upgradeStoredSnapshot(storedSnapshot, initialSnapshot) ?? storedSnapshot ?? fallbackSnapshot);
   }
 
   static fromSnapshot(snapshot: ProjectDataSnapshot): LocalProjectRepository {

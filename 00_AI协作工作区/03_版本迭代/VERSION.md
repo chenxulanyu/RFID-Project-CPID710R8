@@ -19,3 +19,4 @@
 - `cloudbase-persistence`: `v1.0`
 - `repository-and-deployment`: `v1.5`
 - `seed-full-project-tasks`: `v1.0`
+- `fix-cloudbase-and-mobile-shell`: `v1.0`

@@ -159,3 +159,11 @@
 - 移动端竖屏不再显示“建议横屏查看”提示页，改为在网页内部旋转实际内容，以横屏布局展示。
 - 新增 CloudBase `project_tasks` 导入数据文件：`00_AI协作工作区/02_需求与任务/seed-full-project-tasks/cloudbase-project_tasks-import.json`，包含 31 条明细、20 个里程碑。
 - 说明：本修复未修改 `.coze`、根 `package.json`、`serve.mjs` 等扣子部署配置文件。
+
+## fix-cloudbase-and-mobile-shell v1.0 - 2026-06-20
+
+- 修复扣子部署环境未显式配置 CloudBase 变量时静默回退 `localStorage` 的问题；生产默认使用 CloudBase 公开前端配置，测试环境仍显式使用 local。
+- 修复后台维护只在当前设备生效的问题：CloudBase 读取以 31 条内置任务为基线，叠加同 ID 远端覆盖和新增任务。
+- 修复旧浏览器 `localStorage` 中 3 条任务快照覆盖新种子的问题；读取旧种子快照时自动升级为 31 条完整任务并保留本地覆盖。
+- 修复手机竖屏旋转范围：将横屏旋转容器上移到 `App`，顶部“项目仪表盘 / 后台维护”导航和页面内容一起旋转。
+- 新增回归测试覆盖 CloudBase 默认配置、CloudBase 合并覆盖、localStorage 旧快照升级和导航旋转容器范围。
