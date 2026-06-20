@@ -1,5 +1,5 @@
 name: admin-and-timeline-polish
 workflow: hotfix
-phase: open
+phase: archived
 review_mode: standard
-verify_result: pending
+verify_result: passed
