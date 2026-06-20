@@ -22,3 +22,10 @@
 - [x] 4.1 Update VERSION and CHANGELOG.
 - [x] 4.2 Run focused tests.
 - [x] 4.3 Run full web tests and build.
+
+## 5. Deployment read fallback hotfix
+
+- [x] 5.1 Add regression coverage for missing/unreadable CloudBase `projects/cpid710r8`.
+- [x] 5.2 Add regression coverage for failed CloudBase task reads while preserving intentionally empty task lists.
+- [x] 5.3 Implement read fallback to seeded project metadata and seeded task inputs.
+- [x] 5.4 Run full web tests and build.

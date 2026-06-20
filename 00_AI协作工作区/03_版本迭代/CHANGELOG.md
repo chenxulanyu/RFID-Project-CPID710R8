@@ -201,3 +201,12 @@
 - 优化后台左侧任务列表高度，桌面端按可用窗口高度拉伸，减少短列表窗口内滚动。
 - 调整甘特图显示：任务条内只保留完成百分比，移除条内开始/结束日期；时间轴内部只保留当前日期文本，移除黑色当前日期浮标和旧起止刻度。
 - 新增/更新回归测试覆盖 CloudBase 回读传播延迟、后台按钮布局顺序和甘特图简化显示。
+
+## fix-project-save-and-timeline-axis v1.1 - 2026-06-20
+
+- 修复部署环境中 `projects/cpid710r8` 文档缺失、被误建为自动 `_id` 文档或 CloudBase 读取被权限拦截时，前台显示“项目数据加载失败”、后台维护无内容的问题。
+- `CloudBaseProjectRepository.getProject()` 读取失败或固定项目文档不存在时回退内置项目元数据，保证仪表盘和后台维护可继续打开。
+- `CloudBaseProjectRepository.listTaskInputs()` 读取 `project_tasks` 失败时回退内置 31 条任务种子；合法的空任务列表仍由服务层保持为空，不误判为失败。
+- 新增回归测试覆盖 CloudBase 项目读取失败、任务读取失败和合法空任务列表场景。
+- 验证：`npm test --workspace web` 通过，13 个测试文件、73 条测试用例通过。
+- 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。

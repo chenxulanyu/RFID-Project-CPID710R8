@@ -143,4 +143,34 @@ describe("project service", () => {
     expect(data.tasks).toHaveLength(31);
     expect([...new Set(data.tasks.map((task) => task.milestoneCode))]).toHaveLength(20);
   });
+
+  it("keeps project progress usable when repository returns an empty task list intentionally", async () => {
+    const repository = {
+      getProject: async () => ({
+        id: "cpid710r8",
+        name: "CPID710R8 兜底项目",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-09-28",
+        calendarMode: "calendar-days" as const,
+      }),
+      listTaskInputs: async () => [],
+      saveProject: async () => {
+        throw new Error("not used");
+      },
+      saveTaskInput: async () => {
+        throw new Error("not used");
+      },
+      archiveTask: async () => {
+        throw new Error("not used");
+      },
+      restoreTask: async () => {
+        throw new Error("not used");
+      },
+    };
+
+    const data = await getProjectProgress("2026-06-19", repository);
+
+    expect(data.project.name).toBe("CPID710R8 兜底项目");
+    expect(data.tasks).toHaveLength(0);
+  });
 });

@@ -206,6 +206,63 @@ describe("CloudBaseProjectRepository reads", () => {
       plannedEndDate: "2026-09-28",
     });
   });
+
+  it("falls back to the seeded project when CloudBase project metadata is unavailable", async () => {
+    class ProjectReadFailureDatabase implements CloudBaseDatabaseLike {
+      collection(name: string): CloudBaseCollectionLike {
+        return {
+          doc: (): CloudBaseDocumentReferenceLike => ({
+            get: async () => {
+              throw new Error(`permission denied for ${name}`);
+            },
+            set: async () => ({ id: "cpid710r8" }),
+            update: async () => ({ updated: 1 }),
+          }),
+          where: (): CloudBaseQueryLike => ({
+            get: async () => ({ data: [] }),
+          }),
+        };
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new ProjectReadFailureDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(repository.getProject()).resolves.toMatchObject({
+      id: "cpid710r8",
+      name: expect.stringContaining("CPID710R8"),
+      plannedStartDate: "2026-03-30",
+      plannedEndDate: "2026-09-28",
+    });
+  });
+
+  it("falls back to the complete seeded task list when CloudBase task reads fail", async () => {
+    class TaskReadFailureDatabase implements CloudBaseDatabaseLike {
+      collection(): CloudBaseCollectionLike {
+        return {
+          doc: (id: string): CloudBaseDocumentReferenceLike => ({
+            get: async () => ({ data: { ...projectToCloudBaseDocument(project), _id: id } }),
+            set: async () => ({ id }),
+            update: async () => ({ updated: 1 }),
+          }),
+          where: (): CloudBaseQueryLike => ({
+            get: async () => {
+              throw new Error("project_tasks permission denied");
+            },
+          }),
+        };
+      }
+    }
+
+    const repository = new CloudBaseProjectRepository({
+      database: new TaskReadFailureDatabase(),
+      projectId: "cpid710r8",
+    });
+
+    await expect(repository.listTaskInputs()).resolves.toHaveLength(31);
+  });
 });
 
 describe("CloudBaseProjectRepository writes", () => {

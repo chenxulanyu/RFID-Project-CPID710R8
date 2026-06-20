@@ -185,10 +185,13 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async getProject(): Promise<Project> {
-    const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
-    const document = firstDocument(response.data);
-    if (!document) throw new Error(`CloudBase project not found: ${this.projectId}`);
-    return projectFromCloudBaseDocument(document);
+    try {
+      const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
+      const document = firstDocument(response.data);
+      return document ? projectFromCloudBaseDocument(document) : { ...cpid710r8Project };
+    } catch {
+      return { ...cpid710r8Project };
+    }
   }
 
   async saveProject(project: Project): Promise<Project> {
@@ -215,10 +218,15 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async listTaskInputs(options: ListTaskOptions = {}): Promise<ProjectTaskInput[]> {
-    const response = await this.database.collection(this.tasksCollection).where({ projectId: this.projectId }).get();
-    const cloudTasks = response.data
-      .filter(hasRequiredTaskDocumentFields)
-      .map(taskFromCloudBaseDocument);
+    let cloudTasks: ProjectTaskInput[] = [];
+    try {
+      const response = await this.database.collection(this.tasksCollection).where({ projectId: this.projectId }).get();
+      cloudTasks = response.data
+        .filter(hasRequiredTaskDocumentFields)
+        .map(taskFromCloudBaseDocument);
+    } catch {
+      cloudTasks = [];
+    }
     return mergeTaskInputs(cpid710r8TaskInputs, cloudTasks)
       .filter((task) => options.includeArchived || !task.isArchived);
   }
