@@ -98,3 +98,12 @@
 - 确认 `.gitignore` 已排除 `.env`、`.env.*`、`node_modules/`、`dist/`、`.DS_Store` 与 `.superpowers/`，并保留 `!.env.example`。
 - 验证：敏感字段扫描仅命中禁止提交 `secretId` / `secretKey` 的测试或文档说明，未发现真实凭证。
 - 扣子部署由用户手动执行；真实线上部署验证结果待部署完成后补记。
+
+## repository-and-deployment v1.1 - 2026-06-20
+
+- 处理 Claude Code `Claude审查-repository-and-deployment-v1.0.md` 的有条件通过意见。
+- 修正 `README.md`、`docs/deployment.md`、`docs/release-readiness-checklist.md` 和 `web/README.md` 中的路由描述：删除不存在的 `/dashboard` 引用，将 `/` 明确为项目进度仪表盘。
+- 在根 `README.md` 目录结构中补充 `docs/`，覆盖新增部署说明和发布检查清单目录。
+- 新增 `Codex审查回应-repository-and-deployment-v1.0.md`，逐条记录 I1、M1 均采纳。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。

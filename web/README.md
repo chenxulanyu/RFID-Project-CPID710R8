@@ -36,8 +36,7 @@ npm run preview
 
 ## Current Routes
 
-- `/`: project foundation page that loads CPID710R8 project data through the project service.
-- `/dashboard`: project progress dashboard.
+- `/`: project progress dashboard.
 - `/admin`: project progress maintenance page for metadata and task updates.
 
 ## Data Source Boundary
