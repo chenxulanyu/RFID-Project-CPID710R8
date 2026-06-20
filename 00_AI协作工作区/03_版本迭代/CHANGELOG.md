@@ -136,3 +136,16 @@
 - 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
 - 验证：按 `.coze` 的部署构建等价命令 `npm install && cd web && npm run build` 通过。
 - 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
+
+## repository-and-deployment v1.5 - 2026-06-20
+
+- 修复扣子 `[build][runtime_pkg]` 阶段执行裸 `npm` 时受 npm 11.6.2 行为影响退出失败的问题；根目录 `package.json` 新增 `install`、`build`、`start` scripts，明确代理到 `web` workspace。
+- 修复根目录 `install` 生命周期脚本递归触发 `npm install` 的风险；workspace 安装命令使用 `--ignore-scripts`，避免扣子 runtime 安装阶段重复进入根 install 生命周期。
+- 根目录 `package.json` 新增 `engines`，声明 Node.js 与 npm 版本下限。
+- 简化 `.coze` 命令为 `["npm", "run", "build"]` / `["npm", "run", "start", ...]`，避免 `sh -c` 解析差异。
+- 说明：本修复仅调整部署配置层，未修改 `web/src/` 业务代码。
+- 验证：根目录 `npm install` 通过，未再递归触发安装。
+- 验证：根目录 `npm run build` 通过，代理到 `web` workspace 构建成功。
+- 验证：根目录 `npm start` 可进入 Vite preview，并正确使用 `DEPLOY_RUN_PORT`。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
