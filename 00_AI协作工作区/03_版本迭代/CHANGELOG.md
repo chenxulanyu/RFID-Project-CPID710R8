@@ -115,3 +115,12 @@
 - 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
 - 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
 - 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。
+
+## repository-and-deployment v1.3 - 2026-06-20
+
+- 修复扣子部署沙箱提示 `.coze configuration file not found in /workspace/projects` 的问题；在仓库根目录新增 `.coze`，让扣子从仓库根目录进入 `web/` 完成安装、构建和运行。
+- 更新部署说明：扣子部署根目录应使用仓库根目录，由 `.coze` 内的 dev/deploy 命令负责 `cd web`。
+- 验证：`npm test` 通过，10 个测试文件、49 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+- 验证：按 `.coze` 的部署构建等价命令 `cd web && npm install && npm run build` 通过。
+- 验证：`openspec validate --specs --strict` 通过，5 个主 spec 全部通过。

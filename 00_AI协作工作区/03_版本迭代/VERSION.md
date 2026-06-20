@@ -17,4 +17,4 @@
 - `project-dashboard-frontend`: `v1.2`
 - `admin-progress-backend`: `v1.1`
 - `cloudbase-persistence`: `v1.0`
-- `repository-and-deployment`: `v1.2`
+- `repository-and-deployment`: `v1.3`
