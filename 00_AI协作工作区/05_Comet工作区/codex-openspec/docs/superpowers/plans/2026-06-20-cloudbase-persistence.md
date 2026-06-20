@@ -2,6 +2,7 @@
 change: cloudbase-persistence
 design-doc: docs/superpowers/specs/2026-06-20-cloudbase-persistence-design.md
 base-ref: ba22e83ab71fc990e92442f778adfa1ccce88b02
+archived-with: 2026-06-20-cloudbase-persistence
 ---
 
 # CloudBase Persistence Implementation Plan
@@ -13,8 +14,6 @@ base-ref: ba22e83ab71fc990e92442f778adfa1ccce88b02
 **Architecture:** CloudBase is added behind the existing `ProjectRepository` service boundary. A small repository factory selects local or CloudBase data sources from Vite environment variables. CloudBase document conversion stays isolated from React components.
 
 **Tech Stack:** React, Vite, TypeScript, Vitest, `@cloudbase/js-sdk` v3, Tencent CloudBase document database.
-
----
 
 ## File Structure
 

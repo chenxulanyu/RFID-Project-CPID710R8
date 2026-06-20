@@ -2,6 +2,8 @@
 comet_change: cloudbase-persistence
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-20-cloudbase-persistence
+status: final
 ---
 
 # CloudBase 持久化技术设计
