@@ -21,6 +21,18 @@ The system SHALL configure CloudBase credentials through environment variables o
 - **WHEN** the project is prepared for GitHub or Gitee
 - **THEN** only placeholder configuration names and examples are present, with no real CloudBase secret values
 
+#### Scenario: Use frontend direct CloudBase access
+- **WHEN** the frontend is configured to access CloudBase directly through the Web SDK
+- **THEN** it may use public Web SDK configuration such as environment ID, collection names, project ID, and Publishable Key
+- **AND** it MUST NOT use or document service-side secrets such as `secretId` or `secretKey`
+
+### Requirement: CloudBase browser access safety
+The system SHALL document the CloudBase browser access safety prerequisites required for frontend direct access.
+
+#### Scenario: Prepare CloudBase for deployed frontend access
+- **WHEN** the website is configured to use the CloudBase Web SDK from a deployed browser origin
+- **THEN** the setup guidance identifies the need for allowed origins or security domains, authentication mode, and database permission rules before enabling write access
+
 ### Requirement: Local fallback behavior
 The system SHALL keep local or mock data usable when CloudBase configuration is absent, unless the runtime is explicitly configured to require CloudBase.
 
