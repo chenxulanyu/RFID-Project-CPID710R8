@@ -1,6 +1,13 @@
+/// <reference types="node" />
+
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { AdminPage } from "./AdminPage";
+
+const stylesPath = resolve(dirname(fileURLToPath(import.meta.url)), "../../styles.css");
 
 describe("AdminPage", () => {
   beforeEach(() => {
@@ -64,6 +71,13 @@ describe("AdminPage", () => {
     const actionButtons = [...(taskSection?.querySelectorAll("button") ?? [])].map((button) => button.textContent);
 
     expect(actionButtons).toEqual(["保存任务信息", "归档任务"]);
+  });
+
+
+  it("keeps the archived task list rows packed at the top", () => {
+    const styles = readFileSync(stylesPath, "utf8");
+
+    expect(styles).toMatch(/\.admin-task-list\s*\{[^}]*align-content:\s*start[^}]*\}/);
   });
 
   it("creates, archives, and restores a task", async () => {
