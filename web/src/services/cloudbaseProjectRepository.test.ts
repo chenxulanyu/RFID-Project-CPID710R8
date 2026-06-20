@@ -207,6 +207,35 @@ describe("CloudBaseProjectRepository reads", () => {
     });
   });
 
+  it("reads project metadata by logical id when CloudBase uses an auto-generated document _id", async () => {
+    const database = new FakeDatabase();
+    database.collections.set(
+      "projects",
+      new Map([
+        [
+          "60977a436a36660000ef6fde615ae52c",
+          {
+            _id: "60977a436a36660000ef6fde615ae52c",
+            id: "cpid710r8",
+            name: "CPID710R8 项目进度管理",
+            plannedStartDate: "2026-03-30",
+            plannedEndDate: "2026-09-28",
+            calendarMode: "calendar-days",
+          },
+        ],
+      ]),
+    );
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    await expect(repository.getProject()).resolves.toEqual({
+      id: "cpid710r8",
+      name: "CPID710R8 项目进度管理",
+      plannedStartDate: "2026-03-30",
+      plannedEndDate: "2026-09-28",
+      calendarMode: "calendar-days",
+    });
+  });
+
   it("falls back to the seeded project when CloudBase project metadata is unavailable", async () => {
     class ProjectReadFailureDatabase implements CloudBaseDatabaseLike {
       collection(name: string): CloudBaseCollectionLike {
@@ -495,6 +524,38 @@ describe("CloudBaseProjectRepository writes", () => {
       taskName: "更新任务",
       manualCompletionRatio: 0.7,
     });
+  });
+
+  it("updates the auto-id project document when it is found by logical id", async () => {
+    const database = new FakeDatabase();
+    database.collections.set(
+      "projects",
+      new Map([
+        [
+          "60977a436a36660000ef6fde615ae52c",
+          {
+            _id: "60977a436a36660000ef6fde615ae52c",
+            id: "cpid710r8",
+            name: "CPID710R8 项目进度管理",
+            plannedStartDate: "2026-03-30",
+            plannedEndDate: "2026-09-28",
+            calendarMode: "calendar-days",
+          },
+        ],
+      ]),
+    );
+    const repository = new CloudBaseProjectRepository({ database, projectId: "cpid710r8" });
+
+    await expect(repository.saveProject({ ...project, name: "更新后的项目" })).resolves.toMatchObject({
+      id: "cpid710r8",
+      name: "更新后的项目",
+    });
+
+    expect(database.collections.get("projects")?.get("60977a436a36660000ef6fde615ae52c")).toMatchObject({
+      id: "cpid710r8",
+      name: "更新后的项目",
+    });
+    expect(database.collections.get("projects")?.has("cpid710r8")).toBe(false);
   });
 
   it("saves project and task documents", async () => {

@@ -210,3 +210,12 @@
 - 新增回归测试覆盖 CloudBase 项目读取失败、任务读取失败和合法空任务列表场景。
 - 验证：`npm test --workspace web` 通过，13 个测试文件、73 条测试用例通过。
 - 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。
+
+## fix-project-save-and-timeline-axis v1.2 - 2026-06-20
+
+- 支持 CloudBase `projects` 集合使用自动 `_id` 文档：优先读取 `projects/cpid710r8`，若不存在则按普通字段 `id: "cpid710r8"` 查询。
+- 修复自动 `_id` 项目文档的项目 ID 映射，项目模型优先使用普通 `id` 字段，避免把自动 `_id` 误当成业务项目 ID。
+- 保存项目信息时复用按普通 `id` 找到的真实 CloudBase 文档 `_id`，不会再新建一条 `cpid710r8` 文档或写错目标文档。
+- 新增回归测试覆盖自动 `_id` 项目文档的读取和保存更新。
+- 验证：`npm test --workspace web` 通过，13 个测试文件、75 条测试用例通过。
+- 验证：`npm run build --workspace web` 通过，仍仅有 Vite chunk size 非阻断提示。

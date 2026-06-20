@@ -83,6 +83,10 @@ function firstDocument(data: CloudBaseDocument | CloudBaseDocument[] | null): Cl
   return Array.isArray(data) ? data[0] ?? null : data;
 }
 
+function documentId(document: CloudBaseDocument, fallback: string): string {
+  return optionalString(document._id) ?? fallback;
+}
+
 function hasRequiredTaskDocumentFields(document: CloudBaseDocument): boolean {
   return Boolean(
     optionalString(document._id ?? document.id) &&
@@ -110,7 +114,7 @@ export function projectToCloudBaseDocument(project: Project): CloudBaseDocument 
 
 export function projectFromCloudBaseDocument(document: CloudBaseDocument): Project {
   return {
-    id: requiredString(document._id ?? document.id, cpid710r8Project.id),
+    id: requiredString(document.id ?? document._id, cpid710r8Project.id),
     name: requiredString(document.name, cpid710r8Project.name),
     plannedStartDate: requiredString(document.plannedStartDate, "2026-03-30"),
     plannedEndDate: requiredString(document.plannedEndDate, "2026-09-28"),
@@ -172,22 +176,37 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     }
   }
 
-  private async saveDocument(collectionName: string, id: string, document: CloudBaseDocument): Promise<void> {
+  private async findDocumentByLogicalId(collectionName: string, logicalId: string): Promise<CloudBaseDocument | null> {
+    const response = await this.database.collection(collectionName).where({ id: logicalId }).get();
+    return response.data.find((document) => optionalString(document.id) === logicalId) ?? null;
+  }
+
+  private async findDocument(collectionName: string, id: string): Promise<{ document: CloudBaseDocument | null; documentId: string }> {
     const collection = this.database.collection(collectionName);
     const reference = collection.doc(id);
     const existing = await reference.get();
     const currentDocument = firstDocument(existing.data);
+    if (currentDocument) return { document: currentDocument, documentId: id };
+    const logicalDocument = await this.findDocumentByLogicalId(collectionName, id);
+    return { document: logicalDocument, documentId: logicalDocument ? documentId(logicalDocument, id) : id };
+  }
+
+  private async saveDocument(collectionName: string, id: string, document: CloudBaseDocument): Promise<string> {
+    const collection = this.database.collection(collectionName);
+    const existing = await this.findDocument(collectionName, id);
+    const reference = collection.doc(existing.documentId);
+    const currentDocument = existing.document;
     if (currentDocument) {
       await this.assertWriteSucceeded(await reference.update(document));
-      return;
+      return existing.documentId;
     }
     await this.assertWriteSucceeded(await reference.set(document));
+    return id;
   }
 
   async getProject(): Promise<Project> {
     try {
-      const response = await this.database.collection(this.projectsCollection).doc(this.projectId).get();
-      const document = firstDocument(response.data);
+      const { document } = await this.findDocument(this.projectsCollection, this.projectId);
       return document ? projectFromCloudBaseDocument(document) : { ...cpid710r8Project };
     } catch {
       return { ...cpid710r8Project };
@@ -195,8 +214,8 @@ export class CloudBaseProjectRepository implements ProjectRepository {
   }
 
   async saveProject(project: Project): Promise<Project> {
-    const reference = this.database.collection(this.projectsCollection).doc(project.id);
-    await this.saveDocument(this.projectsCollection, project.id, projectToCloudBaseDocument(project));
+    const savedDocumentId = await this.saveDocument(this.projectsCollection, project.id, projectToCloudBaseDocument(project));
+    const reference = this.database.collection(this.projectsCollection).doc(savedDocumentId);
     const readBackProject = async () => {
       const saved = await reference.get();
       const document = firstDocument(saved.data);

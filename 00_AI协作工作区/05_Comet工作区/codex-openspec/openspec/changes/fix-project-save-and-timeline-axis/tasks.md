@@ -29,3 +29,10 @@
 - [x] 5.2 Add regression coverage for failed CloudBase task reads while preserving intentionally empty task lists.
 - [x] 5.3 Implement read fallback to seeded project metadata and seeded task inputs.
 - [x] 5.4 Run full web tests and build.
+
+## 6. Auto-id CloudBase project document support
+
+- [x] 6.1 Add regression coverage for reading project metadata by logical `id` when CloudBase assigns an automatic `_id`.
+- [x] 6.2 Add regression coverage for saving back to the auto-id project document.
+- [x] 6.3 Implement lookup fallback from `doc(projectId)` to `where({ id: projectId })`.
+- [x] 6.4 Run full web tests and build.
