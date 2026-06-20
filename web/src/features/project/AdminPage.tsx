@@ -30,9 +30,13 @@ function hasTaskName(task: ProjectTaskInput): boolean {
   return typeof task.taskName === "string" && task.taskName.trim().length > 0;
 }
 
+function hasStrongTaskName(task: ProjectTaskInput): boolean {
+  return hasTaskName(task) && task.taskName !== "null" && task.taskName !== "undefined";
+}
+
 function taskVisible(task: ProjectTaskInput, filter: TaskFilter) {
-  if (filter === "archived") return Boolean(task.isArchived) && hasTaskName(task);
-  return !task.isArchived && hasTaskName(task);
+  if (filter === "archived") return Boolean(task.isArchived) && hasStrongTaskName(task);
+  return !task.isArchived && hasStrongTaskName(task);
 }
 
 function percentToRatio(value: string): number | undefined {
@@ -240,7 +244,7 @@ export function AdminPage({
             </button>
           </div>
           <ul className="admin-task-list" aria-label="任务列表">
-            {visibleTasks.map((task) => (
+            {visibleTasks.filter(hasStrongTaskName).map((task) => (
               <li key={task.id}>
                 <button
                   className="admin-task-button"

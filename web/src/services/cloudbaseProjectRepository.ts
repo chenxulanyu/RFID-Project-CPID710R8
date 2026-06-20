@@ -48,6 +48,10 @@ function optionalBoolean(value: unknown): boolean | undefined {
   return typeof value === "boolean" ? value : undefined;
 }
 
+function isValidTaskName(value: unknown): boolean {
+  return typeof value === "string" && value.trim().length > 0 && value !== "null" && value !== "undefined";
+}
+
 function normalizeProjectForComparison(project: Project): Pick<Project, "id" | "name" | "plannedStartDate" | "plannedEndDate" | "calendarMode"> {
   return {
     id: project.id,
@@ -277,8 +281,10 @@ export class CloudBaseProjectRepository implements ProjectRepository {
     } catch {
       cloudTasks = [];
     }
-    return mergeTaskInputs(cpid710r8TaskInputs, cloudTasks)
-      .filter((task) => options.includeArchived || !task.isArchived);
+    const merged = mergeTaskInputs(cpid710r8TaskInputs, cloudTasks)
+      .filter((task) => isValidTaskName(task.taskName));
+
+    return merged.filter((task) => options.includeArchived || !task.isArchived);
   }
 
   async saveTaskInput(task: ProjectTaskInput): Promise<ProjectTaskInput> {
