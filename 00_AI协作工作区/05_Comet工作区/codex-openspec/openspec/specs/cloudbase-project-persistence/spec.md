@@ -18,6 +18,12 @@ The system SHALL provide a CloudBase-backed repository adapter that supports rea
 - **THEN** the system reads project metadata and task records from CloudBase through the repository adapter
 - **AND** missing required project fields are recovered from the seeded default project values
 
+#### Scenario: Read task without optional owner fields
+- **WHEN** a CloudBase task record has valid identity, project content, task name, planned start date, and planned end date
+- **AND** the task record has empty resource owner or responsible person fields
+- **THEN** the frontend project data service treats the task as valid
+- **AND** the frontend project data service MUST NOT fall back to seeded default tasks solely because those optional fields are empty
+
 #### Scenario: Reject malformed write results
 - **WHEN** CloudBase returns an error code or the saved document cannot be read back consistently
 - **THEN** the system MUST report the save as failed
@@ -61,3 +67,4 @@ The system SHALL include a verification path for confirming CloudBase read and w
 - **WHEN** valid CloudBase credentials and environment configuration are provided
 - **THEN** a verification command or documented check confirms that project data can be read and updated
 - **AND** the verification proves both read and write round-trip behavior
+

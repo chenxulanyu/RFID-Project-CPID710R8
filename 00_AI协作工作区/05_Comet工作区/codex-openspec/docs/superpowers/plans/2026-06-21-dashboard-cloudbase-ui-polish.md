@@ -2,6 +2,7 @@
 change: dashboard-cloudbase-ui-polish
 design-doc: docs/superpowers/specs/2026-06-21-dashboard-cloudbase-ui-polish-design.md
 base-ref: bc20c2e6bfdfedc8913d0fdff0f221de19839e31
+archived-with: 2026-06-21-dashboard-cloudbase-ui-polish
 ---
 
 # Dashboard CloudBase UI Polish Implementation Plan
@@ -14,6 +15,7 @@ base-ref: bc20c2e6bfdfedc8913d0fdff0f221de19839e31
 
 **Tech Stack:** React, TypeScript, Vite, Vitest, Testing Library, CSS.
 
+archived-with: 2026-06-21-dashboard-cloudbase-ui-polish
 ---
 
 ### Task 1: Public CloudBase Task Read Validity

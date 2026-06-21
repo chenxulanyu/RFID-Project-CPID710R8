@@ -2,6 +2,8 @@
 comet_change: dashboard-cloudbase-ui-polish
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-21-dashboard-cloudbase-ui-polish
+status: final
 ---
 
 # Dashboard CloudBase UI Polish Technical Design
