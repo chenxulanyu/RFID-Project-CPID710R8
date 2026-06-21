@@ -1,7 +1,7 @@
 import type { Project, ProjectTask } from "../../types/project";
 import { calculateCalendarDays } from "../../utils/progress";
 
-export type DashboardTaskStatus = "finished" | "in-progress" | "start-delayed" | "not-started";
+export type DashboardTaskStatus = "finished" | "in-progress" | "not-started";
 
 export interface DashboardTask extends ProjectTask {
   dashboardStatus: DashboardTaskStatus;
@@ -52,9 +52,7 @@ function hasDelayedActualStart(task: ProjectTask): boolean {
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
   void today;
   if (task.actualEndDate) return "finished";
-  if (hasDelayedActualStart(task)) return "start-delayed";
   if (task.actualStartDate) return "in-progress";
-  if (task.elapsedDays === "finished") return "finished";
   return "not-started";
 }
 
@@ -62,27 +60,25 @@ function getStatusLabel(status: DashboardTaskStatus): string {
   const labels: Record<DashboardTaskStatus, string> = {
     finished: "已完成",
     "in-progress": "进行中",
-    "start-delayed": "延迟启动",
     "not-started": "未开始",
   };
   return labels[status];
 }
 
-function getRiskLabel(task: ProjectTask, status: DashboardTaskStatus): string | undefined {
+function getRiskLabel(task: ProjectTask): string | undefined {
   if (task.warningState === "overdue") return `延期${task.overdueDays ?? 0}天`;
   if (task.warningState === "due-today") return "今日到期";
   if (task.warningState === "within-week") return "7日内到期";
-  if (hasDelayedActualStart(task) || status === "start-delayed") return "延迟启动";
+  if (hasDelayedActualStart(task)) return "延迟启动";
   return undefined;
 }
 
-function isRiskTask(task: ProjectTask, status: DashboardTaskStatus): boolean {
+function isRiskTask(task: ProjectTask): boolean {
   return (
     task.warningState === "overdue" ||
     task.warningState === "due-today" ||
     task.warningState === "within-week" ||
-    hasDelayedActualStart(task) ||
-    status === "start-delayed"
+    hasDelayedActualStart(task)
   );
 }
 
@@ -148,7 +144,7 @@ export function buildDashboardModel({
       ...task,
       dashboardStatus,
       statusLabel: getStatusLabel(dashboardStatus),
-      riskLabel: getRiskLabel(task, dashboardStatus),
+      riskLabel: getRiskLabel(task),
       timeline: buildTimeline(task, rangeStart, totalDays),
     };
   });
@@ -172,7 +168,7 @@ export function buildDashboardModel({
     project,
     today,
     metrics,
-    riskTasks: dashboardTasks.filter((task) => isRiskTask(task, task.dashboardStatus)),
+    riskTasks: dashboardTasks.filter(isRiskTask),
     tasks: dashboardTasks,
     timelineRange: {
       startDate: rangeStart,

@@ -294,7 +294,7 @@ body {
 }
 
 .warning-overdue,
-.status-start-delayed {
+.warning-start-delayed {
   background: #fff1ed;
   border-color: #db6b5f;
   color: #8b3f35;
@@ -468,7 +468,6 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-height: calc(100vh - 220px);
   min-height: 0;
 }
 

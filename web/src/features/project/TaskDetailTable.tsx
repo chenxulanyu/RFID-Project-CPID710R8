@@ -6,6 +6,10 @@ function actualPeriod(task: DashboardTask) {
   return `${task.actualStartDate ?? "-"} 至 ${task.actualEndDate ?? "进行中"}`;
 }
 
+function warningClass(task: DashboardTask): string {
+  return task.riskLabel === "延迟启动" ? "warning-start-delayed" : `warning-${task.warningState}`;
+}
+
 export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
   return (
     <section className="dashboard-panel" aria-labelledby="task-table-title">
@@ -47,7 +51,7 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                   </span>
                 </td>
                 <td>
-                  <span className={`status-badge status-${task.dashboardStatus} warning-${task.warningState}`}>
+                  <span className={`status-badge status-${task.dashboardStatus} ${warningClass(task)}`}>
                     {task.riskLabel ?? task.statusLabel}
                   </span>
                 </td>

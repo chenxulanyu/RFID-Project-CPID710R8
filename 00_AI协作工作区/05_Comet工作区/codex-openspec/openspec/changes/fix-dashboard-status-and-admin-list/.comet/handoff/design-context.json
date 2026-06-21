@@ -1,0 +1,15 @@
+{
+  "change": "fix-dashboard-status-and-admin-list",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "4fbea72c5ec2ee4c77679db2288ed31763d0bd347c2cb6df9d56eee9605fdc5b",
+  "files": [
+    { "path": "openspec/changes/fix-dashboard-status-and-admin-list/proposal.md", "sha256": "9ddae7b87a8f8dd7ec764328905e41527eab9128b6ec1158361ad470fda3f6ae" },
+    { "path": "openspec/changes/fix-dashboard-status-and-admin-list/design.md", "sha256": "19064b229269b31ceb7ce5c7c39f6c7f088b8d11ee12aad92b977f9ae88ff093" },
+    { "path": "openspec/changes/fix-dashboard-status-and-admin-list/tasks.md", "sha256": "351c2f9cb0903af0a4ff27f56abd5415bc23bebe3196bd55befd0faf672993b1" },
+    { "path": "openspec/changes/fix-dashboard-status-and-admin-list/specs/admin-progress-management/spec.md", "sha256": "7b829bfed6566ce5f1fae6bfcc584bfdae0f46cd3201e09ae661bb65c6e7c210" },
+    { "path": "openspec/changes/fix-dashboard-status-and-admin-list/specs/project-dashboard-display/spec.md", "sha256": "d83f9c84a387cdea7e5cd48ef36f659604f2aed7d509573771ba4c6f816a0feb" }
+  ]
+}

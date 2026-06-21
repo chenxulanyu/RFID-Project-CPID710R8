@@ -88,11 +88,14 @@ describe("dashboardMetrics", () => {
 
     expect(model.metrics.totalTasks).toBe(5);
     expect(model.metrics.finishedTasks).toBe(1);
-    expect(model.metrics.inProgressTasks).toBe(1);
+    expect(model.metrics.inProgressTasks).toBe(2);
     expect(model.metrics.startDelayedTasks).toBe(1);
     expect(model.metrics.notStartedTasks).toBe(2);
+    expect(
+      model.metrics.finishedTasks + model.metrics.inProgressTasks + model.metrics.notStartedTasks,
+    ).toBe(model.metrics.totalDetailTasks);
     expect(model.tasks.find((item) => item.id === "late-start")?.dashboardStatus).toBe(
-      "start-delayed",
+      "in-progress",
     );
     expect(model.tasks.find((item) => item.id === "missing-actual-start")?.dashboardStatus).toBe(
       "not-started",
@@ -151,6 +154,9 @@ describe("dashboardMetrics", () => {
 
     expect(model.metrics.finishedTasks).toBe(1);
     expect(model.metrics.startDelayedTasks).toBe(1);
+    expect(
+      model.metrics.finishedTasks + model.metrics.inProgressTasks + model.metrics.notStartedTasks,
+    ).toBe(model.metrics.totalDetailTasks);
     expect(model.riskTasks.map((item) => item.id)).toEqual(["finished-late-start"]);
     expect(model.tasks[0].dashboardStatus).toBe("finished");
     expect(model.tasks[0].riskLabel).toBe("延迟启动");

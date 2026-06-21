@@ -15,12 +15,17 @@ describe("styles", () => {
     expect(styles).toMatch(/@media\s*\(max-width:\s*760px\)[\s\S]*?\.metric-grid\s*\{[^}]*grid-template-columns:\s*repeat\(7,\s*minmax\(112px,\s*1fr\)\)/);
   });
 
+  it("uses a dedicated visible warning style for delayed-start risks", () => {
+    expect(styles).toMatch(/\.warning-start-delayed\s*\{[^}]*background:\s*#fff1ed[^}]*border-color:\s*#db6b5f[^}]*color:\s*#8b3f35[^}]*\}/s);
+  });
+
   it("keeps admin right-side sections at natural height", () => {
     expect(styles).toMatch(/\.admin-panels\s*\{[^}]*align-content:\s*start[^}]*align-items:\s*start[^}]*\}/s);
   });
 
-  it("keeps the admin task list bounded with internal scrolling", () => {
-    expect(styles).toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*max-height:\s*calc\(100vh\s*-\s*220px\)/s);
+  it("lets the admin task panel stretch to the right column while the list scrolls internally", () => {
+    expect(styles).not.toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*max-height:\s*calc\(100vh\s*-\s*220px\)/s);
+    expect(styles).toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*height:\s*100%[^}]*min-height:\s*0[^}]*\}/s);
     expect(styles).toMatch(/\.admin-task-list\s*\{[^}]*overflow:\s*auto[^}]*\}/s);
   });
 });

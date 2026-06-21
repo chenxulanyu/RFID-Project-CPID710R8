@@ -1,5 +1,9 @@
 import type { DashboardTask } from "./dashboardMetrics";
 
+function warningClass(task: DashboardTask): string {
+  return task.riskLabel === "延迟启动" ? "warning-start-delayed" : `warning-${task.warningState}`;
+}
+
 export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
   return (
     <section className="risk-strip" aria-labelledby="risk-strip-title">
@@ -11,7 +15,7 @@ export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
         <div className="risk-list">
           {tasks.map((task) => (
             <article
-              className={`risk-pill status-${task.dashboardStatus} warning-${task.warningState}`}
+              className={`risk-pill status-${task.dashboardStatus} ${warningClass(task)}`}
               key={task.id}
             >
               <strong>{task.milestoneCode}</strong>
