@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Project, ProjectTask } from "../../types/project";
-import { buildDashboardModel } from "./dashboardMetrics";
+import {
+  buildDashboardModel,
+  getCompletionDeviationLabel,
+  getNotStartedCountdownLabel,
+  getRiskLabels,
+  getStartDeviationLabel,
+} from "./dashboardMetrics";
 
 const project: Project = {
   id: "cpid710r8",
@@ -159,7 +165,7 @@ describe("dashboardMetrics", () => {
     ).toBe(model.metrics.totalDetailTasks);
     expect(model.riskTasks.map((item) => item.id)).toEqual(["finished-late-start"]);
     expect(model.tasks[0].dashboardStatus).toBe("finished");
-    expect(model.tasks[0].riskLabel).toBe("延迟启动");
+    expect(model.tasks[0].riskLabels).toEqual(["延迟启动", "提前1天"]);
   });
 
   it("counts total tasks by unique milestone code while preserving detail rows", () => {
@@ -287,5 +293,247 @@ describe("dashboardMetrics", () => {
 
     expect(model.timelineRange.todayPercent).toBeGreaterThan(49);
     expect(model.timelineRange.todayPercent).toBeLessThan(51);
+  });
+});
+
+describe("getStartDeviationLabel", () => {
+  it("returns 延迟启动 when actual start is later than planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "late",
+          taskName: "延迟启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-12",
+        }),
+      ),
+    ).toBe("延迟启动");
+  });
+
+  it("returns 提前启动 when actual start is earlier than planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "early",
+          taskName: "提前启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-08",
+        }),
+      ),
+    ).toBe("提前启动");
+  });
+
+  it("returns undefined when actual start equals planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "on-time",
+          taskName: "按时启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-10",
+        }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when actual start is missing", () => {
+    expect(
+      getStartDeviationLabel(task({ id: "not-started", taskName: "未开始" })),
+    ).toBeUndefined();
+  });
+});
+
+describe("getCompletionDeviationLabel", () => {
+  it("returns 超期X天 when actual end is later than planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "overrun",
+          taskName: "超期完成",
+          plannedEndDate: "2026-04-13",
+          actualStartDate: "2026-04-06",
+          actualEndDate: "2026-04-30",
+        }),
+      ),
+    ).toBe("超期17天");
+  });
+
+  it("returns 提前X天 when actual end is earlier than planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "early-done",
+          taskName: "提前完成",
+          plannedEndDate: "2026-04-27",
+          actualStartDate: "2026-04-06",
+          actualEndDate: "2026-04-25",
+        }),
+      ),
+    ).toBe("提前2天");
+  });
+
+  it("returns undefined when actual end equals planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "on-time-done",
+          taskName: "按时完成",
+          plannedEndDate: "2026-04-19",
+          actualStartDate: "2026-03-30",
+          actualEndDate: "2026-04-19",
+        }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when actual end is missing", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({ id: "unfinished", taskName: "未完成", actualStartDate: "2026-04-06" }),
+      ),
+    ).toBeUndefined();
+  });
+});
+
+describe("getNotStartedCountdownLabel", () => {
+  it("returns 距X天 when today is before planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "countdown",
+          taskName: "未开始未到期",
+          plannedEndDate: "2026-06-28",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("距9天");
+  });
+
+  it("returns 已超期X天 when today is after planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "past-due",
+          taskName: "未开始已超期",
+          plannedEndDate: "2026-04-27",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("已超期53天");
+  });
+
+  it("returns 今日到期 when today equals planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "due",
+          taskName: "未开始今日到期",
+          plannedEndDate: "2026-06-19",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("今日到期");
+  });
+
+  it("returns undefined when actual start is present", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "started",
+          taskName: "已开始",
+          actualStartDate: "2026-06-01",
+          plannedEndDate: "2026-06-28",
+        }),
+        "2026-06-19",
+      ),
+    ).toBeUndefined();
+  });
+});
+
+describe("getRiskLabels", () => {
+  it("assembles not-started countdown label with 未开始 prefix", () => {
+    expect(
+      getRiskLabels(
+        task({ id: "countdown", taskName: "未开始", plannedEndDate: "2026-06-28" }),
+        "2026-06-19",
+      ),
+    ).toEqual(["未开始（距9天）"]);
+  });
+
+  it("assembles 未开始 prefix with 今日到期 countdown", () => {
+    expect(
+      getRiskLabels(
+        task({ id: "due", taskName: "未开始当日", plannedEndDate: "2026-06-19" }),
+        "2026-06-19",
+      ),
+    ).toEqual(["未开始（今日到期）"]);
+  });
+
+  it("assembles delayed start plus live overdue for in-progress task", () => {
+    expect(
+      getRiskLabels(
+        task({
+          id: "active-late",
+          taskName: "延迟启动且延期",
+          plannedStartDate: "2026-06-01",
+          plannedEndDate: "2026-06-10",
+          actualStartDate: "2026-06-03",
+          warningState: "overdue",
+          overdueDays: 9,
+        }),
+        "2026-06-19",
+      ),
+    ).toEqual(["延迟启动", "延期9天"]);
+  });
+
+  it("assembles delayed start plus completion overrun for finished task", () => {
+    expect(
+      getRiskLabels(
+        task({
+          id: "finished-overrun",
+          taskName: "延迟启动且超期",
+          plannedStartDate: "2026-03-30",
+          plannedEndDate: "2026-04-13",
+          actualStartDate: "2026-04-06",
+          actualEndDate: "2026-04-30",
+          warningState: "none",
+        }),
+        "2026-06-19",
+      ),
+    ).toEqual(["延迟启动", "超期17天"]);
+  });
+
+  it("falls back to 已完成 when finished task has no deviation", () => {
+    expect(
+      getRiskLabels(
+        task({
+          id: "on-time-done",
+          taskName: "按时完成",
+          plannedStartDate: "2026-03-30",
+          plannedEndDate: "2026-04-19",
+          actualStartDate: "2026-03-30",
+          actualEndDate: "2026-04-19",
+          warningState: "none",
+        }),
+        "2026-06-19",
+      ),
+    ).toEqual(["已完成"]);
+  });
+
+  it("assembles early start plus early completion", () => {
+    expect(
+      getRiskLabels(
+        task({
+          id: "early-all",
+          taskName: "提前启动提前完成",
+          plannedStartDate: "2026-04-06",
+          plannedEndDate: "2026-04-27",
+          actualStartDate: "2026-03-30",
+          actualEndDate: "2026-04-25",
+          warningState: "none",
+        }),
+        "2026-06-19",
+      ),
+    ).toEqual(["提前启动", "提前2天"]);
   });
 });

@@ -1,0 +1,14 @@
+{
+  "change": "task-duration-and-status-v1-2",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "4dceb734ccf19af0c3124e86d622f2350c144225ccd1c5da9b1dd1cbce0a929e",
+  "files": [
+    { "path": "openspec/changes/task-duration-and-status-v1-2/proposal.md", "sha256": "b06ce1655f475de57fb8118a6fca826c23d76b75af61d145fceea44e879483e1" },
+    { "path": "openspec/changes/task-duration-and-status-v1-2/design.md", "sha256": "172d2b0d3817435938cfb333324a644ff2638a1d0cd805f510bfa7701b5b1c5c" },
+    { "path": "openspec/changes/task-duration-and-status-v1-2/tasks.md", "sha256": "090f6f8515b76e5e1fc8696965427ea8b3afd115d8c7e0e88f2e9e346690ff82" },
+    { "path": "openspec/changes/task-duration-and-status-v1-2/specs/task-duration-status/spec.md", "sha256": "4989d7536ad12c00d3e3a586d9edc5eae9e2d32ab6607701ae72d94179313cf0" }
+  ]
+}

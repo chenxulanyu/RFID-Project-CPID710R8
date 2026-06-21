@@ -6,7 +6,7 @@ export type DashboardTaskStatus = "finished" | "in-progress" | "not-started";
 export interface DashboardTask extends ProjectTask {
   dashboardStatus: DashboardTaskStatus;
   statusLabel: string;
-  riskLabel?: string;
+  riskLabels: string[];
   timeline: {
     plan: { leftPercent: number; widthPercent: number };
     actual?: { leftPercent: number; widthPercent: number };
@@ -48,6 +48,27 @@ function compareDate(left: string, right: string): number {
 function hasDelayedActualStart(task: ProjectTask): boolean {
   return Boolean(task.actualStartDate && compareDate(task.actualStartDate, task.plannedStartDate) > 0);
 }
+export function getStartDeviationLabel(task: ProjectTask): string | undefined {
+  if (!task.actualStartDate) return undefined;
+  const cmp = compareDate(task.actualStartDate, task.plannedStartDate);
+  if (cmp > 0) return "延迟启动";
+  if (cmp < 0) return "提前启动";
+  return undefined;
+}
+export function getCompletionDeviationLabel(task: ProjectTask): string | undefined {
+  if (!task.actualEndDate) return undefined;
+  const cmp = compareDate(task.actualEndDate, task.plannedEndDate);
+  if (cmp > 0) return `超期${calculateCalendarDays(task.plannedEndDate, task.actualEndDate) - 1}天`;
+  if (cmp < 0) return `提前${calculateCalendarDays(task.actualEndDate, task.plannedEndDate) - 1}天`;
+  return undefined;
+}
+export function getNotStartedCountdownLabel(task: ProjectTask, today: string): string | undefined {
+  if (task.actualStartDate) return undefined;
+  const cmp = compareDate(today, task.plannedEndDate);
+  if (cmp > 0) return `已超期${calculateCalendarDays(task.plannedEndDate, today) - 1}天`;
+  if (cmp < 0) return `距${calculateCalendarDays(today, task.plannedEndDate) - 1}天`;
+  return "今日到期";
+}
 
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
   void today;
@@ -65,12 +86,27 @@ function getStatusLabel(status: DashboardTaskStatus): string {
   return labels[status];
 }
 
-function getRiskLabel(task: ProjectTask): string | undefined {
+function getLiveWarningLabel(task: ProjectTask): string | undefined {
   if (task.warningState === "overdue") return `延期${task.overdueDays ?? 0}天`;
   if (task.warningState === "due-today") return "今日到期";
   if (task.warningState === "within-week") return "7日内到期";
-  if (hasDelayedActualStart(task)) return "延迟启动";
   return undefined;
+}
+
+export function getRiskLabels(task: ProjectTask, today: string): string[] {
+  const status = getDashboardStatus(task, today);
+  const startLabel = getStartDeviationLabel(task);
+  if (status === "not-started") {
+    const countdown = getNotStartedCountdownLabel(task, today);
+    return countdown ? [`未开始（${countdown}）`] : ["未开始"];
+  }
+  if (status === "in-progress") {
+    const live = getLiveWarningLabel(task);
+    return [startLabel, live].filter((x): x is string => Boolean(x));
+  }
+  const completion = getCompletionDeviationLabel(task);
+  const labels = [startLabel, completion].filter((x): x is string => Boolean(x));
+  return labels.length ? labels : ["已完成"];
 }
 
 function isRiskTask(task: ProjectTask): boolean {
@@ -144,7 +180,7 @@ export function buildDashboardModel({
       ...task,
       dashboardStatus,
       statusLabel: getStatusLabel(dashboardStatus),
-      riskLabel: getRiskLabel(task),
+      riskLabels: getRiskLabels(task, today),
       timeline: buildTimeline(task, rangeStart, totalDays),
     };
   });

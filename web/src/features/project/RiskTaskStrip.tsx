@@ -1,7 +1,12 @@
 import type { DashboardTask } from "./dashboardMetrics";
+import { tagClass } from "./TaskDetailTable";
 
 function warningClass(task: DashboardTask): string {
-  return task.riskLabel === "延迟启动" ? "warning-start-delayed" : `warning-${task.warningState}`;
+  const text = task.riskLabels.join("");
+  if (/超期|延期|已超期/.test(text)) return "warning-overdue";
+  if (/延迟启动|今日到期|7日内到期/.test(text)) return "warning-start-delayed";
+  if (/提前/.test(text)) return "warning-early";
+  return `warning-${task.warningState}`;
 }
 
 export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
@@ -20,7 +25,13 @@ export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
             >
               <strong>{task.milestoneCode}</strong>
               <span>{task.taskName}</span>
-              <em>{task.riskLabel}</em>
+              <em>
+                {task.riskLabels.flatMap((label, index) =>
+                  index === 0
+                    ? [<span key={index} className={tagClass(label)}>{label}</span>]
+                    : ["、", <span key={index} className={tagClass(label)}>{label}</span>],
+                )}
+              </em>
             </article>
           ))}
         </div>
