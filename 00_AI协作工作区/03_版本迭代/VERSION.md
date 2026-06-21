@@ -22,3 +22,5 @@
 - `fix-cloudbase-and-mobile-shell`: `v1.0`
 - `admin-maintenance-and-gantt-fix`: `v1.0`
 - `fix-project-save-and-timeline-axis`: `v1.3`
+- `dashboard-and-timeline`: `v1.1`
+- `task-duration-and-status`: `v1.2`
