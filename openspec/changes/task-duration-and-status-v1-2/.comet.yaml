@@ -13,7 +13,7 @@ base_ref: 2622ad2ef2892eb7ee98187d2e15775bc4c5e3ca
 design_doc: docs/superpowers/specs/2026-06-21-task-duration-and-status-v1-2-design.md
 plan: docs/superpowers/plans/2026-06-21-task-duration-and-status-v1-2.md
 verify_result: pending
-verification_report: null
+verification_report: docs/superpowers/reports/2026-06-21-task-duration-and-status-v1-2-verify.md
 branch_status: pending
 created_at: 2026-06-21
 verified_at: null
