@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { DashboardTask } from "./dashboardMetrics";
-import { TaskDetailTable } from "./TaskDetailTable";
+import { TaskDetailTable, tagClass } from "./TaskDetailTable";
 
 const tasks: DashboardTask[] = [
   {
@@ -245,5 +245,24 @@ describe("TaskDetailTable", () => {
     expect(earlySpans).toHaveLength(2);
     expect(earlySpans[0].textContent).toBe("提前启动");
     expect(earlySpans[1].textContent).toBe("提前2天");
+  });
+});
+
+describe("tagClass", () => {
+  it("classifies atomic labels correctly", () => {
+    expect(tagClass("延迟启动")).toBe("tag-warning");
+    expect(tagClass("提前启动")).toBe("tag-early");
+    expect(tagClass("超期17天")).toBe("tag-overdue");
+    expect(tagClass("延期9天")).toBe("tag-overdue");
+    expect(tagClass("今日到期")).toBe("tag-warning");
+    expect(tagClass("7日内到期")).toBe("tag-warning");
+    expect(tagClass("已完成")).toBe("tag-neutral");
+    expect(tagClass("未开始（距9天）")).toBe("tag-neutral");
+    expect(tagClass("未开始（今日到期）")).toBe("tag-warning");
+    expect(tagClass("未开始（已超期53天）")).toBe("tag-overdue");
+  });
+
+  it("prioritizes overdue over early for compound labels", () => {
+    expect(tagClass("提前启动但超期完成")).toBe("tag-overdue");
   });
 });

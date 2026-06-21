@@ -14,9 +14,9 @@ function warningClass(task: DashboardTask): string {
   return `warning-${task.warningState}`;
 }
 export function tagClass(label: string): string {
-  if (/提前/.test(label)) return "tag-early";
   if (/超期|延期|已超期/.test(label)) return "tag-overdue";
   if (/延迟启动|今日到期|7日内到期/.test(label)) return "tag-warning";
+  if (/提前/.test(label)) return "tag-early";
   return "tag-neutral";
 }
 
