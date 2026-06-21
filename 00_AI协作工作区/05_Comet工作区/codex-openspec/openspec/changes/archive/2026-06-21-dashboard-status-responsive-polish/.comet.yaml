@@ -17,7 +17,7 @@ verification_report: docs/superpowers/reports/2026-06-21-dashboard-status-respon
 branch_status: handled
 created_at: 2026-06-21
 verified_at: 2026-06-21
-archived: false
+archived: true
 handoff_context: openspec/changes/dashboard-status-responsive-polish/.comet/handoff/design-context.json
 handoff_hash: d45435d84902fe5ce617d10eaa61201c8aeba6f9b2053fba44da573c636853cd
 build_command: npm --prefix ../../../web run build

@@ -2,6 +2,7 @@
 change: dashboard-status-responsive-polish
 design-doc: docs/superpowers/specs/2026-06-21-dashboard-status-responsive-polish-design.md
 base-ref: a25a3074632d29b51543f7055f8e8e09d1e7bc0e
+archived-with: 2026-06-21-dashboard-status-responsive-polish
 ---
 
 # Dashboard Status Responsive Polish Implementation Plan
@@ -14,6 +15,7 @@ base-ref: a25a3074632d29b51543f7055f8e8e09d1e7bc0e
 
 **Tech Stack:** React, TypeScript, Vite, Vitest, Testing Library, CSS.
 
+archived-with: 2026-06-21-dashboard-status-responsive-polish
 ---
 
 ### Task 1: Update Dashboard Status Tests

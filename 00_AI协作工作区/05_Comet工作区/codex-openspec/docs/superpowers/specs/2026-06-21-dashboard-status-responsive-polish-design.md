@@ -2,6 +2,8 @@
 comet_change: dashboard-status-responsive-polish
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-21-dashboard-status-responsive-polish
+status: final
 ---
 
 # Dashboard Status And Responsive Polish Design
