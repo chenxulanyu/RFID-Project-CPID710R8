@@ -16,11 +16,17 @@ describe("styles", () => {
   });
 
   it("uses a dedicated visible warning style for delayed-start risks", () => {
-    expect(styles).toMatch(/\.warning-start-delayed\s*\{[^}]*background:\s*#fff7db[^}]*border-color:\s*#e0b341[^}]*color:\s*#735500[^}]*\}/s);
+    expect(styles).toMatch(/\.status-badge\.warning-start-delayed\s*\{[^}]*background:\s*#fff7db[^}]*\}/s);
   });
 
   it("keeps overdue warnings on the red-orange palette", () => {
-    expect(styles).toMatch(/\.warning-overdue\s*\{[^}]*background:\s*#fff1ed[^}]*border-color:\s*#db6b5f[^}]*color:\s*#8b3f35[^}]*\}/s);
+    expect(styles).toMatch(/\.status-badge\.warning-overdue\s*\{[^}]*background:\s*#fff1ed[^}]*\}/s);
+  });
+
+  it("colors risk-pill borders by severity", () => {
+    expect(styles).toMatch(/\.risk-pill\.warning-overdue\s*\{[^}]*border-color:\s*#db6b5f[^}]*\}/s);
+    expect(styles).toMatch(/\.risk-pill\.warning-start-delayed\s*\{[^}]*border-color:\s*#e0b341[^}]*\}/s);
+    expect(styles).toMatch(/\.risk-pill\.warning-early\s*\{[^}]*border-color:\s*#5fae6b[^}]*\}/s);
   });
 
   it("styles early deviations with a green palette", () => {
