@@ -29,15 +29,15 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
       </div>
       <div className="table-scroll">
         <table className="task-table dashboard-task-table">
-          <thead>
+         <thead>
             <tr>
-              <th>编号</th>
+              <th className="col-narrow">编号</th>
               <th>项目内容</th>
               <th>任务名称</th>
               <th>计划周期</th>
-              <th>计划工期</th>
+              <th className="col-duration">计划<br />工期</th>
               <th>实际周期</th>
-              <th>实际工期</th>
+              <th className="col-duration">实际<br />工期</th>
               <th>完成比例</th>
               <th>状态</th>
               <th>责任人</th>
@@ -70,19 +70,17 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                     {formatPercent(task.completionRatio)}
                   </span>
                 </td>
-                <td>
-                  <span className={`status-badge status-${task.dashboardStatus} ${warningClass(task)}`}>
-                    {task.riskLabels.length
-                      ? task.riskLabels.flatMap((label, index) =>
-                          index === 0
-                            ? [<span key={index} className={tagClass(label)}>{label}</span>]
-                            : ["、", <span key={index} className={tagClass(label)}>{label}</span>],
-                        )
-                      : <span className="tag-neutral">{task.statusLabel}</span>}
-                  </span>
-                </td>
-                <td>{task.responsiblePerson}</td>
-                <td>{task.remarks ?? "-"}</td>
+              <td>
+                <span className="status-badge">
+              {task.riskLabels.length
+                ? task.riskLabels.map((label, index) => (
+                    <span key={index} className={tagClass(label)}>{label}</span>
+                  ))
+                : <span className="tag-neutral">{task.statusLabel}</span>}
+               </span>
+             </td>
+             <td>{task.responsiblePerson}</td>
+            <td>{task.remarks ?? "-"}</td>
               </tr>
             ))}
           </tbody>

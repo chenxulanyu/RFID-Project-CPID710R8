@@ -220,6 +220,10 @@ body {
 
 .risk-pill span,
 .risk-pill em {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -232,9 +236,26 @@ body {
 }
 
 .risk-pill em {
-  color: #8b3f35;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
   font-style: normal;
   font-weight: 700;
+}
+
+.risk-pill.warning-overdue {
+  border-color: #db6b5f;
+}
+.risk-pill.warning-start-delayed {
+  border-color: #e0b341;
+}
+.risk-pill.warning-due-today,
+.risk-pill.warning-within-week {
+  border-color: #e0b341;
+}
+.risk-pill.warning-early {
+  border-color: #5fae6b;
 }
 
 .empty-state {
@@ -255,6 +276,20 @@ body {
 .dashboard-task-table td {
   max-width: 220px;
   overflow-wrap: anywhere;
+}
+
+.dashboard-task-table th {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.col-narrow {
+  width: 56px;
+}
+
+.col-duration {
+  width: 52px;
 }
 
 .cell-strong {
@@ -282,21 +317,27 @@ body {
 }
 
 .status-badge {
-  border-radius: 999px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
+}
+
+.status-badge > span {
   display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
   font-size: 12px;
   font-weight: 800;
-  max-width: 140px;
-  overflow: hidden;
-  padding: 5px 8px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .warning-overdue {
-  background: #fff1ed;
   border-color: #db6b5f;
   color: #8b3f35;
+}
+
+.status-badge.warning-overdue {
+  background: #fff1ed;
 }
 .duration-cell {
   text-align: right;
@@ -305,45 +346,59 @@ body {
 
 .tag-early {
   background: #edf7ee;
-  border: 1px solid #5fae6b;
+  padding: 2px 6px;
+  border-radius: 3px;
   color: #2f6b3f;
 }
 
 .tag-delayed-start,
 .tag-warning {
   background: #fff7db;
-  border: 1px solid #e0b341;
+  padding: 2px 6px;
+  border-radius: 3px;
   color: #735500;
 }
 
 .tag-overdue {
   background: #fff1ed;
-  border: 1px solid #db6b5f;
+  padding: 2px 6px;
+  border-radius: 3px;
   color: #8b3f35;
 }
 
 .tag-neutral {
   background: transparent;
-  border: 1px solid transparent;
+  padding: 2px 6px;
+  border-radius: 3px;
   color: #333;
 }
 
 .warning-due-today,
 .warning-within-week {
-  background: #fff7db;
-  border-color: #e0b341;
-  color: #735500;
-}
-.warning-start-delayed {
-  background: #fff7db;
   border-color: #e0b341;
   color: #735500;
 }
 
+.status-badge.warning-due-today,
+.status-badge.warning-within-week {
+  background: #fff7db;
+}
+.warning-start-delayed {
+  border-color: #e0b341;
+  color: #735500;
+}
+
+.status-badge.warning-start-delayed {
+  background: #fff7db;
+}
+
 .warning-early {
-  background: #edf7ee;
   border-color: #5fae6b;
   color: #2f6b3f;
+}
+
+.status-badge.warning-early {
+  background: #edf7ee;
 }
 
 .timeline-scroll {

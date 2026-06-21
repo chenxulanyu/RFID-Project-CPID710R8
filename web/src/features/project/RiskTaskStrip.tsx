@@ -20,17 +20,15 @@ export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
         <div className="risk-list">
           {tasks.map((task) => (
             <article
-              className={`risk-pill status-${task.dashboardStatus} ${warningClass(task)}`}
+              className={`risk-pill ${warningClass(task)}`}
               key={task.id}
             >
               <strong>{task.milestoneCode}</strong>
               <span>{task.taskName}</span>
               <em>
-                {task.riskLabels.flatMap((label, index) =>
-                  index === 0
-                    ? [<span key={index} className={tagClass(label)}>{label}</span>]
-                    : ["、", <span key={index} className={tagClass(label)}>{label}</span>],
-                )}
+                {task.riskLabels.map((label, index) => (
+                  <span key={index} className={tagClass(label)}>{label}</span>
+                ))}
               </em>
             </article>
           ))}

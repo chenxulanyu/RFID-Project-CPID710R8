@@ -117,7 +117,7 @@ describe("TaskDetailTable", () => {
     expect(durationCells[1].textContent).toBe("21天");
   });
 
-  it("renders multi-label status joined by 、 for delayed start plus overrun", () => {
+  it("renders multi-label status spans without separator for delayed start plus overrun", () => {
     const overdue: DashboardTask[] = [
       {
         id: "task-overrun",
@@ -145,7 +145,7 @@ describe("TaskDetailTable", () => {
     ];
     const { container } = render(<TaskDetailTable tasks={overdue} />);
     const badge = container.querySelector(".status-badge");
-    expect(badge?.textContent).toBe("延迟启动、超期17天");
+    expect(badge?.textContent).toBe("延迟启动超期17天");
   });
 
   it("renders statusLabel fallback when riskLabels is empty", () => {
