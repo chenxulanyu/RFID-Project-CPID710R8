@@ -20,5 +20,5 @@ verified_at: null
 archived: false
 handoff_context: openspec/changes/dashboard-cloudbase-ui-polish/.comet/handoff/design-context.json
 handoff_hash: b6b71ab0f29dcb294b560b555474735986dbb89c172be3f8e1738d5c1a9389c0
-build_command: npm run build --workspace web
-verify_command: npm test --workspace web
+build_command: cd ../../.. && npm run build --workspace web
+verify_command: cd ../../.. && npm test --workspace web
