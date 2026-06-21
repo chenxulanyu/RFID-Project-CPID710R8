@@ -24,7 +24,7 @@ const tasks: DashboardTask[] = [
     warningState: "future",
     dashboardStatus: "in-progress",
     statusLabel: "进行中",
-    riskLabel: undefined,
+    riskLabels: [],
     timeline: { plan: { leftPercent: 10, widthPercent: 20 }, percent: 50 },
   },
 ];
@@ -40,5 +40,140 @@ describe("TaskDetailTable", () => {
     const { container } = render(<TaskDetailTable tasks={tasks} />);
     expect(container.querySelector("tbody td:nth-child(2)")).toHaveClass("cell-strong");
     expect(container.querySelector("tbody td:nth-child(3)")).not.toHaveClass("cell-strong");
+  });
+
+  it("renders planned duration column with day count", () => {
+    render(<TaskDetailTable tasks={tasks} />);
+    expect(screen.getByText("10天")).toBeInTheDocument();
+  });
+
+  it("renders actual duration as 进行中 when only actual start is present", () => {
+    render(<TaskDetailTable tasks={tasks} />);
+    // task-1 只有 actualStartDate，无 actualEndDate -> 进行中
+    expect(screen.getAllByText("进行中").length).toBeGreaterThan(0);
+  });
+
+  it("renders actual duration as - when task not started", () => {
+    const notStarted: DashboardTask[] = [
+      {
+        id: "task-ns",
+        milestoneCode: "M2",
+        projectContent: "未开始内容",
+        taskName: "未开始任务",
+        plannedStartDate: "2026-06-01",
+        plannedEndDate: "2026-06-10",
+        actualStartDate: undefined,
+        actualEndDate: undefined,
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 10,
+        actualDurationDays: undefined,
+        elapsedDays: "not-started",
+        completionRatio: 0,
+        overdueDays: undefined,
+        warningState: "future",
+        dashboardStatus: "not-started",
+        statusLabel: "未开始",
+        riskLabels: ["未开始（距9天）"],
+        timeline: { plan: { leftPercent: 10, widthPercent: 20 }, percent: 0 },
+      },
+    ];
+    const { container } = render(<TaskDetailTable tasks={notStarted} />);
+    // 实际工期单元格应显示 "-"
+    const durationCells = container.querySelectorAll(".duration-cell");
+    expect(durationCells[1].textContent).toBe("-");
+  });
+
+  it("renders actual duration day count when both actual dates present", () => {
+    const finished: DashboardTask[] = [
+      {
+        id: "task-done",
+        milestoneCode: "M1",
+        projectContent: "已完成内容",
+        taskName: "已完成任务",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-04-19",
+        actualStartDate: "2026-03-30",
+        actualEndDate: "2026-04-19",
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 21,
+        actualDurationDays: 21,
+        elapsedDays: "finished",
+        completionRatio: 1,
+        overdueDays: undefined,
+        warningState: "none",
+        dashboardStatus: "finished",
+        statusLabel: "已完成",
+        riskLabels: ["已完成"],
+        timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
+      },
+    ];
+    const { container } = render(<TaskDetailTable tasks={finished} />);
+    const durationCells = container.querySelectorAll(".duration-cell");
+    expect(durationCells[0].textContent).toBe("21天");
+    expect(durationCells[1].textContent).toBe("21天");
+  });
+
+  it("renders multi-label status joined by 、 for delayed start plus overrun", () => {
+    const overdue: DashboardTask[] = [
+      {
+        id: "task-overrun",
+        milestoneCode: "M2",
+        projectContent: "超期内容",
+        taskName: "延迟启动且超期",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-04-13",
+        actualStartDate: "2026-04-06",
+        actualEndDate: "2026-04-30",
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 15,
+        actualDurationDays: 25,
+        elapsedDays: "finished",
+        completionRatio: 1,
+        overdueDays: undefined,
+        warningState: "none",
+        dashboardStatus: "finished",
+        statusLabel: "已完成",
+        riskLabels: ["延迟启动", "超期17天"],
+        timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
+      },
+    ];
+    render(<TaskDetailTable tasks={overdue} />);
+    expect(screen.getByText("延迟启动、超期17天")).toBeInTheDocument();
+  });
+
+  it("renders statusLabel fallback when riskLabels is empty", () => {
+    const clean: DashboardTask[] = [
+      {
+        id: "task-clean",
+        milestoneCode: "M1",
+        projectContent: "正常内容",
+        taskName: "按时完成",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-04-19",
+        actualStartDate: "2026-03-30",
+        actualEndDate: "2026-04-19",
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 21,
+        actualDurationDays: 21,
+        elapsedDays: "finished",
+        completionRatio: 1,
+        overdueDays: undefined,
+        warningState: "none",
+        dashboardStatus: "finished",
+        statusLabel: "已完成",
+        riskLabels: [],
+        timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
+      },
+    ];
+    render(<TaskDetailTable tasks={clean} />);
+    expect(screen.getByText("已完成")).toBeInTheDocument();
   });
 });

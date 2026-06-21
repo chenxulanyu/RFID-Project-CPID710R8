@@ -7,7 +7,11 @@ function actualPeriod(task: DashboardTask) {
 }
 
 function warningClass(task: DashboardTask): string {
-  return task.riskLabel === "延迟启动" ? "warning-start-delayed" : `warning-${task.warningState}`;
+  const text = task.riskLabels.join("");
+  if (/超期|延期|已超期/.test(text)) return "warning-overdue";
+  if (/延迟启动|今日到期|7日内到期/.test(text)) return "warning-start-delayed";
+  if (/提前/.test(text)) return "warning-early";
+  return `warning-${task.warningState}`;
 }
 
 export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
@@ -25,7 +29,9 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
               <th>项目内容</th>
               <th>任务名称</th>
               <th>计划周期</th>
+              <th>计划工期</th>
               <th>实际周期</th>
+              <th>实际工期</th>
               <th>完成比例</th>
               <th>状态</th>
               <th>责任人</th>
@@ -41,7 +47,15 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                 <td>
                   {task.plannedStartDate} 至 {task.plannedEndDate}
                 </td>
+                <td className="duration-cell">{task.plannedDurationDays}天</td>
                 <td>{actualPeriod(task)}</td>
+                <td className="duration-cell">
+                  {task.actualStartDate && task.actualEndDate
+                    ? `${task.actualDurationDays}天`
+                    : task.actualStartDate
+                      ? "进行中"
+                      : "-"}
+                </td>
                 <td>
                   <span className="progress-cell">
                     <span className="progress-track" aria-hidden="true">
@@ -52,7 +66,7 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                 </td>
                 <td>
                   <span className={`status-badge status-${task.dashboardStatus} ${warningClass(task)}`}>
-                    {task.riskLabel ?? task.statusLabel}
+                    {task.riskLabels.length ? task.riskLabels.join("、") : task.statusLabel}
                   </span>
                 </td>
                 <td>{task.responsiblePerson}</td>
