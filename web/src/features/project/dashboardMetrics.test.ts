@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Project, ProjectTask } from "../../types/project";
-import { buildDashboardModel } from "./dashboardMetrics";
+import { buildDashboardModel, getStartDeviationLabel } from "./dashboardMetrics";
 
 const project: Project = {
   id: "cpid710r8",
@@ -287,5 +287,52 @@ describe("dashboardMetrics", () => {
 
     expect(model.timelineRange.todayPercent).toBeGreaterThan(49);
     expect(model.timelineRange.todayPercent).toBeLessThan(51);
+  });
+});
+
+describe("getStartDeviationLabel", () => {
+  it("returns 延迟启动 when actual start is later than planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "late",
+          taskName: "延迟启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-12",
+        }),
+      ),
+    ).toBe("延迟启动");
+  });
+
+  it("returns 提前启动 when actual start is earlier than planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "early",
+          taskName: "提前启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-08",
+        }),
+      ),
+    ).toBe("提前启动");
+  });
+
+  it("returns undefined when actual start equals planned start", () => {
+    expect(
+      getStartDeviationLabel(
+        task({
+          id: "on-time",
+          taskName: "按时启动",
+          plannedStartDate: "2026-06-10",
+          actualStartDate: "2026-06-10",
+        }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when actual start is missing", () => {
+    expect(
+      getStartDeviationLabel(task({ id: "not-started", taskName: "未开始" })),
+    ).toBeUndefined();
   });
 });

@@ -48,6 +48,13 @@ function compareDate(left: string, right: string): number {
 function hasDelayedActualStart(task: ProjectTask): boolean {
   return Boolean(task.actualStartDate && compareDate(task.actualStartDate, task.plannedStartDate) > 0);
 }
+export function getStartDeviationLabel(task: ProjectTask): string | undefined {
+  if (!task.actualStartDate) return undefined;
+  const cmp = compareDate(task.actualStartDate, task.plannedStartDate);
+  if (cmp > 0) return "延迟启动";
+  if (cmp < 0) return "提前启动";
+  return undefined;
+}
 
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
   void today;
