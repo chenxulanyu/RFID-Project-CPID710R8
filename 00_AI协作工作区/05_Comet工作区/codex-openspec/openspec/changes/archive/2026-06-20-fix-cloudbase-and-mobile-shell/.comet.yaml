@@ -1,0 +1,7 @@
+change: fix-cloudbase-and-mobile-shell
+workflow: hotfix
+phase: archived
+verify_result: pass
+archived: true
+archived_at: 2026-06-20
+review_report: 00_AI协作工作区/04_审查记录/Claude审查-fix-cloudbase-and-mobile-shell-v1.0.md

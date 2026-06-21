@@ -1,0 +1,14 @@
+{
+  "change": "repository-and-deployment",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "cf1466f83c52c957a3300dcc74ad7d82da45eafdf1dde9390da9757e87aa23e4",
+  "files": [
+    { "path": "openspec/changes/repository-and-deployment/proposal.md", "sha256": "5d114d8f367fe442a79050fed7c906d9bf0bdb1da1f9ea713b97e50b5789ab4f" },
+    { "path": "openspec/changes/repository-and-deployment/design.md", "sha256": "170fd0bcb58649f6d998084265b2c98e99d81e777309fd099b915c644fe5fafd" },
+    { "path": "openspec/changes/repository-and-deployment/tasks.md", "sha256": "6994ca6cefd3787c70cfd3ef50b1b155a68b2a60cb08e5e8f25384d14605ecf3" },
+    { "path": "openspec/changes/repository-and-deployment/specs/repository-deployment-readiness/spec.md", "sha256": "c760829d2cc8db7bbde33ecef5bc716dc36ca81e87e97585ca99b07f4a93fd3d" }
+  ]
+}
