@@ -2,6 +2,8 @@
 comet_change: task-duration-and-status-v1-2
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-21-task-duration-and-status-v1-2
+status: final
 ---
 
 # Design Doc: 任务工期列与多标签状态（V1.2）

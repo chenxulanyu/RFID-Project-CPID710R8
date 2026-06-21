@@ -2,6 +2,8 @@
 comet_change: dashboard-and-timeline-v1-1
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-21-dashboard-and-timeline-v1-1
+status: final
 ---
 
 # Technical Design: dashboard-and-timeline-v1.1
