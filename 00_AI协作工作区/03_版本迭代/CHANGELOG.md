@@ -270,3 +270,21 @@
 - 验证：`npx vitest run` 通过，123 条测试用例通过（基线 91 + 新增 32）。
 - 验证：`npm run build` 通过。
 - Claude Code 终审通过（I1 tagClass 优先级修复后 123/123 测试通过）。
+
+## ui-polish-and-workflow v1.3 - 2026-06-21
+
+- 状态标签去实体框：`.status-badge` 从实心药丸改为透明 flex 容器，每个状态标签独立着色（padding + border-radius），标签间不加分隔符号。
+- 风险任务外框按严重程度着色：`.risk-pill` 增加 `.warning-overdue`（红边框）、`.warning-start-delayed`（黄边框）、`.warning-early`（绿边框）变体，仅改 `border-color` 不改填充。
+- 风险任务卡片均分铺满：`.risk-pill` 从固定 `220px` 改为 `flex: 1 1 calc(25% - 10px); max-width: calc(25% - 10px); min-width: 180px`，每排 4 个自动均分外框。
+- 风险任务显示任务 ID（如 M5-001）替代里程碑编号（如 M5）。
+- "N 项需关注"提示文字移到"风险任务"标题后面作为内联提示。
+- 表头及部分列内容居中：编号、计划工期、实际工期、状态、责任人列统一居中。
+- 责任人列多名字用换行替代斜线分隔。
+- 进度条 100% 改为深绿色（`#2d7d46`），非 100% 保持蓝色。
+- 未开始倒计时去"距"字："未开始（距9天）" → "未开始（9天）"。
+- 修复 `h2.section-heading-row` 选择器不匹配导致标题字体回退的问题。
+- 修复 `styles.test.ts` 断言未随 CSS 选择器重构同步更新。
+- 建立 CC+Codex 共创项目组开发流程规范：`/Users/mac/Vibe Coding/CC+Codex共创项目组/开发流程规范.md`、`CloudBase对接完整指南.md`、Codex skill `cc-codex-workflow`。
+- 验证：`npm run build` 通过。
+- Claude Code 审查：6 次审查（status-tag-style、risk-pill-table-align、status-center-progress-countdown），所有阻塞问题已修复。
+
