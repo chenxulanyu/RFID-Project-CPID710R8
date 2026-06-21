@@ -1,5 +1,5 @@
 workflow: full
-phase: build
+phase: verify
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -7,13 +7,13 @@ subagent_dispatch: null
 tdd_mode: tdd
 review_mode: standard
 isolation: branch
-verify_mode: null
+verify_mode: full
 auto_transition: true
 base_ref: bc20c2e6bfdfedc8913d0fdff0f221de19839e31
 design_doc: docs/superpowers/specs/2026-06-21-dashboard-cloudbase-ui-polish-design.md
 plan: docs/superpowers/plans/2026-06-21-dashboard-cloudbase-ui-polish.md
 verify_result: pending
-verification_report: null
+verification_report: docs/superpowers/reports/2026-06-21-dashboard-cloudbase-ui-polish-verify.md
 branch_status: pending
 created_at: 2026-06-21
 verified_at: null
