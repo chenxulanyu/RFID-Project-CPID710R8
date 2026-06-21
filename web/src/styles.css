@@ -110,9 +110,11 @@ body {
 .metric-grid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(7, minmax(min-content, max-content));
-  justify-content: start;
+  grid-template-columns: repeat(7, minmax(128px, 1fr));
+  justify-content: stretch;
   min-width: 0;
+  overflow-x: auto;
+  width: 100%;
 }
 
 .metric-card {
@@ -121,9 +123,8 @@ body {
   border-radius: 8px;
   box-sizing: border-box;
   min-height: 88px;
-  min-width: 126px;
+  min-width: 0;
   padding: 14px;
-  width: max-content;
 }
 
 .metric-card span {
@@ -467,6 +468,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-height: calc(100vh - 220px);
   min-height: 0;
 }
 
@@ -636,7 +638,7 @@ body {
 
 @media (max-width: 1100px) {
   .metric-grid {
-    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    grid-template-columns: repeat(7, minmax(118px, 1fr));
   }
 }
 
@@ -646,7 +648,7 @@ body {
   }
 
   .metric-grid {
-    grid-template-columns: repeat(2, minmax(116px, 1fr));
+    grid-template-columns: repeat(7, minmax(112px, 1fr));
   }
 
   .section-heading-row {
@@ -661,7 +663,7 @@ body {
 
   .admin-task-list {
     align-content: start;
-    flex: initial;
+    flex: 1;
     max-height: none;
   }
 

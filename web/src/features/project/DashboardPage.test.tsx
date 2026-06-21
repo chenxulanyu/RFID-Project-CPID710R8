@@ -29,7 +29,7 @@ describe("DashboardPage", () => {
     expect(await screen.findByText(/CPID710R8 Check Point/)).toBeInTheDocument();
     expect(screen.getByText("总体进度")).toBeInTheDocument();
     expect(screen.getByText("任务总数")).toBeInTheDocument();
-    expect(screen.getByText("延迟启动")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("项目关键指标")).getByText("延迟启动")).toBeInTheDocument();
     const metricLabels = screen
       .getByLabelText("项目关键指标")
       .querySelectorAll(".metric-card span");

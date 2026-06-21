@@ -1,0 +1,23 @@
+workflow: full
+phase: build
+context_compression: off
+build_mode: executing-plans
+build_pause: null
+subagent_dispatch: null
+tdd_mode: tdd
+review_mode: standard
+isolation: branch
+verify_mode: null
+auto_transition: true
+base_ref: a25a3074632d29b51543f7055f8e8e09d1e7bc0e
+design_doc: docs/superpowers/specs/2026-06-21-dashboard-status-responsive-polish-design.md
+plan: docs/superpowers/plans/2026-06-21-dashboard-status-responsive-polish.md
+verify_result: pending
+verification_report: null
+branch_status: pending
+created_at: 2026-06-21
+verified_at: null
+archived: false
+handoff_context: openspec/changes/dashboard-status-responsive-polish/.comet/handoff/design-context.json
+handoff_hash: d45435d84902fe5ce617d10eaa61201c8aeba6f9b2053fba44da573c636853cd
+build_command: npm --prefix ../../../web run build

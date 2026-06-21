@@ -1,0 +1,15 @@
+{
+  "change": "dashboard-status-responsive-polish",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "d45435d84902fe5ce617d10eaa61201c8aeba6f9b2053fba44da573c636853cd",
+  "files": [
+    { "path": "openspec/changes/dashboard-status-responsive-polish/proposal.md", "sha256": "9a3b965b3a413439e827d13dd441e2545bcd3dad79dfceb18d846cb24f17abc6" },
+    { "path": "openspec/changes/dashboard-status-responsive-polish/design.md", "sha256": "2d8a498095c8f6ca735015277e4399aa2ebcb85177236edf9ee7301654751234" },
+    { "path": "openspec/changes/dashboard-status-responsive-polish/tasks.md", "sha256": "a57b290aae56559c1438f17b0b259ad84008805ecf233cb56c29d5d948af7f84" },
+    { "path": "openspec/changes/dashboard-status-responsive-polish/specs/admin-progress-management/spec.md", "sha256": "e706b07a4e50b1d84aa6954f25ae3492c6558607d677667b50ae4a3bb4cc627f" },
+    { "path": "openspec/changes/dashboard-status-responsive-polish/specs/project-dashboard-display/spec.md", "sha256": "4deb8b3e93aacf052e98e5efb7adf3a6962754a56bcb0ce8e3c9c1b26fca38e7" }
+  ]
+}

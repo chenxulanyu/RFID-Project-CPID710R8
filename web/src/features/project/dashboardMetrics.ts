@@ -45,12 +45,16 @@ function compareDate(left: string, right: string): number {
   return left.localeCompare(right);
 }
 
+function hasDelayedActualStart(task: ProjectTask): boolean {
+  return Boolean(task.actualStartDate && compareDate(task.actualStartDate, task.plannedStartDate) > 0);
+}
+
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
+  void today;
   if (task.actualEndDate) return "finished";
+  if (hasDelayedActualStart(task)) return "start-delayed";
   if (task.actualStartDate) return "in-progress";
   if (task.elapsedDays === "finished") return "finished";
-  if (typeof task.elapsedDays === "number" && task.elapsedDays > 0) return "in-progress";
-  if (compareDate(task.plannedStartDate, today) < 0) return "start-delayed";
   return "not-started";
 }
 
@@ -68,7 +72,7 @@ function getRiskLabel(task: ProjectTask, status: DashboardTaskStatus): string | 
   if (task.warningState === "overdue") return `延期${task.overdueDays ?? 0}天`;
   if (task.warningState === "due-today") return "今日到期";
   if (task.warningState === "within-week") return "7日内到期";
-  if (status === "start-delayed") return "延迟启动";
+  if (hasDelayedActualStart(task) || status === "start-delayed") return "延迟启动";
   return undefined;
 }
 
@@ -77,6 +81,7 @@ function isRiskTask(task: ProjectTask, status: DashboardTaskStatus): boolean {
     task.warningState === "overdue" ||
     task.warningState === "due-today" ||
     task.warningState === "within-week" ||
+    hasDelayedActualStart(task) ||
     status === "start-delayed"
   );
 }
@@ -154,7 +159,7 @@ export function buildDashboardModel({
     finishedTasks: dashboardTasks.filter((task) => task.dashboardStatus === "finished").length,
     inProgressTasks: dashboardTasks.filter((task) => task.dashboardStatus === "in-progress").length,
     notStartedTasks: dashboardTasks.filter((task) => task.dashboardStatus === "not-started").length,
-    startDelayedTasks: dashboardTasks.filter((task) => task.dashboardStatus === "start-delayed").length,
+    startDelayedTasks: dashboardTasks.filter(hasDelayedActualStart).length,
     overdueTasks: dashboardTasks.filter((task) => task.warningState === "overdue").length,
     dueTodayTasks: dashboardTasks.filter((task) => task.warningState === "due-today").length,
     withinWeekTasks: dashboardTasks.filter((task) => task.warningState === "within-week").length,
