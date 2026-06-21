@@ -6,7 +6,7 @@ export type DashboardTaskStatus = "finished" | "in-progress" | "not-started";
 export interface DashboardTask extends ProjectTask {
   dashboardStatus: DashboardTaskStatus;
   statusLabel: string;
-  riskLabel?: string;
+  riskLabels: string[];
   timeline: {
     plan: { leftPercent: number; widthPercent: number };
     actual?: { leftPercent: number; widthPercent: number };
@@ -86,12 +86,27 @@ function getStatusLabel(status: DashboardTaskStatus): string {
   return labels[status];
 }
 
-function getRiskLabel(task: ProjectTask): string | undefined {
+function getLiveWarningLabel(task: ProjectTask): string | undefined {
   if (task.warningState === "overdue") return `延期${task.overdueDays ?? 0}天`;
   if (task.warningState === "due-today") return "今日到期";
   if (task.warningState === "within-week") return "7日内到期";
-  if (hasDelayedActualStart(task)) return "延迟启动";
   return undefined;
+}
+
+export function getRiskLabels(task: ProjectTask, today: string): string[] {
+  const status = getDashboardStatus(task, today);
+  const startLabel = getStartDeviationLabel(task);
+  if (status === "not-started") {
+    const countdown = getNotStartedCountdownLabel(task, today);
+    return countdown ? [`未开始（${countdown}）`] : ["未开始"];
+  }
+  if (status === "in-progress") {
+    const live = getLiveWarningLabel(task);
+    return [startLabel, live].filter((x): x is string => Boolean(x));
+  }
+  const completion = getCompletionDeviationLabel(task);
+  const labels = [startLabel, completion].filter((x): x is string => Boolean(x));
+  return labels.length ? labels : ["已完成"];
 }
 
 function isRiskTask(task: ProjectTask): boolean {
@@ -165,7 +180,7 @@ export function buildDashboardModel({
       ...task,
       dashboardStatus,
       statusLabel: getStatusLabel(dashboardStatus),
-      riskLabel: getRiskLabel(task),
+      riskLabels: getRiskLabels(task, today),
       timeline: buildTimeline(task, rangeStart, totalDays),
     };
   });
