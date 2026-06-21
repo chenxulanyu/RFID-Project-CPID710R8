@@ -35,7 +35,27 @@ function task(overrides: Partial<ProjectTask> & Pick<ProjectTask, "id" | "taskNa
 }
 
 describe("ProjectTimeline", () => {
-  it("reserves enough width for percentage labels in progress bars", () => {
+  it("shows a legend for planned and actual spans", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({
+          id: "timeline",
+          taskName: "时间轴任务",
+          actualStartDate: "2026-06-01",
+          actualEndDate: "2026-06-08",
+        }),
+      ],
+    });
+
+    const { getByText } = render(<ProjectTimeline model={model} />);
+
+    expect(getByText("计划周期")).toBeInTheDocument();
+    expect(getByText("实际周期")).toBeInTheDocument();
+  });
+
+  it("does not render completion percentage text inside timeline bars", () => {
     const model = buildDashboardModel({
       project,
       today: "2026-06-19",
@@ -45,14 +65,12 @@ describe("ProjectTimeline", () => {
     });
 
     const { container } = render(<ProjectTimeline model={model} />);
-    const bar = container.querySelector(".timeline-bar-plan");
-    const percent = container.querySelector(".timeline-bar-plan .timeline-percent");
 
-    expect(bar?.textContent).toContain("95%");
-    expect(percent).toBeTruthy();
+    expect(container.querySelector(".timeline-bar-plan")).not.toHaveTextContent("95%");
+    expect(container.querySelector(".timeline-percent")).toBeNull();
   });
 
-  it("keeps only the completion percentage inside the gantt bar", () => {
+  it("keeps date text out of the gantt bar", () => {
     const model = buildDashboardModel({
       project,
       today: "2026-06-19",
@@ -64,7 +82,6 @@ describe("ProjectTimeline", () => {
     const { container } = render(<ProjectTimeline model={model} />);
     const bar = container.querySelector(".timeline-bar-plan");
 
-    expect(bar?.textContent).toContain("100%");
     expect(bar).not.toHaveTextContent("2026-06-01");
     expect(bar).not.toHaveTextContent("2026-06-10");
   });

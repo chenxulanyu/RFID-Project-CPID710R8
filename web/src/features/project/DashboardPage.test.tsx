@@ -30,6 +30,18 @@ describe("DashboardPage", () => {
     expect(screen.getByText("总体进度")).toBeInTheDocument();
     expect(screen.getByText("任务总数")).toBeInTheDocument();
     expect(screen.getByText("延迟启动")).toBeInTheDocument();
+    const metricLabels = screen
+      .getByLabelText("项目关键指标")
+      .querySelectorAll(".metric-card span");
+    expect([...metricLabels].map((node) => node.textContent)).toEqual([
+      "总体进度",
+      "任务总数",
+      "延期/临期",
+      "延迟启动",
+      "已完成",
+      "进行中",
+      "未启动",
+    ]);
   });
 
   it("renders risk tasks and task detail fields", async () => {

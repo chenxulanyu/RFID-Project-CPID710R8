@@ -144,6 +144,39 @@ describe("project service", () => {
     expect([...new Set(data.tasks.map((task) => task.milestoneCode))]).toHaveLength(20);
   });
 
+  it("keeps CloudBase tasks valid when optional owner fields are blank", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({
+      project: {
+        id: "cpid710r8",
+        name: "CPID710R8 CloudBase",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-11-05",
+        calendarMode: "calendar-days",
+      },
+      tasks: [
+        {
+          id: "custom-cloud-task",
+          milestoneCode: "M21",
+          projectContent: "新增验证任务",
+          taskName: "CloudBase 空负责人任务",
+          plannedStartDate: "2026-10-20",
+          plannedEndDate: "2026-11-05",
+          resourceOwner: "",
+          responsiblePerson: "",
+        },
+      ],
+    });
+
+    const data = await getProjectProgress("2026-10-21", repository);
+
+    expect(data.tasks).toHaveLength(1);
+    expect(data.tasks[0]).toMatchObject({
+      id: "custom-cloud-task",
+      resourceOwner: "",
+      responsiblePerson: "",
+    });
+  });
+
   it("keeps project progress usable when repository returns an empty task list intentionally", async () => {
     const repository = {
       getProject: async () => ({

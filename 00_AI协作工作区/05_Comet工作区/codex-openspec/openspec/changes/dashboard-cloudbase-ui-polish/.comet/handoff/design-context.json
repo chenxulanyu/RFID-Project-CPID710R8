@@ -1,0 +1,16 @@
+{
+  "change": "dashboard-cloudbase-ui-polish",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "b6b71ab0f29dcb294b560b555474735986dbb89c172be3f8e1738d5c1a9389c0",
+  "files": [
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/proposal.md", "sha256": "bfc0cd77c89bc59dd9add1b6d15a2f84f5f81fcb68964b7446cf2e3316df789d" },
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/design.md", "sha256": "dda5e2ec130e70a52f37a301d8716db2293f39902d6851981455922e39379b84" },
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/tasks.md", "sha256": "50e836c6de10b4c07f1ae624d395dbd3707c24b34722a3b52887d7c9fe4c0353" },
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/specs/admin-progress-management/spec.md", "sha256": "8a837843bc239310576f8a05c99172ee179c71a6b2d1e04cb70f1b6a3f402b5b" },
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/specs/cloudbase-project-persistence/spec.md", "sha256": "87a580ddab371ef4cf9a83a635ccbc4ba1532b2d82fddd5d391223b27e308b2e" },
+    { "path": "openspec/changes/dashboard-cloudbase-ui-polish/specs/project-dashboard-display/spec.md", "sha256": "68fe846fb73a37fb712ccc53d8f2dd81d7003410ef3329954b70c90568f8e6be" }
+  ]
+}
