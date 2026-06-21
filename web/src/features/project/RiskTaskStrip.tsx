@@ -23,7 +23,7 @@ export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
               className={`risk-pill ${warningClass(task)}`}
               key={task.id}
             >
-              <strong>{task.milestoneCode}</strong>
+              <strong>{task.id}</strong>
               <span>{task.taskName}</span>
               <em>
                 {task.riskLabels.map((label, index) => (
