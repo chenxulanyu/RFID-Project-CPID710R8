@@ -55,6 +55,13 @@ export function getStartDeviationLabel(task: ProjectTask): string | undefined {
   if (cmp < 0) return "提前启动";
   return undefined;
 }
+export function getCompletionDeviationLabel(task: ProjectTask): string | undefined {
+  if (!task.actualEndDate) return undefined;
+  const cmp = compareDate(task.actualEndDate, task.plannedEndDate);
+  if (cmp > 0) return `超期${calculateCalendarDays(task.plannedEndDate, task.actualEndDate) - 1}天`;
+  if (cmp < 0) return `提前${calculateCalendarDays(task.actualEndDate, task.plannedEndDate) - 1}天`;
+  return undefined;
+}
 
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
   void today;

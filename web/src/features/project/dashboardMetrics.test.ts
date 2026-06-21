@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Project, ProjectTask } from "../../types/project";
-import { buildDashboardModel, getStartDeviationLabel } from "./dashboardMetrics";
+import {
+  buildDashboardModel,
+  getCompletionDeviationLabel,
+  getStartDeviationLabel,
+} from "./dashboardMetrics";
 
 const project: Project = {
   id: "cpid710r8",
@@ -333,6 +337,58 @@ describe("getStartDeviationLabel", () => {
   it("returns undefined when actual start is missing", () => {
     expect(
       getStartDeviationLabel(task({ id: "not-started", taskName: "未开始" })),
+    ).toBeUndefined();
+  });
+});
+
+describe("getCompletionDeviationLabel", () => {
+  it("returns 超期X天 when actual end is later than planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "overrun",
+          taskName: "超期完成",
+          plannedEndDate: "2026-04-13",
+          actualStartDate: "2026-04-06",
+          actualEndDate: "2026-04-30",
+        }),
+      ),
+    ).toBe("超期17天");
+  });
+
+  it("returns 提前X天 when actual end is earlier than planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "early-done",
+          taskName: "提前完成",
+          plannedEndDate: "2026-04-27",
+          actualStartDate: "2026-04-06",
+          actualEndDate: "2026-04-25",
+        }),
+      ),
+    ).toBe("提前2天");
+  });
+
+  it("returns undefined when actual end equals planned end", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({
+          id: "on-time-done",
+          taskName: "按时完成",
+          plannedEndDate: "2026-04-19",
+          actualStartDate: "2026-03-30",
+          actualEndDate: "2026-04-19",
+        }),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when actual end is missing", () => {
+    expect(
+      getCompletionDeviationLabel(
+        task({ id: "unfinished", taskName: "未完成", actualStartDate: "2026-04-06" }),
+      ),
     ).toBeUndefined();
   });
 });
