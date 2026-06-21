@@ -173,7 +173,8 @@ body {
   min-width: 0;
 }
 
-.section-heading-row h2 {
+.section-heading-row h2,
+h2.section-heading-row {
   font-size: 18px;
   margin: 0;
 }
