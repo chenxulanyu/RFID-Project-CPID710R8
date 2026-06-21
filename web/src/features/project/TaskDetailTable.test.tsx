@@ -75,7 +75,7 @@ describe("TaskDetailTable", () => {
         warningState: "future",
         dashboardStatus: "not-started",
         statusLabel: "未开始",
-        riskLabels: ["未开始（距9天）"],
+        riskLabels: ["未开始（9天）"],
         timeline: { plan: { leftPercent: 10, widthPercent: 20 }, percent: 0 },
       },
     ];

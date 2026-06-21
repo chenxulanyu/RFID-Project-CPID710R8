@@ -406,7 +406,7 @@ describe("getNotStartedCountdownLabel", () => {
         }),
         "2026-06-19",
       ),
-    ).toBe("距9天");
+    ).toBe("9天");
   });
 
   it("returns 已超期X天 when today is after planned end", () => {
@@ -457,7 +457,7 @@ describe("getRiskLabels", () => {
         task({ id: "countdown", taskName: "未开始", plannedEndDate: "2026-06-28" }),
         "2026-06-19",
       ),
-    ).toEqual(["未开始（距9天）"]);
+    ).toEqual(["未开始（9天）"]);
   });
 
   it("assembles 未开始 prefix with 今日到期 countdown", () => {
