@@ -62,6 +62,13 @@ export function getCompletionDeviationLabel(task: ProjectTask): string | undefin
   if (cmp < 0) return `提前${calculateCalendarDays(task.actualEndDate, task.plannedEndDate) - 1}天`;
   return undefined;
 }
+export function getNotStartedCountdownLabel(task: ProjectTask, today: string): string | undefined {
+  if (task.actualStartDate) return undefined;
+  const cmp = compareDate(today, task.plannedEndDate);
+  if (cmp > 0) return `已超期${calculateCalendarDays(task.plannedEndDate, today) - 1}天`;
+  if (cmp < 0) return `距${calculateCalendarDays(today, task.plannedEndDate) - 1}天`;
+  return "今日到期";
+}
 
 export function getDashboardStatus(task: ProjectTask, today: string): DashboardTaskStatus {
   void today;

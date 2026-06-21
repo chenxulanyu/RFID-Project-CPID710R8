@@ -3,6 +3,7 @@ import type { Project, ProjectTask } from "../../types/project";
 import {
   buildDashboardModel,
   getCompletionDeviationLabel,
+  getNotStartedCountdownLabel,
   getStartDeviationLabel,
 } from "./dashboardMetrics";
 
@@ -388,6 +389,61 @@ describe("getCompletionDeviationLabel", () => {
     expect(
       getCompletionDeviationLabel(
         task({ id: "unfinished", taskName: "未完成", actualStartDate: "2026-04-06" }),
+      ),
+    ).toBeUndefined();
+  });
+});
+
+describe("getNotStartedCountdownLabel", () => {
+  it("returns 距X天 when today is before planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "countdown",
+          taskName: "未开始未到期",
+          plannedEndDate: "2026-06-28",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("距9天");
+  });
+
+  it("returns 已超期X天 when today is after planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "past-due",
+          taskName: "未开始已超期",
+          plannedEndDate: "2026-04-27",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("已超期53天");
+  });
+
+  it("returns 今日到期 when today equals planned end", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "due",
+          taskName: "未开始今日到期",
+          plannedEndDate: "2026-06-19",
+        }),
+        "2026-06-19",
+      ),
+    ).toBe("今日到期");
+  });
+
+  it("returns undefined when actual start is present", () => {
+    expect(
+      getNotStartedCountdownLabel(
+        task({
+          id: "started",
+          taskName: "已开始",
+          actualStartDate: "2026-06-01",
+          plannedEndDate: "2026-06-28",
+        }),
+        "2026-06-19",
       ),
     ).toBeUndefined();
   });
