@@ -47,8 +47,6 @@ export function validateTaskInput(task: ProjectTaskInput): void {
   requireText(task.taskName, "taskName", "任务名称");
   requireText(task.plannedStartDate, "plannedStartDate", "计划开始日期");
   requireText(task.plannedEndDate, "plannedEndDate", "计划结束日期");
-  requireText(task.resourceOwner, "resourceOwner", "资源方");
-  requireText(task.responsiblePerson, "responsiblePerson", "责任人");
   assertDateOrder(task.plannedStartDate, task.plannedEndDate, "plannedEndDate", "计划");
   assertDateOrder(task.actualStartDate, task.actualEndDate, "actualEndDate", "实际");
   if (

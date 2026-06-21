@@ -45,11 +45,11 @@ describe("ProjectTimeline", () => {
     });
 
     const { container } = render(<ProjectTimeline model={model} />);
-    const bar = container.querySelector(".timeline-bar");
-    const percent = container.querySelector(".timeline-percent");
+    const bar = container.querySelector(".timeline-bar-plan");
+    const percent = container.querySelector(".timeline-bar-plan .timeline-percent");
 
-    expect(bar).toHaveTextContent("95%");
-    expect(percent).toHaveTextContent("95%");
+    expect(bar?.textContent).toContain("95%");
+    expect(percent).toBeTruthy();
   });
 
   it("keeps only the completion percentage inside the gantt bar", () => {
@@ -62,9 +62,9 @@ describe("ProjectTimeline", () => {
     });
 
     const { container } = render(<ProjectTimeline model={model} />);
-    const bar = container.querySelector(".timeline-bar");
+    const bar = container.querySelector(".timeline-bar-plan");
 
-    expect(bar).toHaveTextContent("100%");
+    expect(bar?.textContent).toContain("100%");
     expect(bar).not.toHaveTextContent("2026-06-01");
     expect(bar).not.toHaveTextContent("2026-06-10");
   });

@@ -8,8 +8,9 @@ export interface DashboardTask extends ProjectTask {
   statusLabel: string;
   riskLabel?: string;
   timeline: {
-    leftPercent: number;
-    widthPercent: number;
+    plan: { leftPercent: number; widthPercent: number };
+    actual?: { leftPercent: number; widthPercent: number };
+    percent: number;
   };
 }
 
@@ -85,12 +86,18 @@ function clampPercent(value: number): number {
 }
 
 function buildTimeline(task: ProjectTask, rangeStart: string, totalDays: number) {
-  const offsetDays = Math.max(calculateCalendarDays(rangeStart, task.plannedStartDate) - 1, 0);
-  const durationDays = Math.max(task.plannedDurationDays, 1);
-  return {
-    leftPercent: clampPercent((offsetDays / totalDays) * 100),
-    widthPercent: clampPercent((durationDays / totalDays) * 100),
-  };
+  const planLeft = clampPercent(((calculateCalendarDays(rangeStart, task.plannedStartDate) - 1) / totalDays) * 100);
+  const planWidth = clampPercent((Math.max(task.plannedDurationDays, 1) / totalDays) * 100);
+  const percent = clampPercent(Math.round(task.completionRatio * 100));
+
+  const actualObj = task.actualStartDate && task.actualEndDate
+    ? {
+        leftPercent: clampPercent(((calculateCalendarDays(rangeStart, task.actualStartDate!) - 1) / totalDays) * 100),
+        widthPercent: clampPercent((Math.max(calculateCalendarDays(task.actualStartDate!, task.actualEndDate!), 1) / totalDays) * 100),
+      }
+    : undefined;
+
+  return { plan: { leftPercent: planLeft, widthPercent: planWidth }, actual: actualObj, percent };
 }
 
 function buildTodayPercent(rangeStart: string, today: string, totalDays: number): number {

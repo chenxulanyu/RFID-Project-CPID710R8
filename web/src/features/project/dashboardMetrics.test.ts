@@ -141,10 +141,10 @@ describe("dashboardMetrics", () => {
     expect(model.riskTasks.map((item) => item.id)).toEqual(["overdue", "due"]);
     expect(model.timelineRange.startDate).toBe("2026-03-30");
     expect(model.timelineRange.endDate).toBe("2026-09-28");
-    expect(model.tasks.find((item) => item.id === "overdue")?.timeline.leftPercent).toBeGreaterThanOrEqual(
+    expect(model.tasks.find((item) => item.id === "overdue")?.timeline.plan.leftPercent).toBeGreaterThanOrEqual(
       0,
     );
-    expect(model.tasks.find((item) => item.id === "overdue")?.timeline.widthPercent).toBeGreaterThan(
+    expect(model.tasks.find((item) => item.id === "overdue")?.timeline.plan.widthPercent).toBeGreaterThan(
       0,
     );
   });

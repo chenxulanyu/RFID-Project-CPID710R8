@@ -1,0 +1,13 @@
+{
+  "change": "dashboard-and-timeline-v1-1",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "c4fd24db1ec67915fddb7820652849d630dc0676d0000076d05f4e5df2b13204",
+  "files": [
+    { "path": "openspec/changes/dashboard-and-timeline-v1-1/proposal.md", "sha256": "5091cbe971cd9815d63fe271c4d1df6d4ef3a61b0bacd7ddfa6a1ba8ce62af7a" },
+    { "path": "openspec/changes/dashboard-and-timeline-v1-1/design.md", "sha256": "e4c8338ed891eaad6922ed94f8eeb89f2d162941a23ed7bee2ac42bc057e4daf" },
+    { "path": "openspec/changes/dashboard-and-timeline-v1-1/tasks.md", "sha256": "94d5ce73c7077f3023f4c3a298508859aa931b5c91b9cbf57178c5ed89ad1d5e" }
+  ]
+}

@@ -41,6 +41,10 @@ export function ProjectSummaryDashboard({ model }: { model: DashboardModel }) {
           <span>延迟启动</span>
           <strong>{metrics.startDelayedTasks}</strong>
         </article>
+        <article className="metric-card">
+          <span>未启动</span>
+          <strong>{metrics.notStartedTasks}</strong>
+        </article>
       </div>
     </section>
   );

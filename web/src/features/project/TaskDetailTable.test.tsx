@@ -25,7 +25,7 @@ const tasks: DashboardTask[] = [
     dashboardStatus: "in-progress",
     statusLabel: "进行中",
     riskLabel: undefined,
-    timeline: { leftPercent: 10, widthPercent: 20 },
+    timeline: { plan: { leftPercent: 10, widthPercent: 20 }, percent: 50 },
   },
 ];
 

@@ -99,9 +99,7 @@ function hasRequiredTaskDocumentFields(document: CloudBaseDocument): boolean {
       optionalString(document.projectContent) &&
       optionalString(document.taskName) &&
       optionalString(document.plannedStartDate) &&
-      optionalString(document.plannedEndDate) &&
-      optionalString(document.resourceOwner) &&
-      optionalString(document.responsiblePerson),
+      optionalString(document.plannedEndDate),
   );
 }
 

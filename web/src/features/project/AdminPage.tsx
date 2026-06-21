@@ -122,6 +122,28 @@ export function AdminPage({
     setSelectedTask(nextTask);
     setIsNewTask(false);
     setProjectEditEnabled(false);
+    // Auto-adjust project dates to cover task range
+    const allDates = data.tasks
+      .filter((t) => !t.isArchived)
+      .map((t) => t.plannedStartDate)
+      .filter(Boolean)
+      .sort();
+    const allEndDates = data.tasks
+      .filter((t) => !t.isArchived)
+      .map((t) => t.plannedEndDate)
+      .filter(Boolean)
+      .sort();
+    const earliest = allDates.length > 0 ? allDates[0] : data.project.plannedStartDate;
+    const latest = allEndDates.length > 0 ? allEndDates[allEndDates.length - 1] : data.project.plannedEndDate;
+    if (earliest < data.project.plannedStartDate || latest > data.project.plannedEndDate) {
+      const expanded = { ...data.project, plannedStartDate: earliest, plannedEndDate: latest };
+      setProject(expanded);
+      try {
+        await saveProjectMetadata(activeRepository, expanded);
+      } catch {
+        setProject(data.project);
+      }
+    }
   }
 
   async function handleProjectSave() {
@@ -327,12 +349,12 @@ export function AdminPage({
               </div>
               <div className="admin-form-grid">
                 <label className="admin-field">
-                  <span>任务 ID</span>
-                  <input value={selectedTask.id} onChange={(event) => updateSelectedTask("id", event.target.value)} disabled={!isNewTask} />
-                </label>
-                <label className="admin-field">
                   <span>里程碑</span>
                   <input value={selectedTask.milestoneCode} onChange={(event) => updateSelectedTask("milestoneCode", event.target.value)} />
+                </label>
+                <label className="admin-field">
+                  <span>任务 ID</span>
+                  <input value={selectedTask.id} onChange={(event) => updateSelectedTask("id", event.target.value)} disabled={!isNewTask} />
                 </label>
                 <label className="admin-field admin-field-wide">
                   <span>项目内容</span>

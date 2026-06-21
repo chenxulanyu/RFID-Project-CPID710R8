@@ -1,5 +1,4 @@
 import type { DashboardModel } from "./dashboardMetrics";
-import { formatPercent } from "./formatters";
 
 export function ProjectTimeline({ model }: { model: DashboardModel }) {
   return (
@@ -23,15 +22,25 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
               </div>
               <div className="timeline-track">
                 <div
-                  className={`timeline-bar status-${task.dashboardStatus} warning-${task.warningState}`}
+                  className="timeline-bar-plan"
                   style={{
-                    left: `${task.timeline.leftPercent}%`,
-                    width: `${Math.max(task.timeline.widthPercent, 1.4)}%`,
+                    left: `${task.timeline.plan.leftPercent}%`,
+                    width: `${Math.max(task.timeline.plan.widthPercent, 1.4)}%`,
                   }}
-                  title={`${task.taskName}：${task.statusLabel}，完成 ${formatPercent(task.completionRatio)}`}
+                  title={`${task.taskName}：${task.statusLabel}`}
                 >
-                  <span className="timeline-percent">{formatPercent(task.completionRatio)}</span>
+                  <span className="timeline-percent">{task.timeline.percent}%</span>
                 </div>
+                {task.timeline.actual ? (
+                  <div
+                    className="timeline-bar-actual"
+                    style={{
+                      left: `${task.timeline.actual.leftPercent}%`,
+                      width: `${Math.max(task.timeline.actual.widthPercent, 1.4)}%`,
+                    }}
+                    title={`${task.taskName} 实际周期：${task.actualStartDate} 至 ${task.actualEndDate ?? "进行中"}`}
+                  />
+                ) : null}
               </div>
             </div>
           ))}
