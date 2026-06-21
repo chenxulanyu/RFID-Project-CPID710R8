@@ -293,11 +293,39 @@ body {
   white-space: nowrap;
 }
 
-.warning-overdue,
-.warning-start-delayed {
+.warning-overdue {
   background: #fff1ed;
   border-color: #db6b5f;
   color: #8b3f35;
+}
+.duration-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tag-early {
+  background: #edf7ee;
+  border: 1px solid #5fae6b;
+  color: #2f6b3f;
+}
+
+.tag-delayed-start,
+.tag-warning {
+  background: #fff7db;
+  border: 1px solid #e0b341;
+  color: #735500;
+}
+
+.tag-overdue {
+  background: #fff1ed;
+  border: 1px solid #db6b5f;
+  color: #8b3f35;
+}
+
+.tag-neutral {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #333;
 }
 
 .warning-due-today,
@@ -305,6 +333,17 @@ body {
   background: #fff7db;
   border-color: #e0b341;
   color: #735500;
+}
+.warning-start-delayed {
+  background: #fff7db;
+  border-color: #e0b341;
+  color: #735500;
+}
+
+.warning-early {
+  background: #edf7ee;
+  border-color: #5fae6b;
+  color: #2f6b3f;
 }
 
 .timeline-scroll {

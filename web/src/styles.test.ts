@@ -16,7 +16,23 @@ describe("styles", () => {
   });
 
   it("uses a dedicated visible warning style for delayed-start risks", () => {
-    expect(styles).toMatch(/\.warning-start-delayed\s*\{[^}]*background:\s*#fff1ed[^}]*border-color:\s*#db6b5f[^}]*color:\s*#8b3f35[^}]*\}/s);
+    expect(styles).toMatch(/\.warning-start-delayed\s*\{[^}]*background:\s*#fff7db[^}]*border-color:\s*#e0b341[^}]*color:\s*#735500[^}]*\}/s);
+  });
+
+  it("keeps overdue warnings on the red-orange palette", () => {
+    expect(styles).toMatch(/\.warning-overdue\s*\{[^}]*background:\s*#fff1ed[^}]*border-color:\s*#db6b5f[^}]*color:\s*#8b3f35[^}]*\}/s);
+  });
+
+  it("styles early deviations with a green palette", () => {
+    expect(styles).toMatch(/\.tag-early\s*\{[^}]*background:\s*#edf7ee[^}]*color:\s*#2f6b3f[^}]*\}/s);
+  });
+
+  it("styles overdue tag with a red-orange palette", () => {
+    expect(styles).toMatch(/\.tag-overdue\s*\{[^}]*background:\s*#fff1ed[^}]*color:\s*#8b3f35[^}]*\}/s);
+  });
+
+  it("right-aligns duration cells", () => {
+    expect(styles).toMatch(/\.duration-cell\s*\{[^}]*text-align:\s*right[^}]*white-space:\s*nowrap[^}]*\}/s);
   });
 
   it("keeps admin right-side sections at natural height", () => {
