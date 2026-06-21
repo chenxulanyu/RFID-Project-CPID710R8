@@ -26,6 +26,7 @@ describe("styles", () => {
   it("lets the admin task panel stretch to the right column while the list scrolls internally", () => {
     expect(styles).not.toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*max-height:\s*calc\(100vh\s*-\s*220px\)/s);
     expect(styles).toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*height:\s*100%[^}]*min-height:\s*0[^}]*\}/s);
+    expect(styles).toMatch(/\.admin-layout\s*>\s*\.admin-panel\s*\{[^}]*overflow:\s*hidden[^}]*\}/s);
     expect(styles).toMatch(/\.admin-task-list\s*\{[^}]*overflow:\s*auto[^}]*\}/s);
   });
 });

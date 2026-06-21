@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AdminPage } from "./AdminPage";
 
 const stylesPath = resolve(dirname(fileURLToPath(import.meta.url)), "../../styles.css");
@@ -78,6 +78,33 @@ describe("AdminPage", () => {
     const styles = readFileSync(stylesPath, "utf8");
 
     expect(styles).toMatch(/\.admin-task-list\s*\{[^}]*align-content:\s*start[^}]*\}/);
+  });
+
+  it("locks the task-list panel height to the right-side maintenance panels", async () => {
+    const rectSpy = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      if (this.classList.contains("admin-panels")) {
+        return { height: 720, width: 1000, x: 0, y: 0, top: 0, right: 1000, bottom: 720, left: 0, toJSON: () => ({}) };
+      }
+      return { height: 100, width: 300, x: 0, y: 0, top: 0, right: 300, bottom: 100, left: 0, toJSON: () => ({}) };
+    });
+
+    try {
+      const { container } = render(<AdminPage today="2026-06-19" />);
+
+      await screen.findByRole("heading", { name: "任务详情" });
+      const taskListPanel = container.querySelector<HTMLElement>("[data-admin-task-panel='true']");
+
+      expect(taskListPanel).toBeTruthy();
+      expect(taskListPanel?.style.height).toBe("720px");
+      expect(taskListPanel?.style.maxHeight).toBe("720px");
+
+      fireEvent.click(screen.getByRole("button", { name: "已归档" }));
+
+      expect(taskListPanel?.style.height).toBe("720px");
+      expect(taskListPanel?.style.maxHeight).toBe("720px");
+    } finally {
+      rectSpy.mockRestore();
+    }
   });
 
   it("creates, archives, and restores a task", async () => {

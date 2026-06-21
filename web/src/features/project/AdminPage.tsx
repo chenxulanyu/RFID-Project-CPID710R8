@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Project, ProjectTaskInput } from "../../types/project";
 import {
   archiveProjectTask,
@@ -82,6 +82,8 @@ export function AdminPage({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [projectEditEnabled, setProjectEditEnabled] = useState(false);
+  const adminPanelsRef = useRef<HTMLDivElement | null>(null);
+  const [taskPanelHeight, setTaskPanelHeight] = useState<number | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -98,6 +100,20 @@ export function AdminPage({
   }, [activeRepository]);
 
   const visibleTasks = tasks.filter((task) => taskVisible(task, filter));
+
+  const syncTaskPanelHeight = useCallback(() => {
+    const nextHeight = adminPanelsRef.current?.getBoundingClientRect().height ?? 0;
+    setTaskPanelHeight(nextHeight > 0 ? Math.round(nextHeight) : null);
+  }, []);
+
+  useLayoutEffect(() => {
+    syncTaskPanelHeight();
+  }, [syncTaskPanelHeight, project, selectedTask, filter, projectEditEnabled, isNewTask, tasks.length]);
+
+  useEffect(() => {
+    window.addEventListener("resize", syncTaskPanelHeight);
+    return () => window.removeEventListener("resize", syncTaskPanelHeight);
+  }, [syncTaskPanelHeight]);
 
   function updateSelectedTask(field: keyof ProjectTaskInput, value: string) {
     setSelectedTask((current) => {
@@ -241,7 +257,11 @@ export function AdminPage({
       </div>
 
       <div className="admin-layout">
-        <aside className="admin-panel">
+        <aside
+          className="admin-panel"
+          data-admin-task-panel="true"
+          style={taskPanelHeight ? { height: taskPanelHeight, maxHeight: taskPanelHeight } : undefined}
+        >
           <div className="section-heading-row">
             <h2>任务列表</h2>
             <button
@@ -288,7 +308,7 @@ export function AdminPage({
           </ul>
         </aside>
 
-        <div className="admin-panels">
+        <div className="admin-panels" ref={adminPanelsRef}>
           {project ? (
             <section className="admin-panel admin-section">
               <div className="section-heading-row">
