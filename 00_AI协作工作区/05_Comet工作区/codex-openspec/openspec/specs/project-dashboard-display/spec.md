@@ -20,9 +20,17 @@ The system SHALL display a project summary dashboard with project name, project 
 
 #### Scenario: Identify delayed starts
 - **WHEN** a task has an actual start date later than its planned start date
-- **THEN** the dashboard counts and labels the task as start-delayed
-- **AND** tasks without an actual start date are not counted as start-delayed
-- **AND** tasks with an actual start date on or before the planned start date are not counted as start-delayed
+- **THEN** the dashboard counts the task in the delayed-start indicator
+- **AND** tasks without an actual start date are not counted as delayed-start
+- **AND** tasks with an actual start date on or before the planned start date are not counted as delayed-start
+- **AND** delayed-start counting does not replace the task's lifecycle status
+
+#### Scenario: Count lifecycle task states
+- **WHEN** the dashboard computes completed, in-progress, and not-started counts
+- **THEN** the three counts partition the task detail rows
+- **AND** the sum of completed, in-progress, and not-started equals the task detail count
+- **AND** a delayed-start task with an actual start date and no actual end date counts as in-progress
+- **AND** a delayed-start task with an actual end date counts as completed
 
 #### Scenario: Count not-started tasks
 - **WHEN** a task does not have an actual start date
@@ -67,16 +75,17 @@ The system SHALL provide a timeline or Gantt-style visualization that represents
 - **AND** the bar remains readable without truncated percentage labels
 
 ### Requirement: Warning presentation
-The system SHALL visually distinguish overdue, due-today, due-within-week, and future warning states in the dashboard and task detail views.
+The system SHALL visually distinguish overdue, due-today, due-within-week, delayed-start, and future warning states in the dashboard and task detail views.
 
 #### Scenario: Identify risky tasks
-- **WHEN** one or more tasks are overdue or near their planned finish date
+- **WHEN** one or more tasks are overdue, near their planned finish date, or delayed-started
 - **THEN** the dashboard and task list highlight those tasks with clear warning indicators
 
 #### Scenario: Include delayed actual starts in risk presentation
 - **WHEN** a task has an actual start date later than its planned start date
 - **THEN** the dashboard can include the task in delayed-start risk presentation
 - **AND** the delayed-start indicator includes the task even if the task is already completed
+- **AND** delayed-start risk cards and status badges use a visible warning style
 - **AND** tasks that merely lack an actual start date are not treated as delayed-start risks
 
 ### Requirement: Mobile landscape guidance

@@ -17,7 +17,7 @@ verification_report: docs/superpowers/reports/2026-06-21-fix-dashboard-status-an
 branch_status: handled
 created_at: 2026-06-21
 verified_at: 2026-06-21
-archived: false
+archived: true
 handoff_context: openspec/changes/fix-dashboard-status-and-admin-list/.comet/handoff/design-context.json
 handoff_hash: 4fbea72c5ec2ee4c77679db2288ed31763d0bd347c2cb6df9d56eee9605fdc5b
 build_command: npm --prefix ../../.. run build

@@ -2,6 +2,8 @@
 comet_change: fix-dashboard-status-and-admin-list
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-06-21-fix-dashboard-status-and-admin-list
+status: final
 ---
 
 # fix-dashboard-status-and-admin-list Technical Design

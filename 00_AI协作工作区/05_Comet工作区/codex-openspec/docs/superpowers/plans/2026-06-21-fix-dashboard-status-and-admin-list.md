@@ -2,6 +2,7 @@
 change: fix-dashboard-status-and-admin-list
 design-doc: docs/superpowers/specs/2026-06-21-fix-dashboard-status-and-admin-list-design.md
 base-ref: 8950435a5390f151cf24b3f723e0507454b05d5e
+archived-with: 2026-06-21-fix-dashboard-status-and-admin-list
 ---
 
 # fix-dashboard-status-and-admin-list Implementation Plan
@@ -14,6 +15,7 @@ base-ref: 8950435a5390f151cf24b3f723e0507454b05d5e
 
 **Tech Stack:** React, TypeScript, Vite, Vitest, Testing Library, CSS。
 
+archived-with: 2026-06-21-fix-dashboard-status-and-admin-list
 ---
 
 ## File Structure
