@@ -110,7 +110,8 @@ body {
 .metric-grid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  grid-template-columns: repeat(7, minmax(min-content, max-content));
+  justify-content: start;
   min-width: 0;
 }
 
@@ -120,8 +121,9 @@ body {
   border-radius: 8px;
   box-sizing: border-box;
   min-height: 88px;
-  min-width: 0;
+  min-width: 126px;
   padding: 14px;
+  width: max-content;
 }
 
 .metric-card span {
@@ -335,6 +337,37 @@ body {
   white-space: nowrap;
 }
 
+.timeline-legend {
+  align-items: center;
+  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.timeline-legend span {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.timeline-legend i {
+  border-radius: 999px;
+  display: inline-block;
+  height: 8px;
+  width: 24px;
+}
+
+.timeline-legend-plan {
+  background: #3b82f6;
+}
+
+.timeline-legend-actual {
+  background: #ef4444;
+}
+
 .timeline-row {
   align-items: center;
   display: grid;
@@ -392,16 +425,6 @@ body {
   margin-top: 3px;
   position: absolute;
 }
-.timeline-percent {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.timeline-percent {
-  max-width: 100%;
-}
 
 .primary-button,
 .ghost-button,
@@ -448,6 +471,8 @@ body {
 }
 
 .admin-panels {
+  align-content: start;
+  align-items: start;
   display: grid;
   gap: 16px;
   min-width: 0;

@@ -47,9 +47,7 @@ function hasRequiredTaskFields(task: ProjectTaskInput): boolean {
       task.projectContent &&
       task.taskName &&
       task.plannedStartDate &&
-      task.plannedEndDate &&
-      task.resourceOwner &&
-      task.responsiblePerson,
+      task.plannedEndDate,
   );
 }
 

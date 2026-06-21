@@ -11,6 +11,16 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
       </div>
       <div className="section-heading-row" style={{ marginTop: 8 }}>
         <span>当前日期：{model.today}</span>
+        <div className="timeline-legend" aria-label="时间轴图示">
+          <span>
+            <i className="timeline-legend-plan" />
+            计划周期
+          </span>
+          <span>
+            <i className="timeline-legend-actual" />
+            实际周期
+          </span>
+        </div>
       </div>
       <div className="timeline-scroll">
         <div className="timeline-frame" aria-label="项目计划时间轴">
@@ -28,9 +38,7 @@ export function ProjectTimeline({ model }: { model: DashboardModel }) {
                     width: `${Math.max(task.timeline.plan.widthPercent, 1.4)}%`,
                   }}
                   title={`${task.taskName}：${task.statusLabel}`}
-                >
-                  <span className="timeline-percent">{task.timeline.percent}%</span>
-                </div>
+                />
                 {task.timeline.actual ? (
                   <div
                     className="timeline-bar-actual"
