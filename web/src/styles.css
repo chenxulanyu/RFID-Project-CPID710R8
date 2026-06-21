@@ -300,6 +300,10 @@ h2.section-heading-row {
   vertical-align: middle;
 }
 
+td.col-center .status-badge {
+  justify-content: center;
+}
+
 .cell-strong {
   font-weight: 700;
 }
@@ -322,6 +326,10 @@ h2.section-heading-row {
   background: #2f80c0;
   display: block;
   height: 100%;
+}
+
+.progress-track span.progress-complete {
+  background: #2d7d46;
 }
 
 .status-badge {

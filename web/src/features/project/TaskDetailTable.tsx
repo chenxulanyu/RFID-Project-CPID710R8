@@ -65,7 +65,7 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                 <td>
                   <span className="progress-cell">
                     <span className="progress-track" aria-hidden="true">
-                      <span style={{ width: `${Math.round(task.completionRatio * 100)}%` }} />
+                      <span className={task.completionRatio >= 1 ? "progress-complete" : ""} style={{ width: `${Math.round(task.completionRatio * 100)}%` }} />
                     </span>
                     {formatPercent(task.completionRatio)}
                   </span>
