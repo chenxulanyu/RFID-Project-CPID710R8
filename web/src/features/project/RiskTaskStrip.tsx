@@ -12,10 +12,10 @@ function warningClass(task: DashboardTask): string {
 export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
   return (
     <section className="risk-strip" aria-labelledby="risk-strip-title">
-      <div className="section-heading-row">
-        <h2 id="risk-strip-title">风险任务</h2>
+      <h2 id="risk-strip-title" className="section-heading-row" style={{ justifyContent: "flex-start" }}>
+        风险任务
         <span>{tasks.length} 项需关注</span>
-      </div>
+      </h2>
       {tasks.length ? (
         <div className="risk-list">
           {tasks.map((task) => (

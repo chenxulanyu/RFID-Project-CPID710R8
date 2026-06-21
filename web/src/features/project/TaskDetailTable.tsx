@@ -31,31 +31,31 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
         <table className="task-table dashboard-task-table">
          <thead>
             <tr>
-              <th className="col-narrow">编号</th>
+              <th className="col-narrow col-center">编号</th>
               <th>项目内容</th>
               <th>任务名称</th>
               <th>计划周期</th>
-              <th className="col-duration">计划<br />工期</th>
+              <th className="col-duration col-center">计划<br />工期</th>
               <th>实际周期</th>
-              <th className="col-duration">实际<br />工期</th>
+              <th className="col-duration col-center">实际<br />工期</th>
               <th>完成比例</th>
-              <th>状态</th>
-              <th>责任人</th>
+              <th className="col-center">状态</th>
+              <th className="col-center">责任人</th>
               <th>备注</th>
             </tr>
           </thead>
           <tbody>
             {tasks.map((task) => (
               <tr key={task.id}>
-                <td>{task.milestoneCode}</td>
+                <td className="col-center">{task.milestoneCode}</td>
                 <td className="cell-strong">{task.projectContent}</td>
                 <td>{task.taskName}</td>
                 <td>
                   {task.plannedStartDate} 至 {task.plannedEndDate}
                 </td>
-                <td className="duration-cell">{task.plannedDurationDays}天</td>
+                <td className="duration-cell col-center">{task.plannedDurationDays}天</td>
                 <td>{actualPeriod(task)}</td>
-                <td className="duration-cell">
+                <td className="duration-cell col-center">
                   {task.actualStartDate && task.actualEndDate
                     ? `${task.actualDurationDays}天`
                     : task.actualStartDate
@@ -70,7 +70,7 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                     {formatPercent(task.completionRatio)}
                   </span>
                 </td>
-              <td>
+              <td className="col-center">
                 <span className="status-badge">
               {task.riskLabels.length
                 ? task.riskLabels.map((label, index) => (
@@ -79,7 +79,9 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                 : <span className="tag-neutral">{task.statusLabel}</span>}
                </span>
              </td>
-             <td>{task.responsiblePerson}</td>
+             <td className="col-center">{task.responsiblePerson.split("/").flatMap((name, i, arr) =>
+  i < arr.length - 1 ? [<span key={i}>{name}</span>, <br key={`br-${i}`} />] : [<span key={i}>{name}</span>]
+)}</td>
             <td>{task.remarks ?? "-"}</td>
               </tr>
             ))}

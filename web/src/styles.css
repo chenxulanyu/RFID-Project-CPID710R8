@@ -210,7 +210,9 @@ body {
   border-radius: 8px;
   box-sizing: border-box;
   display: grid;
-  flex: 0 0 220px;
+  flex: 1 1 calc(25% - 10px);
+  max-width: calc(25% - 10px);
+  min-width: 180px;
   gap: 4px;
   grid-template-rows: auto minmax(34px, 1fr) auto;
   min-height: 104px;
@@ -290,6 +292,11 @@ body {
 
 .col-duration {
   width: 52px;
+}
+
+.col-center {
+  text-align: center !important;
+  vertical-align: middle;
 }
 
 .cell-strong {
