@@ -6,3 +6,12 @@ dist/
 !.env.example
 .DS_Store
 .superpowers/
+
+# 开发过程工作区（不纳入版本管理）
+00_AI协作工作区/
+03_开发阶段/
+docs/
+.codex/
+.codegraph/
+.superpowers/
+web/test-results/
