@@ -22,7 +22,7 @@ base-ref: bc20c2e6bfdfedc8913d0fdff0f221de19839e31
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/services/projectService.test.ts`
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/services/projectService.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Add this test to `describe("project service", ...)` in `projectService.test.ts`:
 
@@ -61,7 +61,7 @@ Add this test to `describe("project service", ...)` in `projectService.test.ts`:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -71,7 +71,7 @@ npm test --workspace web -- web/src/services/projectService.test.ts
 
 Expected: FAIL because current `hasRequiredTaskFields` treats blank `resourceOwner` / `responsiblePerson` as invalid and falls back to seeded tasks.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 In `projectService.ts`, update `hasRequiredTaskFields` so it no longer requires `resourceOwner` and `responsiblePerson`:
 
@@ -88,7 +88,7 @@ function hasRequiredTaskFields(task: ProjectTaskInput): boolean {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run:
 
@@ -105,7 +105,7 @@ Expected: PASS.
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/features/project/ProjectSummaryDashboard.tsx`
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/styles.css`
 
-- [ ] **Step 1: Write the failing KPI order test**
+- [x] **Step 1: Write the failing KPI order test**
 
 In `DashboardPage.test.tsx`, extend `renders project summary KPI cards`:
 
@@ -124,7 +124,7 @@ In `DashboardPage.test.tsx`, extend `renders project summary KPI cards`:
     ]);
 ```
 
-- [ ] **Step 2: Add CSS regression test**
+- [x] **Step 2: Add CSS regression test**
 
 Create or extend an existing CSS text test. If no CSS test exists, add `web/src/styles.test.ts`:
 
@@ -139,7 +139,7 @@ describe("styles", () => {
 });
 ```
 
-- [ ] **Step 3: Run tests to verify they fail**
+- [x] **Step 3: Run tests to verify they fail**
 
 Run:
 
@@ -149,7 +149,7 @@ npm test --workspace web -- web/src/features/project/DashboardPage.test.tsx web/
 
 Expected: FAIL because KPI order and CSS are still old.
 
-- [ ] **Step 4: Reorder KPI cards**
+- [x] **Step 4: Reorder KPI cards**
 
 In `ProjectSummaryDashboard.tsx`, move the warning and danger cards immediately after task total:
 
@@ -166,7 +166,7 @@ In `ProjectSummaryDashboard.tsx`, move the warning and danger cards immediately 
 
 Then render completed, in-progress, and not-started cards after them.
 
-- [ ] **Step 5: Update metric CSS**
+- [x] **Step 5: Update metric CSS**
 
 In `styles.css`, update desktop `.metric-grid`:
 
@@ -197,7 +197,7 @@ Update `.metric-card`:
 
 Keep existing responsive media queries, but adjust them if they override desktop behavior too aggressively.
 
-- [ ] **Step 6: Run tests**
+- [x] **Step 6: Run tests**
 
 Run:
 
@@ -214,7 +214,7 @@ Expected: PASS.
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/features/project/ProjectTimeline.tsx`
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/styles.css`
 
-- [ ] **Step 1: Update failing timeline tests**
+- [x] **Step 1: Update failing timeline tests**
 
 In `ProjectTimeline.test.tsx`, replace percentage expectations with:
 
@@ -255,7 +255,7 @@ In `ProjectTimeline.test.tsx`, replace percentage expectations with:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -265,7 +265,7 @@ npm test --workspace web -- web/src/features/project/ProjectTimeline.test.tsx
 
 Expected: FAIL because legend is absent and `.timeline-percent` exists.
 
-- [ ] **Step 3: Implement timeline legend and remove percent span**
+- [x] **Step 3: Implement timeline legend and remove percent span**
 
 In `ProjectTimeline.tsx`, add a legend near the heading:
 
@@ -282,7 +282,7 @@ Remove:
 <span className="timeline-percent">{task.timeline.percent}%</span>
 ```
 
-- [ ] **Step 4: Update CSS**
+- [x] **Step 4: Update CSS**
 
 Remove `.timeline-percent` rules and add:
 
@@ -319,7 +319,7 @@ Remove `.timeline-percent` rules and add:
 }
 ```
 
-- [ ] **Step 5: Run test**
+- [x] **Step 5: Run test**
 
 Run:
 
@@ -335,7 +335,7 @@ Expected: PASS.
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/styles.test.ts`
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/web/src/styles.css`
 
-- [ ] **Step 1: Add failing CSS regression test**
+- [x] **Step 1: Add failing CSS regression test**
 
 Add to `web/src/styles.test.ts`:
 
@@ -345,7 +345,7 @@ Add to `web/src/styles.test.ts`:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -355,7 +355,7 @@ npm test --workspace web -- web/src/styles.test.ts
 
 Expected: FAIL because `.admin-panels` currently does not declare natural-height alignment.
 
-- [ ] **Step 3: Implement CSS fix**
+- [x] **Step 3: Implement CSS fix**
 
 In `.admin-panels`, add:
 
@@ -366,7 +366,7 @@ In `.admin-panels`, add:
 
 Do not remove `.admin-layout > .admin-panel` flex/stretch behavior.
 
-- [ ] **Step 4: Run test**
+- [x] **Step 4: Run test**
 
 Run:
 
@@ -381,7 +381,7 @@ Expected: PASS.
 **Files:**
 - Modify: `/Users/mac/Vibe Coding/CC+Codex共创项目组/RFID-项目管理-CPID710R8/00_AI协作工作区/05_Comet工作区/codex-openspec/openspec/changes/dashboard-cloudbase-ui-polish/tasks.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -391,7 +391,7 @@ npm test --workspace web
 
 Expected: all tests pass.
 
-- [ ] **Step 2: Run build**
+- [x] **Step 2: Run build**
 
 Run:
 
@@ -401,7 +401,7 @@ npm run build --workspace web
 
 Expected: build passes.
 
-- [ ] **Step 3: Prepare Claude Code review instruction**
+- [x] **Step 3: Prepare Claude Code review instruction**
 
 Generate a Chinese review prompt covering:
 
@@ -411,6 +411,6 @@ Generate a Chinese review prompt covering:
 - Required focus: CloudBase fallback root cause, optional owner/person consistency, KPI layout/order, timeline legend/no percentage, admin panel height, no deployment config changes
 - Commands run and results
 
-- [ ] **Step 4: Stop for Claude Code review**
+- [x] **Step 4: Stop for Claude Code review**
 
 Do not push or archive until the user reports Claude Code review passed.
