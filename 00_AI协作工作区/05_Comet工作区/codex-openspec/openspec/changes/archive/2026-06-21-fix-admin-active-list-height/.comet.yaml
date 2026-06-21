@@ -1,5 +1,5 @@
 workflow: hotfix
-phase: verify
+phase: archive
 context_compression: off
 build_mode: direct
 build_pause: null
@@ -12,10 +12,10 @@ auto_transition: true
 base_ref: ec82662c15c21fa6759392c4efd82e795dd5883a
 design_doc: null
 plan: null
-verify_result: pending
+verify_result: pass
 verification_report: docs/superpowers/reports/2026-06-21-fix-admin-active-list-height-verify.md
-branch_status: pending
+branch_status: handled
 created_at: 2026-06-21
-verified_at: null
-archived: false
+verified_at: 2026-06-21
+archived: true
 build_command: npm --prefix ../../.. run build
