@@ -1,4 +1,5 @@
 import type { DashboardTask } from "./dashboardMetrics";
+import { tagClass } from "./TaskDetailTable";
 
 function warningClass(task: DashboardTask): string {
   const text = task.riskLabels.join("");
@@ -24,7 +25,13 @@ export function RiskTaskStrip({ tasks }: { tasks: DashboardTask[] }) {
             >
               <strong>{task.milestoneCode}</strong>
               <span>{task.taskName}</span>
-              <em>{task.riskLabels.join("、")}</em>
+              <em>
+                {task.riskLabels.flatMap((label, index) =>
+                  index === 0
+                    ? [<span key={index} className={tagClass(label)}>{label}</span>]
+                    : ["、", <span key={index} className={tagClass(label)}>{label}</span>],
+                )}
+              </em>
             </article>
           ))}
         </div>

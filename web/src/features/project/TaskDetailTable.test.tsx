@@ -143,8 +143,9 @@ describe("TaskDetailTable", () => {
         timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
       },
     ];
-    render(<TaskDetailTable tasks={overdue} />);
-    expect(screen.getByText("延迟启动、超期17天")).toBeInTheDocument();
+    const { container } = render(<TaskDetailTable tasks={overdue} />);
+    const badge = container.querySelector(".status-badge");
+    expect(badge?.textContent).toBe("延迟启动、超期17天");
   });
 
   it("renders statusLabel fallback when riskLabels is empty", () => {
@@ -175,5 +176,74 @@ describe("TaskDetailTable", () => {
     ];
     render(<TaskDetailTable tasks={clean} />);
     expect(screen.getByText("已完成")).toBeInTheDocument();
+  });
+
+  it("renders each label as a span with the matching tag class", () => {
+    const overdue: DashboardTask[] = [
+      {
+        id: "task-overrun-2",
+        milestoneCode: "M2",
+        projectContent: "超期内容",
+        taskName: "延迟启动且超期",
+        plannedStartDate: "2026-03-30",
+        plannedEndDate: "2026-04-13",
+        actualStartDate: "2026-04-06",
+        actualEndDate: "2026-04-30",
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 15,
+        actualDurationDays: 25,
+        elapsedDays: "finished",
+        completionRatio: 1,
+        overdueDays: undefined,
+        warningState: "none",
+        dashboardStatus: "finished",
+        statusLabel: "已完成",
+        riskLabels: ["延迟启动", "超期17天"],
+        timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
+      },
+    ];
+    const { container } = render(<TaskDetailTable tasks={overdue} />);
+    const badge = container.querySelector(".status-badge");
+    expect(badge).not.toBeNull();
+    const startSpan = badge!.querySelector(".tag-warning");
+    const overdueSpan = badge!.querySelector(".tag-overdue");
+    expect(startSpan?.textContent).toBe("延迟启动");
+    expect(overdueSpan?.textContent).toBe("超期17天");
+  });
+
+  it("renders early labels with the tag-early class", () => {
+    const early: DashboardTask[] = [
+      {
+        id: "task-early",
+        milestoneCode: "M1",
+        projectContent: "提前内容",
+        taskName: "提前启动提前完成",
+        plannedStartDate: "2026-04-06",
+        plannedEndDate: "2026-04-27",
+        actualStartDate: "2026-03-30",
+        actualEndDate: "2026-04-25",
+        resourceOwner: "芯联",
+        responsiblePerson: "负责人",
+        remarks: undefined,
+        plannedDurationDays: 22,
+        actualDurationDays: 27,
+        elapsedDays: "finished",
+        completionRatio: 1,
+        overdueDays: undefined,
+        warningState: "none",
+        dashboardStatus: "finished",
+        statusLabel: "已完成",
+        riskLabels: ["提前启动", "提前2天"],
+        timeline: { plan: { leftPercent: 0, widthPercent: 20 }, percent: 100 },
+      },
+    ];
+    const { container } = render(<TaskDetailTable tasks={early} />);
+    const badge = container.querySelector(".status-badge");
+    const earlySpans = badge!.querySelectorAll(".tag-early");
+    expect(earlySpans).toHaveLength(2);
+    expect(earlySpans[0].textContent).toBe("提前启动");
+    expect(earlySpans[1].textContent).toBe("提前2天");
   });
 });

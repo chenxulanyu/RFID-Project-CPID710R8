@@ -13,6 +13,12 @@ function warningClass(task: DashboardTask): string {
   if (/提前/.test(text)) return "warning-early";
   return `warning-${task.warningState}`;
 }
+export function tagClass(label: string): string {
+  if (/提前/.test(label)) return "tag-early";
+  if (/超期|延期|已超期/.test(label)) return "tag-overdue";
+  if (/延迟启动|今日到期|7日内到期/.test(label)) return "tag-warning";
+  return "tag-neutral";
+}
 
 export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
   return (
@@ -66,7 +72,13 @@ export function TaskDetailTable({ tasks }: { tasks: DashboardTask[] }) {
                 </td>
                 <td>
                   <span className={`status-badge status-${task.dashboardStatus} ${warningClass(task)}`}>
-                    {task.riskLabels.length ? task.riskLabels.join("、") : task.statusLabel}
+                    {task.riskLabels.length
+                      ? task.riskLabels.flatMap((label, index) =>
+                          index === 0
+                            ? [<span key={index} className={tagClass(label)}>{label}</span>]
+                            : ["、", <span key={index} className={tagClass(label)}>{label}</span>],
+                        )
+                      : <span className="tag-neutral">{task.statusLabel}</span>}
                   </span>
                 </td>
                 <td>{task.responsiblePerson}</td>
