@@ -25,36 +25,39 @@ describe('exportDashboardToPdf', () => {
     expect(openSpy).not.toHaveBeenCalled();
   });
 
-  it('should create an isolated iframe print document when .dashboard-page exists', async () => {
-    const iframePrintSpy = vi.fn();
-    vi.spyOn(document, 'createElement').mockImplementation((tagName, options) => {
-      const element = Document.prototype.createElement.call(document, tagName, options);
-      if (tagName === 'iframe') {
-        Object.defineProperty(element, 'contentWindow', {
-          configurable: true,
-          value: {
-            addEventListener: vi.fn(),
-            focus: vi.fn(),
-            print: iframePrintSpy,
-          },
-        });
-      }
-      return element;
+  it('should fall back to window.print() when the print window is blocked', async () => {
+    document.body.innerHTML = `<section class="dashboard-page"><div>ok</div></section>`;
+    exportDashboardToPdf();
+
+    await vi.waitFor(() => {
+      expect(printSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should create an isolated top-level print document when .dashboard-page exists', async () => {
+    const printDocument = document.implementation.createHTMLDocument('');
+    const printWindowSpy = vi.fn();
+    openSpy.mockReturnValue({
+      document: printDocument,
+      addEventListener: vi.fn(),
+      close: vi.fn(),
+      focus: vi.fn(),
+      print: printWindowSpy,
+    } as unknown as Window);
 
     document.body.innerHTML = `<style>.dashboard-page { color: rgb(23, 32, 42); }</style><section class="dashboard-page"><div>ok</div><button class="export-pdf-btn">导出PDF</button></section>`;
     exportDashboardToPdf();
 
     await vi.waitFor(() => {
-      expect(iframePrintSpy).toHaveBeenCalledTimes(1);
+      expect(printWindowSpy).toHaveBeenCalledTimes(1);
     });
 
-    expect(openSpy).not.toHaveBeenCalled();
-    const iframe = document.querySelector('iframe');
-    expect(iframe?.contentDocument?.documentElement.innerHTML).toContain('width: 1320px');
-    expect(iframe?.contentDocument?.documentElement.innerHTML).toContain('@page');
-    expect(iframe?.contentDocument?.documentElement.innerHTML).toContain('size: 210mm 297mm');
-    expect(iframe?.contentDocument?.documentElement.innerHTML).toContain('.export-pdf-btn');
+    expect(openSpy).toHaveBeenCalledWith('', '_blank', 'width=1320,height=900');
+    expect(printDocument.documentElement.innerHTML).toContain('width: 1320px');
+    expect(printDocument.documentElement.innerHTML).toContain('@page');
+    expect(printDocument.documentElement.innerHTML).toContain('size: 210mm 297mm');
+    expect(printDocument.documentElement.innerHTML).toContain('.export-pdf-btn');
+    expect(printDocument.querySelector('title')?.textContent).toContain('项目仪表盘-CPID710R8-');
   });
 
   it('should calculate a single long page when content is taller than A4', () => {

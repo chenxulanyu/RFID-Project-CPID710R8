@@ -34,7 +34,7 @@ function collectDocumentStyleNodes(): string {
     .join('\n');
 }
 
-function waitForFrameStyles(doc: Document): Promise<void> {
+function waitForPrintStyles(doc: Document): Promise<void> {
   const links = Array.from(doc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'));
   const waits = links.map((link) => {
     if (link.sheet) return Promise.resolve();
@@ -51,7 +51,7 @@ function waitForFrameStyles(doc: Document): Promise<void> {
 }
 
 async function waitForPrintableLayout(doc: Document): Promise<void> {
-  await waitForFrameStyles(doc);
+  await waitForPrintStyles(doc);
   if ('fonts' in doc) {
     await doc.fonts.ready;
   }
@@ -64,6 +64,7 @@ function buildPrintDocument(dashboardHtml: string, stylesHtml: string): string {
     <html>
     <head>
       <meta charset="utf-8">
+      <base href="${document.baseURI}">
       <meta name="viewport" content="width=${DESKTOP_LAYOUT_WIDTH_PX}">
       <title>${getExportPdfTitle()}</title>
       ${stylesHtml}
@@ -171,28 +172,14 @@ function applyFinalPrintStyles(doc: Document, metrics: ReturnType<typeof calcula
   doc.head.appendChild(style);
 }
 
-async function printDashboardFromIframe(dashboardHtml: string): Promise<void> {
-  const iframe = document.createElement('iframe');
-  iframe.setAttribute('aria-hidden', 'true');
-  iframe.style.border = '0';
-  iframe.style.height = '1px';
-  iframe.style.opacity = '0';
-  iframe.style.pointerEvents = 'none';
-  iframe.style.position = 'fixed';
-  iframe.style.right = '0';
-  iframe.style.top = '0';
-  iframe.style.width = '1px';
-
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentDocument;
-  const frameWindow = iframe.contentWindow;
-  if (!doc || !frameWindow) {
-    iframe.remove();
+async function printDashboardFromWindow(dashboardHtml: string): Promise<void> {
+  const printWindow = window.open('', '_blank', 'width=1320,height=900');
+  if (!printWindow) {
     window.print();
     return;
   }
 
+  const doc = printWindow.document;
   doc.open();
   doc.write(buildPrintDocument(dashboardHtml, collectDocumentStyleNodes()));
   doc.close();
@@ -206,17 +193,16 @@ async function printDashboardFromIframe(dashboardHtml: string): Promise<void> {
   const metrics = calculatePrintPageMetrics(contentHeightPx);
   applyFinalPrintStyles(doc, metrics);
 
-  frameWindow.addEventListener(
+  printWindow.addEventListener(
     'afterprint',
     () => {
-      window.setTimeout(() => iframe.remove(), 1000);
+      window.setTimeout(() => printWindow.close(), 500);
     },
     { once: true },
   );
-  window.setTimeout(() => iframe.remove(), 120000);
 
-  frameWindow.focus();
-  frameWindow.print();
+  printWindow.focus();
+  printWindow.print();
 }
 
 /**
@@ -231,5 +217,5 @@ export function exportDashboardToPdf(): void {
     return;
   }
 
-  void printDashboardFromIframe(dashboardEl.outerHTML).catch(() => window.print());
+  void printDashboardFromWindow(dashboardEl.outerHTML).catch(() => window.print());
 }
