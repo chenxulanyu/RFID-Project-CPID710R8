@@ -2,6 +2,7 @@
 change: timeline-pdf-export-v1-3
 design-doc: docs/superpowers/specs/2026-06-22-timeline-pdf-export-v1-3-design.md
 base-ref: 22d0199e7ff87f444246cbe0e6952a78a29f4c66
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 # Dashboard PDF 导出 实施计划
@@ -14,6 +15,7 @@ base-ref: 22d0199e7ff87f444246cbe0e6952a78a29f4c66
 
 **Tech Stack:** React + TypeScript, html2canvas, jsPDF, Vitest
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 1: 安装依赖
@@ -34,6 +36,7 @@ node -e "require('html2canvas'); require('jspdf'); console.log('OK')"
 ```
 Expected: `OK`
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 2: 创建 exportPdf 工具函数
@@ -89,6 +92,7 @@ cd web && npx tsc --noEmit
 ```
 Expected: 0 errors (若 html2canvas/jsPDF 缺少类型声明，下一步处理)
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 3: 类型声明（如需要）
@@ -117,6 +121,7 @@ declare module 'html2canvas' {
 
 若 `jspdf` 也有类型问题，类似处理。
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 4: DashboardPage 集成按钮
@@ -177,6 +182,7 @@ cd web && npx tsc --noEmit
 ```
 Expected: 0 errors
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 5: 按钮样式
@@ -215,6 +221,7 @@ Expected: 0 errors
 }
 ```
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 6: exportPdf 单元测试
@@ -310,6 +317,7 @@ cd web && npx vitest run src/utils/exportPdf.test.ts
 ```
 Expected: 所有测试通过
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 7: DashboardPage 按钮状态补充测试
@@ -343,6 +351,7 @@ cd web && npx vitest run
 ```
 Expected: 全部测试通过
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 8: 提交代码
@@ -369,6 +378,7 @@ git commit -m "feat: add dashboard PDF export button
 Change: timeline-pdf-export-v1-3"
 ```
 
+archived-with: 2026-06-22-timeline-pdf-export-v1-3
 ---
 
 ## Task 9: 验证构建
