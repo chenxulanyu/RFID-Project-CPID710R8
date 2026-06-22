@@ -10,6 +10,9 @@ function getDateString(date = new Date()): string {
 }
 
 const HIDDEN_CLASS = 'export-pdf-btn--hidden';
+const A4_WIDTH_MM = 210;
+const MARGIN_MM = 10;
+const JPEG_QUALITY = 0.85;
 
 export async function exportDashboardToPdf(): Promise<void> {
   const dashboardEl = document.querySelector('.dashboard-page');
@@ -23,16 +26,19 @@ export async function exportDashboardToPdf(): Promise<void> {
 
   try {
     const canvas = await html2canvas(container, {
-      scale: 2,
+      scale: 1,
       useCORS: true,
       backgroundColor: '#f6f8fb',
       windowWidth: 1320,
     });
-    const pdfW = 210;
-    const pdfH = pdfW * (canvas.height / canvas.width);
-    const pdf = new jsPDF({ unit: 'mm', format: [pdfW, pdfH] });
-    const imgData = canvas.toDataURL('image/png');
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+
+    const contentW = A4_WIDTH_MM - 2 * MARGIN_MM;
+    const contentH = contentW * (canvas.height / canvas.width);
+    const pageH = contentH + 2 * MARGIN_MM;
+
+    const pdf = new jsPDF({ unit: 'mm', format: [A4_WIDTH_MM, pageH] });
+    const imgData = canvas.toDataURL('image/jpeg', JPEG_QUALITY);
+    pdf.addImage(imgData, 'JPEG', MARGIN_MM, MARGIN_MM, contentW, contentH);
     pdf.save(`项目仪表盘-CPID710R8-${getDateString()}.pdf`);
   } finally {
     btn?.classList.remove(HIDDEN_CLASS);
