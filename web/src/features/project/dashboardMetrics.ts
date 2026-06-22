@@ -110,6 +110,7 @@ export function getRiskLabels(task: ProjectTask, today: string): string[] {
 }
 
 function isRiskTask(task: ProjectTask): boolean {
+  if (task.actualEndDate) return false;
   return (
     task.warningState === "overdue" ||
     task.warningState === "due-today" ||

@@ -139,7 +139,7 @@ describe("dashboardMetrics", () => {
     expect(model.tasks.map((item) => item.dashboardStatus)).toEqual(["in-progress", "in-progress"]);
   });
 
-  it("counts completed tasks with late actual starts in delayed-start metrics", () => {
+  it("counts completed tasks with late actual starts in delayed-start metrics without showing them as risks", () => {
     const model = buildDashboardModel({
       project,
       today: "2026-06-19",
@@ -163,9 +163,52 @@ describe("dashboardMetrics", () => {
     expect(
       model.metrics.finishedTasks + model.metrics.inProgressTasks + model.metrics.notStartedTasks,
     ).toBe(model.metrics.totalDetailTasks);
-    expect(model.riskTasks.map((item) => item.id)).toEqual(["finished-late-start"]);
+    expect(model.riskTasks.map((item) => item.id)).toEqual([]);
     expect(model.tasks[0].dashboardStatus).toBe("finished");
     expect(model.tasks[0].riskLabels).toEqual(["延迟启动", "提前1天"]);
+  });
+
+  it("excludes any task with an actual end date from risk tasks", () => {
+    const model = buildDashboardModel({
+      project,
+      today: "2026-06-19",
+      tasks: [
+        task({
+          id: "finished-overdue",
+          taskName: "已结束但带延期状态",
+          actualStartDate: "2026-06-01",
+          actualEndDate: "2026-06-15",
+          completionRatio: 1,
+          warningState: "overdue",
+          overdueDays: 5,
+        }),
+        task({
+          id: "finished-due-today",
+          taskName: "已结束但今日到期状态",
+          actualStartDate: "2026-06-01",
+          actualEndDate: "2026-06-10",
+          completionRatio: 1,
+          warningState: "due-today",
+        }),
+        task({
+          id: "finished-within-week",
+          taskName: "已结束但七日内状态",
+          actualStartDate: "2026-06-01",
+          actualEndDate: "2026-06-10",
+          completionRatio: 1,
+          warningState: "within-week",
+        }),
+        task({
+          id: "active-overdue",
+          taskName: "未结束延期任务",
+          actualStartDate: "2026-06-01",
+          warningState: "overdue",
+          overdueDays: 9,
+        }),
+      ],
+    });
+
+    expect(model.riskTasks.map((item) => item.id)).toEqual(["active-overdue"]);
   });
 
   it("counts total tasks by unique milestone code while preserving detail rows", () => {
