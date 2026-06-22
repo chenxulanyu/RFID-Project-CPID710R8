@@ -90,4 +90,19 @@ describe("DashboardPage", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("项目数据加载失败");
   });
+
+  it("shows export button when data is loaded", async () => {
+    render(<DashboardPage today="2099-06-22" />);
+    await vi.waitFor(() => {
+      expect(screen.getByText("导出PDF")).toBeInTheDocument();
+    });
+  });
+
+  it("should not show export button during loading", async () => {
+    vi.mocked(getProjectProgress).mockImplementation(
+      () => new Promise(() => {}),
+    );
+    render(<DashboardPage today="2099-06-22" />);
+    expect(screen.queryByText("导出PDF")).not.toBeInTheDocument();
+  });
 });

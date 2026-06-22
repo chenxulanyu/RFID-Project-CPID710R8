@@ -814,3 +814,30 @@ td.col-center .status-badge {
     padding: 18px;
   }
 }
+
+/* PDF 导出按钮 */
+.export-pdf-btn {
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 6px 16px;
+  font-size: 13px;
+  border: 1px solid var(--color-border, #d0d5dd);
+  border-radius: 4px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text, #101828);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.export-pdf-btn:hover:not(:disabled) {
+  background: var(--color-surface-hover, #f5f5f5);
+}
+
+.export-pdf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-pdf-btn--hidden {
+  visibility: hidden;
+}
