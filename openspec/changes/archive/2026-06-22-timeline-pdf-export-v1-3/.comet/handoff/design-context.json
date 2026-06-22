@@ -1,0 +1,14 @@
+{
+  "change": "timeline-pdf-export-v1-3",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "6c6e7d517a456fd7ecfc0114a9fa28c3a664516bc52911cd663abd537ea7dcae",
+  "files": [
+    { "path": "openspec/changes/timeline-pdf-export-v1-3/proposal.md", "sha256": "0be6c891d55ab8e10d2864d45c30a5b3e61c907965cc8346e3feb123cce4d058" },
+    { "path": "openspec/changes/timeline-pdf-export-v1-3/design.md", "sha256": "e72aa7e68500146e456d4b063f2c4abd73fed842a5a500ee537c7b0b48101173" },
+    { "path": "openspec/changes/timeline-pdf-export-v1-3/tasks.md", "sha256": "8ff85074a3bcbf5b4f7452bda7648ea1ad693e23e42c7cd5552280a2383c51a2" },
+    { "path": "openspec/changes/timeline-pdf-export-v1-3/specs/dashboard-pdf-export/spec.md", "sha256": "cb20eb65426dbf5a4dce2f5a892249fea82913b8ce0a787aac310f936af59a4e" }
+  ]
+}
