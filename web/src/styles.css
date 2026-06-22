@@ -841,3 +841,34 @@ td.col-center .status-badge {
 .export-pdf-btn--hidden {
   visibility: hidden;
 }
+
+/* ===== 打印样式 ===== */
+@media print {
+  @page {
+    size: 210mm auto;
+    margin: 10mm;
+  }
+
+  /* 隐藏导航和导出按钮 */
+  .top-nav,
+  .export-pdf-btn {
+    display: none !important;
+  }
+
+  /* 移除 app shell 内边距，使用 @page margin 替代 */
+  .app-shell {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* 禁止各区块内部断页 */
+  .dashboard-page,
+  .dashboard-panel,
+  .kpi-card,
+  .risk-pill,
+  .timeline-row,
+  .task-detail-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

@@ -23,7 +23,6 @@ export function getCurrentDateString(date = new Date()): string {
 export function DashboardPage({ today = getCurrentDateString() }: { today?: string }) {
   const [model, setModel] = useState<DashboardModel | null>(null);
   const [error, setError] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -53,17 +52,6 @@ export function DashboardPage({ today = getCurrentDateString() }: { today?: stri
     return <p>正在加载项目仪表盘...</p>;
   }
 
-  const handleExportPdf = async () => {
-    setIsExporting(true);
-    try {
-      await exportDashboardToPdf();
-    } catch (err) {
-      console.error("PDF 导出失败：", err);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   return (
     <section className="dashboard-page">
       <ProjectSummaryDashboard model={model} />
@@ -71,12 +59,8 @@ export function DashboardPage({ today = getCurrentDateString() }: { today?: stri
       <TaskDetailTable tasks={model.tasks} />
       <div style={{ display: "flex", flexDirection: "column" }}>
         <ProjectTimeline model={model} />
-        <button
-          className="export-pdf-btn"
-          disabled={isExporting}
-          onClick={handleExportPdf}
-        >
-          {isExporting ? "生成中…" : "导出PDF"}
+        <button className="export-pdf-btn" onClick={exportDashboardToPdf}>
+          导出PDF
         </button>
       </div>
     </section>
