@@ -22,7 +22,12 @@ export async function exportDashboardToPdf(): Promise<void> {
   btn?.classList.add(HIDDEN_CLASS);
 
   try {
-    const canvas = await html2canvas(container, { scale: 2, useCORS: true });
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#f6f8fb',
+      windowWidth: 1320,
+    });
     const pdfW = 210;
     const pdfH = pdfW * (canvas.height / canvas.width);
     const pdf = new jsPDF({ unit: 'mm', format: [pdfW, pdfH] });
