@@ -58,7 +58,19 @@ async function waitForPrintableLayout(doc: Document): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
-function buildPrintDocument(dashboardHtml: string, stylesHtml: string): string {
+function getPrintWindowUrl(title: string): string {
+  return `${window.location.origin}/pdf-export/${encodeURIComponent(title)}`;
+}
+
+function updatePrintWindowUrl(printWindow: Window, title: string): void {
+  try {
+    printWindow.history.replaceState(null, title, getPrintWindowUrl(title));
+  } catch {
+    // Some browser contexts keep about:blank immutable. Printing still works.
+  }
+}
+
+function buildPrintDocument(dashboardHtml: string, stylesHtml: string, title: string): string {
   return `
     <!doctype html>
     <html>
@@ -66,7 +78,7 @@ function buildPrintDocument(dashboardHtml: string, stylesHtml: string): string {
       <meta charset="utf-8">
       <base href="${document.baseURI}">
       <meta name="viewport" content="width=${DESKTOP_LAYOUT_WIDTH_PX}">
-      <title>${getExportPdfTitle()}</title>
+      <title>${title}</title>
       ${stylesHtml}
       <style>
         html,
@@ -173,16 +185,19 @@ function applyFinalPrintStyles(doc: Document, metrics: ReturnType<typeof calcula
 }
 
 async function printDashboardFromWindow(dashboardHtml: string): Promise<void> {
+  const title = getExportPdfTitle();
   const printWindow = window.open('', '_blank', 'width=1320,height=900');
   if (!printWindow) {
     window.print();
     return;
   }
+  printWindow.focus();
 
   const doc = printWindow.document;
   doc.open();
-  doc.write(buildPrintDocument(dashboardHtml, collectDocumentStyleNodes()));
+  doc.write(buildPrintDocument(dashboardHtml, collectDocumentStyleNodes(), title));
   doc.close();
+  updatePrintWindowUrl(printWindow, title);
 
   await waitForPrintableLayout(doc);
 
@@ -202,7 +217,10 @@ async function printDashboardFromWindow(dashboardHtml: string): Promise<void> {
   );
 
   printWindow.focus();
-  printWindow.print();
+  window.setTimeout(() => {
+    printWindow.focus();
+    printWindow.print();
+  }, 350);
 }
 
 /**

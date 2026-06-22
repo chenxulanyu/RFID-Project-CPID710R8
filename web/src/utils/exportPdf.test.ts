@@ -36,12 +36,17 @@ describe('exportDashboardToPdf', () => {
 
   it('should create an isolated top-level print document when .dashboard-page exists', async () => {
     const printDocument = document.implementation.createHTMLDocument('');
+    const replaceStateSpy = vi.fn();
     const printWindowSpy = vi.fn();
+    const focusSpy = vi.fn();
     openSpy.mockReturnValue({
       document: printDocument,
       addEventListener: vi.fn(),
       close: vi.fn(),
-      focus: vi.fn(),
+      focus: focusSpy,
+      history: {
+        replaceState: replaceStateSpy,
+      },
       print: printWindowSpy,
     } as unknown as Window);
 
@@ -58,6 +63,12 @@ describe('exportDashboardToPdf', () => {
     expect(printDocument.documentElement.innerHTML).toContain('size: 210mm 297mm');
     expect(printDocument.documentElement.innerHTML).toContain('.export-pdf-btn');
     expect(printDocument.querySelector('title')?.textContent).toContain('项目仪表盘-CPID710R8-');
+    expect(focusSpy).toHaveBeenCalled();
+    expect(replaceStateSpy).toHaveBeenCalledWith(
+      null,
+      expect.stringContaining('项目仪表盘-CPID710R8-'),
+      expect.stringContaining('/pdf-export/'),
+    );
   });
 
   it('should calculate a single long page when content is taller than A4', () => {
