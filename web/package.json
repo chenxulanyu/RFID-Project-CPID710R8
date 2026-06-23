@@ -1,7 +1,7 @@
 {
   "name": "cpid710r8-project-web",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

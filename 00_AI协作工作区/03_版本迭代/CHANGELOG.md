@@ -288,3 +288,13 @@
 - 验证：`npm run build` 通过。
 - Claude Code 审查：6 次审查（status-tag-style、risk-pill-table-align、status-center-progress-countdown），所有阻塞问题已修复。
 
+## project-dashboard-frontend v1.4 - 2026-06-23
+
+- 时间计划轴窗口新增“导出 PDF”按钮，导出逻辑从 `html2canvas + jsPDF` 调整为浏览器原生打印排版，导出的 PDF 保留 HTML 文本布局与可搜索能力。
+- PDF 导出改为在顶层新窗口中构建打印文档，按 A4 宽度和动态长页高度生成连续文档，修复实际下载结果与页面预览不一致、内容截断、方向错误和强制分页的问题。
+- 调整打印专用样式与打印窗口流程：保留适度页边距但不压缩内容，移除 `about:blank` 页脚来源，补上打印窗口聚焦与延迟触发，避免需要手动切换窗口后才弹出浏览器打印对话框。
+- 风险任务筛选规则收紧：凡是存在 `actualEndDate` 的任务，一律不再进入风险任务区域，避免已实际完成任务继续堆积在风险栏中。
+- 新增/更新回归测试覆盖：连续 PDF 导出打印流程、已完成任务从风险任务中排除。
+- 验证：`npm test` 通过，15 个测试文件、131 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+- Claude Code 审查结论：`Claude审查报告-timeline-pdf-export-v1-3-v1-0.md` ✅ 通过。
