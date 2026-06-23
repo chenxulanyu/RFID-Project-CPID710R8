@@ -298,3 +298,13 @@
 - 验证：`npm test` 通过，15 个测试文件、131 条测试用例通过。
 - 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
 - Claude Code 审查结论：`Claude审查报告-timeline-pdf-export-v1-3-v1-0.md` ✅ 通过。
+
+## completion-ratio-zero-fix v1.0 - 2026-06-23
+
+- 修复进行中任务完成比例被历史默认 `manualCompletionRatio: 0` 锁定为 `0%` 的问题。
+- 对已填写实际开始、未填写实际结束且自动进度大于 0 的任务，若手动完成比例仍为历史默认 0，则改用自动完成比例；非 0 的手动完成比例仍优先保留。
+- 覆盖用户反馈场景：计划 `2026-06-15` 至 `2026-06-21`、实际开始 `2026-06-15`、当前日期 `2026-06-23` 时，完成比例显示为 `99%` 而不是 `0%`。
+- 新增回归测试：`derives progress for started unfinished tasks when a seeded zero manual ratio is unchanged`。
+- 验证：`npm test --workspace web` 通过，15 个测试文件、132 条测试用例通过。
+- 验证：`npm run build` 通过，仍仅有 Vite chunk size 非阻断提示。
+- Claude Code 审查结论：`Claude审查-completion-ratio-zero-fix-v1.0.md` ✅ 通过。

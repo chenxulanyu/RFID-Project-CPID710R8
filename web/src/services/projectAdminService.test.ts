@@ -64,6 +64,26 @@ describe("admin repository read integration", () => {
     expect(data.tasks[0].completionRatio).toBe(0.42);
   });
 
+  it("derives progress for started unfinished tasks when a seeded zero manual ratio is unchanged", async () => {
+    const repository = LocalProjectRepository.fromSnapshot({
+      project,
+      tasks: [
+        task({
+          id: "auto-progress",
+          taskName: "自动进度",
+          plannedStartDate: "2026-06-15",
+          plannedEndDate: "2026-06-21",
+          actualStartDate: "2026-06-15",
+          manualCompletionRatio: 0,
+        }),
+      ],
+    });
+
+    const data = await getProjectProgress("2026-06-23", repository);
+
+    expect(data.tasks[0].completionRatio).toBe(0.99);
+  });
+
   it("treats actual end date as complete even when manual completion is lower", async () => {
     const repository = LocalProjectRepository.fromSnapshot({
       project,

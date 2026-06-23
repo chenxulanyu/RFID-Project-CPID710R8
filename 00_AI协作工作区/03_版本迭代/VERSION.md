@@ -14,7 +14,7 @@
 ## 业务功能版本
 
 - `web-app-foundation`: `v1.1`
-- `project-dashboard-frontend`: `v1.4`
+- `project-dashboard-frontend`: `v1.4.1`
 - `admin-progress-backend`: `v1.2`
 - `cloudbase-persistence`: `v1.2`
 - `repository-and-deployment`: `v1.5`

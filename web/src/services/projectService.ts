@@ -28,13 +28,17 @@ function deriveTask(input: ProjectTaskInput, today: string): ProjectTask {
     elapsedDays: numericElapsedDays,
     isFinished,
   });
+  const completionRatio =
+    input.manualCompletionRatio === 0 && input.actualStartDate && !input.actualEndDate && automaticCompletionRatio > 0
+      ? automaticCompletionRatio
+      : input.manualCompletionRatio ?? automaticCompletionRatio;
 
   return {
     ...input,
     plannedDurationDays,
     actualDurationDays,
     elapsedDays,
-    completionRatio: isFinished ? 1 : input.manualCompletionRatio ?? automaticCompletionRatio,
+    completionRatio: isFinished ? 1 : completionRatio,
     overdueDays,
     warningState,
   };
